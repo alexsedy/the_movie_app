@@ -2,6 +2,7 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/widgets/images_const/app_images.dart';
 import 'package:the_movie_app/widgets/main_screen/main_screen_widget.dart';
+import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 import 'package:the_movie_app/widgets/theme/app_colors.dart';
 
 class Movie {
@@ -54,7 +55,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
 
   void _onMovieTap(int index) {
     final id = _movies[index].id;
-    Navigator.of(context).pushNamed("/main_screen/movie_details", arguments: id);
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.movieDetails, arguments: id);
   }
 
   @override

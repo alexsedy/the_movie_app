@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/domain/data_providers/session_data_provider.dart';
 import '../movie_list_screen/movie_list_widget.dart';
 
 class MainScreenWidget extends StatefulWidget {
@@ -68,7 +69,12 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
       body: IndexedStack(
         index: _selectedTab,
         children: [
-          Center(child: Text("Home")),
+          Center(
+            child: IconButton(
+              onPressed: () => SessionDataProvider().setSessionId(null),
+              icon: Icon(Icons.exit_to_app),
+            )
+          ),
           MovieListWidget(),
           Center(child: Text("TV Shows")),
         ],
