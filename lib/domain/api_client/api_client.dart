@@ -1,6 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
 
+enum ApiClientExceptionType {
+  Network, Auth, Other
+}
+
+class ApiClientException implements Exception {
+  final ApiClientExceptionType type;
+
+  ApiClientException(this.type);
+}
+
 class ApiClient {
   final _client = HttpClient();
   static const _host = "https://api.themoviedb.org/3";
@@ -17,18 +27,24 @@ class ApiClient {
 
   Future<String> _makeToken() async {
     final url = Uri.parse("$_host/authentication/token/new?api_key=$_apiKey");
+    // final request = await _client.getUrl(url);
+    // final response = await request.close();
+    // final json = (await response.jsonDecode()) as Map<String, dynamic>;
+    // final token = json["request_token"] as String;
+    // return token;
+    // _client.connectionTimeout = Duration.zero;
     final request = await _client.getUrl(url);
     final response = await request.close();
-
     final json = (await response.jsonDecode()) as Map<String, dynamic>;
-    // final json = await response
-    //   .transform(utf8.decoder)
-    //   .toList()
-    //   .then((value) => value.join())
-    //   .then((value) => jsonDecode(value) as Map<String, dynamic>);
+
+    if(response.statusCode == 401) {
+      final responseCode = json["status_code"] as int;
+      if(responseCode == 7) {
+        throw ApiClientException(ApiClientExceptionType.Other);
+      }
+    }
 
     final token = json["request_token"] as String;
-
     return token;
   }
 
@@ -44,18 +60,21 @@ class ApiClient {
     final request = await _client.postUrl(url);
     request.headers.contentType = ContentType.json;
     request.write(jsonEncode(parameters));
-
     final response = await request.close();
-
     final json = (await response.jsonDecode()) as Map<String, dynamic>;
     // final json = await response
     //     .transform(utf8.decoder)
     //     .toList()
     //     .then((value) => value.join())
     //     .then((value) => jsonDecode(value) as Map<String, dynamic>);
+    if(response.statusCode == 401) {
+      final responseCode = json["status_code"] as int;
+      if(responseCode == 30) {
+        throw ApiClientException(ApiClientExceptionType.Auth);
+      }
+    }
 
     final token = json["request_token"] as String;
-
     return token;
   }
 
@@ -68,18 +87,17 @@ class ApiClient {
     final request = await _client.postUrl(url);
     request.headers.contentType = ContentType.json;
     request.write(jsonEncode(parameters));
-
     final response = await request.close();
-
     final json = (await response.jsonDecode()) as Map<String, dynamic>;
-    // final json = await response
-    //     .transform(utf8.decoder)
-    //     .toList()
-    //     .then((value) => value.join())
-    //     .then((value) => jsonDecode(value) as Map<String, dynamic>);
+
+    if(response.statusCode == 401) {
+      final responseCode = json["status_code"] as int;
+      if(responseCode == 17) {
+        throw ApiClientException(ApiClientExceptionType.Other);
+      }
+    }
 
     final sessionId = json["session_id"] as String;
-
     return sessionId;
   }
 }

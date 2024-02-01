@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/domain/data_providers/session_data_provider.dart';
@@ -33,8 +35,22 @@ class AuthModel extends ChangeNotifier {
     String? sessionId;
     try {
       sessionId = await _apiClient.auth(username: username, password: password);
+    } on ApiClientException catch (e) {
+      switch (e.type) {
+        case ApiClientExceptionType.Network:
+          _errorMessage = "Server is not available. Please check the connection or try again later.";
+          break;
+        case ApiClientExceptionType.Auth:
+          _errorMessage = "Invalid Username and/or Password";
+          break;
+        case ApiClientExceptionType.Other:
+          _errorMessage = "An error has occurred. Try again.";
+          break;
+      }
+    } on SocketException catch (e) {
+      _errorMessage = "Server is not available. Please check the connection or try again later.";
     } catch (e) {
-      _errorMessage = "Incorrect Username or Password";
+      _errorMessage = "An error has occurred. Please ry again.";
     }
 
     _isAuthProgress = false;
