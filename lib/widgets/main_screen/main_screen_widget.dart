@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/domain/data_providers/session_data_provider.dart';
+import 'package:the_movie_app/provider/provider.dart';
+import 'package:the_movie_app/widgets/movie_list_screen/movie_list_model.dart';
 import '../movie_list_screen/movie_list_widget.dart';
 
 class MainScreenWidget extends StatefulWidget {
@@ -10,15 +12,9 @@ class MainScreenWidget extends StatefulWidget {
 }
 
 class _MainScreenWidgetState extends State<MainScreenWidget> {
+  final movieListModel = MovieListModel();
   int _selectedTab = 0;
   bool isSearchOpen = false;
-
-  //todo реализация при которой виджеты сбрасываются [1]
-  // static final List<Widget> _widgetOptions = <Widget>[
-  //   Text("Home"),
-  //   MovieListWidget(),
-  //   Text("TV Shows"),
-  // ];
 
   void onSelectTab(int index) {
     if (_selectedTab == index) return;
@@ -28,12 +24,25 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    movieListModel.loadMovies();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // movieListModel.setupLocale(context);
+    // movieListModel.loadMovies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: AnimatedSwitcher(
           duration: const Duration(milliseconds: 500),
-          child: isSearchOpen ? SearchFieldWidget() : const Text("The Movie"),
+          child: isSearchOpen ? const SearchFieldWidget() : const Text("The Movie"),
         ),
         actions: [
           IconButton(
@@ -62,21 +71,19 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
       //     onPressed: () {  },
       //     icon: Icon(Icons.arrow_upward),),
       // ),
-              //todo реализация при которой виджеты сбрасываются [2]
-      // body: Center(
-      //   child: _widgetOptions[_selectedTab],
-      // ),
       body: IndexedStack(
         index: _selectedTab,
         children: [
           Center(
             child: IconButton(
               onPressed: () => SessionDataProvider().setSessionId(null),
-              icon: Icon(Icons.exit_to_app),
+              icon: const Icon(Icons.exit_to_app),
             )
           ),
-          MovieListWidget(),
-          Center(child: Text("TV Shows")),
+          NotifierProvider(
+            model: movieListModel,
+            child: const MovieListWidget()),
+          const Center(child: Text("TV Shows")),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

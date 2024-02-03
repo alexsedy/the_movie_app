@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:the_movie_app/domain/entity/movie_response/movie_response.dart';
+
 enum ApiClientExceptionType {
   Network, Auth, Other
 }
@@ -17,12 +19,38 @@ class ApiClient {
   static const _imageUrl = "https://image.tmdb.org/t/p/w500";
   static const _apiKey = "772a84be1e646a7870931e64417537cb";
 
+  static String imageUrl(String path) => _imageUrl + path;
+
   Future<String> auth({required String username, required String password}) async {
     final token = await _makeToken();
     final validToken = await _validateUser(username: username, password: password, requestToken: token);
     final sessionId = _makeSession(requestToken: validToken);
 
     return sessionId;
+  }
+
+  Future<MovieResponse> getDiscoverMovie(int page) async {
+
+    final url = _makeUri(
+      "/discover/movie",
+      <String, dynamic>{
+        "api_key": _apiKey,
+        "page": page.toString()
+      },
+    );
+    final request = await _client.getUrl(url);
+    final response = await request.close();
+    final json = (await response.jsonDecode()) as Map<String, dynamic>;
+
+    if(response.statusCode == 401) {
+      final responseCode = json["status_code"] as int;
+      if(responseCode == 7) {
+        throw ApiClientException(ApiClientExceptionType.Other);
+      }
+    }
+
+    final movieResponse = MovieResponse.fromJson(json);
+    return movieResponse;
   }
 
   Future<String> _makeToken() async {
@@ -99,6 +127,15 @@ class ApiClient {
 
     final sessionId = json["session_id"] as String;
     return sessionId;
+  }
+
+  Uri _makeUri(String path, [Map<String, dynamic>? parameters]) {
+    final uri = Uri.parse('$_host$path');
+    if (parameters != null) {
+      return uri.replace(queryParameters: parameters);
+    } else {
+      return uri;
+    }
   }
 }
 

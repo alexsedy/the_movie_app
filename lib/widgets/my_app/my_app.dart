@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:the_movie_app/widgets/my_app/my_app_model.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
@@ -20,6 +21,16 @@ class MyApp extends StatelessWidget {
       //     unselectedItemColor: Colors.grey,
       //   ),
       // ),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en', "US"),
+        Locale('ru', "RU"),
+        Locale("ua", "UA")
+      ],
       routes: mainNavigation.routes,
       initialRoute: mainNavigation.initialRouts(model.isAuth),
       onGenerateRoute: mainNavigation.onGenerateRoute,
