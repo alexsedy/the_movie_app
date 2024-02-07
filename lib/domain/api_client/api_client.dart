@@ -35,7 +35,34 @@ class ApiClient {
       "/discover/movie",
       <String, dynamic>{
         "api_key": _apiKey,
-        "page": page.toString()
+        "page": page.toString(),
+        // "language": "uk-UA"
+      },
+    );
+    final request = await _client.getUrl(url);
+    final response = await request.close();
+    final json = (await response.jsonDecode()) as Map<String, dynamic>;
+
+    if(response.statusCode == 401) {
+      final responseCode = json["status_code"] as int;
+      if(responseCode == 7) {
+        throw ApiClientException(ApiClientExceptionType.Other);
+      }
+    }
+
+    final movieResponse = MovieResponse.fromJson(json);
+    return movieResponse;
+  }
+
+  Future<MovieResponse> searchMovie(int page, String query) async {
+
+    final url = _makeUri(
+      "/search/movie",
+      <String, dynamic>{
+        "api_key": _apiKey,
+        "page": page.toString(),
+        "query": query
+        // "language": "uk-UA"
       },
     );
     final request = await _client.getUrl(url);

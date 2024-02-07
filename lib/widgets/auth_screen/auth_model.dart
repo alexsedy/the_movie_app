@@ -47,7 +47,7 @@ class AuthModel extends ChangeNotifier {
           _errorMessage = "An error has occurred. Try again.";
           break;
       }
-    } on SocketException catch (e) {
+    } on SocketException catch (_) {
       _errorMessage = "Server is not available. Please check the connection or try again later.";
     } catch (e) {
       _errorMessage = "An error has occurred. Please ry again.";

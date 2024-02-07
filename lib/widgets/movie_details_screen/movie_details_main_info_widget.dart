@@ -111,7 +111,7 @@ class _SummaryMovieWidget extends StatelessWidget {
   const _SummaryMovieWidget({super.key});
 
   @override
-  final double _textSize = 16;
+  final double textSize = 16;
 
   Widget build(BuildContext context) {
     return Padding(
@@ -124,28 +124,28 @@ class _SummaryMovieWidget extends StatelessWidget {
               TextSpan(
                 text: "15",
                 style: TextStyle(
-                  fontSize: _textSize,
+                  fontSize: textSize,
                 ),
               ),
-              TextSpan(text: " ● ", style: TextStyle(fontSize: _textSize,),),
+              TextSpan(text: " ● ", style: TextStyle(fontSize: textSize,),),
               TextSpan(
                   text: "1h 49m",
                   style: TextStyle(
-                    fontSize: _textSize,
+                    fontSize: textSize,
                   )
               ),
-              TextSpan(text: " ● ", style: TextStyle(fontSize: _textSize,),),
+              TextSpan(text: " ● ", style: TextStyle(fontSize: textSize,),),
               TextSpan(
                   text: "07/28/2023 (GB)",
                   style: TextStyle(
-                    fontSize: _textSize,
+                    fontSize: textSize,
                   )
               ),
-              TextSpan(text: " ● ", style: TextStyle(fontSize: _textSize,),),
+              TextSpan(text: " ● ", style: TextStyle(fontSize: textSize,),),
               TextSpan(
                   text: "Horror, Thriller",
                   style: TextStyle(
-                    fontSize: _textSize,
+                    fontSize: textSize,
                   )
               ),
             ]

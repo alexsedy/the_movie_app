@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: const [
         Locale('en', "US"),
         Locale('ru', "RU"),
-        Locale("ua", "UA")
+        Locale("uk", "UA")
       ],
       routes: mainNavigation.routes,
       initialRoute: mainNavigation.initialRouts(model.isAuth),
