@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/elements/score_radial_percent_widget.dart';
 import 'package:the_movie_app/widgets/movie_details_screen/movie_details_model.dart';
@@ -20,8 +21,8 @@ class MovieDetailsMainInfoWidget extends StatelessWidget {
         ),
         _TaglineWidget(),
         _DescriptionWidget(),
-        SizedBox(height: 30,),
-        _PeopleWidget(),
+        _MovieCrewWidget(),
+        _MovieCastWidget(),
       ],
     );
   }
@@ -118,38 +119,46 @@ class _ScoreAndTrailerWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        TextButton(
-          onPressed: (){},
-          child: Row(
-            children: [
-              SizedBox(
-                width: 45,
-                height: 45,
-                child: RadiantPercentWidget(
-                  percent: voteAverageScore,
-                  progressFreeColor: Colors.grey,
-                  progressLine: voteAverage,
-                  backgroundCircleColor: Colors.black87,
-                  lineWidth: 3,
-                  child: Text(
-                    "$voteAverageText%",
-                    style: const TextStyle(color: Colors.white),),
+        SizedBox(
+          height: 62,
+          child: TextButton(
+            onPressed: (){},
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 45,
+                  height: 45,
+                  child: RadiantPercentWidget(
+                    percent: voteAverageScore,
+                    progressFreeColor: Colors.grey,
+                    progressLine: voteAverage,
+                    backgroundCircleColor: Colors.black87,
+                    lineWidth: 3,
+                    child: Text(
+                      "$voteAverageText%",
+                      style: const TextStyle(color: Colors.white),),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              const Text("User Score", style: TextStyle(color: Colors.black),),
-            ],
-          )
+                const SizedBox(width: 10),
+                const Text("User Score", style: TextStyle(color: Colors.black),),
+              ],
+            )
+          ),
         ),
         Container(width: 1, height: 15,color: Colors.grey,),
-        TextButton(
-          onPressed: (){},
-          child: const Row(
-            children: [
-              Icon(Icons.play_arrow, color: Colors.black),
-              Text("Play Trailer", style: TextStyle(color: Colors.black),),
-            ],
-          )
+        SizedBox(
+          height: 62,
+          child: Expanded(
+            child: TextButton(
+              onPressed: (){},
+              child: const Row(
+                children: [
+                  Icon(Icons.play_arrow, color: Colors.black),
+                  Text("Play Trailer", style: TextStyle(color: Colors.black),),
+                ],
+              )
+            ),
+          ),
         ),
       ],
     );
@@ -202,7 +211,7 @@ class _SummaryMovieWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<MovieDetailsModel>(context);
     final movieDetails = model?.movieDetails;
-    final releaseDateRoot = model?.releaseDateRoot?.results;
+    final releaseDates = model?.movieDetails?.releaseDates.results;
     final releaseDate = model?.formatDate(movieDetails?.releaseDate);
     var countriesList = <String>[];
     var genresList = <String>[];
@@ -218,9 +227,9 @@ class _SummaryMovieWidget extends StatelessWidget {
     }
 
     String rating = "";
-    if(releaseDateRoot != null) {
+    if(releaseDates != null) {
       try {
-        rating = releaseDateRoot.firstWhere((element) => element.iso == "US").releaseDates.first.certification;
+        rating = releaseDates.firstWhere((element) => element.iso == "US").releaseDates.first.certification;
       } catch (e) {
         rating = "";
       }
@@ -290,55 +299,206 @@ class _SummaryMovieWidget extends StatelessWidget {
   }
 }
 
-class _PeopleWidget extends StatelessWidget {
-  const _PeopleWidget({super.key});
+class _MovieCrewWidget extends StatelessWidget {
+  const _MovieCrewWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const styleOfName = TextStyle(fontSize: 16, );
+    final crew = NotifierProvider.watch<MovieDetailsModel>(context)?.movieDetails?.credits.crew;
+
+    const styleOfName = TextStyle(fontSize: 16,);
     const styleOfRole = TextStyle(fontSize: 16, fontStyle: FontStyle.italic);
 
+    if (crew == null) {
+      return const SizedBox.shrink();
+    } else if (crew.length < 4) {
+      return const SizedBox.shrink();
+    } else {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(24),
+              onTap: () {},
+              child: const SizedBox(
+                width: 120,
+                height: 40,
+                child: Center(
+                  child: Text(
+                    "Movie Crew",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SizedBox(
+                width: 130,
+                height: 50,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(crew[0].name, style: styleOfName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,),
+                    Text(crew[0].job, style: styleOfRole,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,),
+                    // Text("Danny Philippou", style: styleOfName,),
+                    // Text("Director, Writer", style: styleOfRole,),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 130,
+                height: 50,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(crew[1].name, style: styleOfName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,),
+                    Text(crew[1].job, style: styleOfRole,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SizedBox(
+                width: 130,
+                height: 50,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(crew[2].name, style: styleOfName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,),
+                    Text(crew[2].job, style: styleOfRole,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 130,
+                height: 50,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(crew[3].name, style: styleOfName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,),
+                    Text(crew[3].job, style: styleOfRole,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,),
+                  ],
+                ),
+              ),
+            ],
+          )
+        ],
+      );
+    }
+  }
+}
+
+class _MovieCastWidget extends StatelessWidget {
+  const _MovieCastWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Danny Philippou", style: styleOfName,),
-                Text("Director, Writer", style: styleOfRole,),
-              ],),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Danny Philippou", style: styleOfName,),
-                Text("Director, Writer", style: styleOfRole,),
-              ],
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(24),
+            onTap: () {},
+            child: const SizedBox(
+              width: 120,
+              height: 40,
+              child: Center(
+                child: Text(
+                  "Movie Cast",
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
             ),
-          ],
+          ),
         ),
-        SizedBox(height: 20,),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Danny Philippou", style: styleOfName,),
-                Text("Director, Writer", style: styleOfRole,),
-              ],),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Danny Philippou", style: styleOfName,),
-                Text("Director, Writer", style: styleOfRole,),
-              ],
+        SizedBox(
+          height: 250,
+          child: Scrollbar(
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: 20,
+              itemExtent: 125,
+              itemBuilder: (BuildContext context, int index){
+                return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(color: Colors.black.withOpacity(0.2)),
+                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 8,
+                              offset: const Offset(1, 2),
+                            )
+                          ]
+                      ),
+                      clipBehavior: Clip.hardEdge,
+                      child: Column(
+                        children: [
+                          Image(image: AssetImage(AppImages.actor)),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 10,),
+                              Text(
+                                "Sophie Wilde",
+                                maxLines: 2,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700
+                                ),
+                              ),
+                              SizedBox(height: 10,),
+                              Text("Mia",
+                                maxLines: 2,
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontStyle: FontStyle.italic
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                );
+              },
             ),
-          ],
-        )
+          ),
+        ),
       ],
     );
   }

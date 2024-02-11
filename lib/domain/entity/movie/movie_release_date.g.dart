@@ -8,7 +8,7 @@ part of 'movie_release_date.dart';
 
 ReleaseDateRoot _$ReleaseDateRootFromJson(Map<String, dynamic> json) =>
     ReleaseDateRoot(
-      id: json['id'] as int,
+      id: json['id'] as int?,
       results: (json['results'] as List<dynamic>)
           .map((e) => ReleaseResult.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -24,7 +24,7 @@ ReleaseResult _$ReleaseResultFromJson(Map<String, dynamic> json) =>
     ReleaseResult(
       iso: json['iso_3166_1'] as String,
       releaseDates: (json['release_dates'] as List<dynamic>)
-          .map((e) => ReleaseDate.fromJson(e as Map<String, dynamic>))
+          .map((e) => ReleaseDates.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
@@ -34,7 +34,7 @@ Map<String, dynamic> _$ReleaseResultToJson(ReleaseResult instance) =>
       'release_dates': instance.releaseDates,
     };
 
-ReleaseDate _$ReleaseDateFromJson(Map<String, dynamic> json) => ReleaseDate(
+ReleaseDates _$ReleaseDatesFromJson(Map<String, dynamic> json) => ReleaseDates(
       certification: json['certification'] as String,
       descriptors: (json['descriptors'] as List<dynamic>)
           .map((e) => e as Object)
@@ -45,7 +45,7 @@ ReleaseDate _$ReleaseDateFromJson(Map<String, dynamic> json) => ReleaseDate(
       type: json['type'] as int,
     );
 
-Map<String, dynamic> _$ReleaseDateToJson(ReleaseDate instance) =>
+Map<String, dynamic> _$ReleaseDatesToJson(ReleaseDates instance) =>
     <String, dynamic>{
       'certification': instance.certification,
       'descriptors': instance.descriptors,

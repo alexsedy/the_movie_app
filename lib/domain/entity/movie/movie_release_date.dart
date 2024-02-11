@@ -4,7 +4,7 @@ part 'movie_release_date.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class ReleaseDateRoot {
-  final int id;
+  final int? id;
   final List<ReleaseResult> results;
 
   ReleaseDateRoot({required this.id, required this.results});
@@ -17,7 +17,7 @@ class ReleaseDateRoot {
 class ReleaseResult {
   @JsonKey(name: 'iso_3166_1')
   final String iso;
-  final List<ReleaseDate> releaseDates;
+  final List<ReleaseDates> releaseDates;
 
   ReleaseResult({required this.iso, required this.releaseDates});
 
@@ -26,7 +26,7 @@ class ReleaseResult {
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class ReleaseDate {
+class ReleaseDates {
   final String certification;
   final List<Object> descriptors;
   @JsonKey(name: 'iso_639_1')
@@ -35,9 +35,9 @@ class ReleaseDate {
   final DateTime releaseDate;
   final int type;
 
-  ReleaseDate({required this.certification, required this.descriptors, required this.iso, required this.note,
+  ReleaseDates({required this.certification, required this.descriptors, required this.iso, required this.note,
   required this.releaseDate, required this.type});
 
-  factory ReleaseDate.fromJson(Map<String, dynamic> json) => _$ReleaseDateFromJson(json);
-  Map<String, dynamic> toJson() => _$ReleaseDateToJson(this);
+  factory ReleaseDates.fromJson(Map<String, dynamic> json) => _$ReleaseDatesFromJson(json);
+  Map<String, dynamic> toJson() => _$ReleaseDatesToJson(this);
 }

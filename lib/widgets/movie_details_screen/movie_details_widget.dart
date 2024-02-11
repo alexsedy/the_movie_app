@@ -3,7 +3,6 @@ import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/movie_details_screen/movie_details_model.dart';
 import 'package:the_movie_app/widgets/movie_details_screen/movie_details_shimmer_skeleton_widget.dart';
-import 'package:the_movie_app/widgets/movie_details_screen/movie_screen_cast_widget.dart';
 
 import 'movie_details_main_info_widget.dart';
 
@@ -80,9 +79,8 @@ class _BodyWidget extends StatelessWidget {
     return SliverList(
       delegate: SliverChildListDelegate(
         [
-          MovieDetailsMainInfoWidget(),
+          const MovieDetailsMainInfoWidget(),
           const SizedBox(height: 20,),
-          MovieScreenCastWidget(),
         ],
       ),
     );

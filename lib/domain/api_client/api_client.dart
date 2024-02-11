@@ -86,6 +86,7 @@ class ApiClient {
       "/movie/$movieId",
       <String, dynamic>{
         "api_key": _apiKey,
+        "append_to_response": "release_dates,credits",
         // "language": "uk-UA"
       },
     );
@@ -102,29 +103,6 @@ class ApiClient {
 
     final movieDetailsResponse = MovieDetails.fromJson(json);
     return movieDetailsResponse;
-  }
-
-  Future<ReleaseDateRoot> getMovieDetailsReleaseDateId(int movieId) async {
-    final url = _makeUri(
-      "/movie/$movieId/release_dates",
-      <String, dynamic>{
-        "api_key": _apiKey,
-        // "language": "uk-UA"
-      },
-    );
-    final request = await _client.getUrl(url);
-    final response = await request.close();
-    final json = (await response.jsonDecode()) as Map<String, dynamic>;
-
-    if(response.statusCode == 401) {
-      final responseCode = json["status_code"] as int;
-      if(responseCode == 7) {
-        throw ApiClientException(ApiClientExceptionType.Other);
-      }
-    }
-
-    final releaseDateRoot = ReleaseDateRoot.fromJson(json);
-    return releaseDateRoot;
   }
 
   Future<String> _makeToken() async {
