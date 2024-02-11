@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:the_movie_app/widgets/images_const/app_images.dart';
+import 'package:the_movie_app/constants/images_const/app_images.dart';
 
 class MovieScreenCastWidget extends StatelessWidget {
   const MovieScreenCastWidget({super.key});

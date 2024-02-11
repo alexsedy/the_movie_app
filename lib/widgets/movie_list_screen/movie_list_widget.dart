@@ -82,10 +82,13 @@ class _MovieListWidgetState extends State<MovieListWidget> {
                         clipBehavior: Clip.hardEdge,
                         child: Row(
                           children: [
-                            posterPath != null
-                                ? Image.network(
-                              ApiClient.imageUrl(posterPath), width: 95,)
-                                : Image.asset("images/no_poster.png"),
+                            AspectRatio(
+                              aspectRatio: 500 / 750,
+                              child: posterPath != null
+                                  ? Image.network(
+                                ApiClient.imageUrl(posterPath), width: 95,)
+                                  : Image.asset("images/no_poster.png"),
+                            ),
                             Expanded(
                               child: Padding(
                                 padding: const EdgeInsets.only(
