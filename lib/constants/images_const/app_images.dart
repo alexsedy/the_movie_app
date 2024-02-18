@@ -1,7 +1,6 @@
 abstract class AppImages {
-  static const String poster = "images/poster.jpg";
-  static const String topHeaderPoster = "images/topHeaderPoster.jpg";
-  static const String subHeaderPoster = "images/subHeaderPoster.jpg";
-  static const String actor = "images/actor.jpg";
-  static const String noPoster = "images/no_poster.png";
+  static const String noPoster = "images/no_poster.jpg";
+  static const String noBackdropPoster = "images/no_backdrop_poster.jpg";
+  static const String noProfile = "images/no_profile.jpg";
+
 }

@@ -47,7 +47,6 @@ class _FilterMoviesWidget extends StatefulWidget {
 }
 
 class _FilterMoviesWidgetState extends State<_FilterMoviesWidget> {
-  final double _startValue = 0.0;
   var _rangeValues = const RangeValues(0, 10);
   String? _sortingValue = "Popularity Descending";
   DateTime? _selectedDateFrom;

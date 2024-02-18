@@ -2,11 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
+import 'package:the_movie_app/domain/api_client/auth_api_client.dart';
 import 'package:the_movie_app/domain/data_providers/session_data_provider.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
 class AuthModel extends ChangeNotifier {
-  final _apiClient = ApiClient();
+  final _apiClient = AuthApiClient();
   final _sessionDataProvider = SessionDataProvider();
   final usernameTextController = TextEditingController(text: "alexsedy");
   //alexsedy

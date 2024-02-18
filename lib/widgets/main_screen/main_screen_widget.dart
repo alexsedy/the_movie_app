@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:the_movie_app/domain/data_providers/session_data_provider.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/main_screen/filter_widget.dart';
-import 'package:the_movie_app/widgets/movie_list_screen/movie_list_model.dart';
-import 'package:the_movie_app/widgets/movie_list_screen/movie_list_widget.dart';
+import 'package:the_movie_app/widgets/movie_screens/movie_list_screen/movie_list_model.dart';
+import 'package:the_movie_app/widgets/movie_screens/movie_list_screen/movie_list_widget.dart';
+import 'package:the_movie_app/widgets/tv_show_screens/tv_show_list_screen/tv_show_list_model.dart';
+import 'package:the_movie_app/widgets/tv_show_screens/tv_show_list_screen/tv_show_list_widget.dart';
+
 
 
 class MainScreenWidget extends StatefulWidget {
@@ -15,6 +18,7 @@ class MainScreenWidget extends StatefulWidget {
 
 class _MainScreenWidgetState extends State<MainScreenWidget> {
   final movieListModel = MovieListModel();
+  final tvShowListModel = TvShowListModel();
   int _selectedTab = 0;
   bool isSearchOpen = false;
 
@@ -22,6 +26,8 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
     if (_selectedTab == index) {
       if(index == 1) {
         movieListModel.scrollToTop();
+      } else if (index == 2) {
+        tvShowListModel.scrollToTop();
       }
       return;
     }
@@ -34,6 +40,7 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
   void initState() {
     super.initState();
     movieListModel.firstLoadMovies();
+    tvShowListModel.firstLoadTvShows();
   }
 
   @override
@@ -64,6 +71,11 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
                   movieListModel.resetList();
                   movieListModel.loadMovies();
                   movieListModel.scrollToTop();
+                }
+                if (_selectedTab == 2) {
+                  tvShowListModel.resetList();
+                  tvShowListModel.loadTvShows();
+                  tvShowListModel.scrollToTop();
                 }
               }
             },
@@ -100,7 +112,11 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
               isManagingModel: false,
             // model: movieListModel,
             child: const MovieListWidget()),
-          const Center(child: Text("TV Shows")),
+          NotifierProvider(
+              create: () => tvShowListModel,
+              isManagingModel: false,
+              // model: tvShowListModel,
+              child: const TvShowListWidget()),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -133,13 +149,17 @@ class SearchFieldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.findAncestorStateOfType<_MainScreenWidgetState>()?.movieListModel;
+    final movieListModel = context.findAncestorStateOfType<_MainScreenWidgetState>()?.movieListModel;
+    final tvShowListModel = context.findAncestorStateOfType<_MainScreenWidgetState>()?.tvShowListModel;
     final selectedTab = context.findAncestorStateOfType<_MainScreenWidgetState>()?._selectedTab;
 
     return TextField(
       onChanged: (text) {
-        if(selectedTab == 1 && model != null) {
-          model.searchMovies(text);
+        if(selectedTab == 1 && movieListModel != null) {
+          movieListModel.searchMovies(text);
+        }
+        if (selectedTab == 2 && tvShowListModel != null) {
+          tvShowListModel.searchTvShows(text);
         }
       },
       controller: searchController,
