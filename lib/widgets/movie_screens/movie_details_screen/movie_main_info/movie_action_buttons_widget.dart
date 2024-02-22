@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/movie_screens/movie_details_screen/movie_details_model.dart';
 
-class ActionButtonsWidget extends StatelessWidget {
-  const ActionButtonsWidget({
+class MovieActionButtonsWidget extends StatelessWidget {
+  const MovieActionButtonsWidget({
     super.key,
   });
 

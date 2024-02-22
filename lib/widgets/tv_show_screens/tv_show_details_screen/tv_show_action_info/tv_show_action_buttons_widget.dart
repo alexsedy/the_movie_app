@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/provider/provider.dart';
-import 'package:the_movie_app/widgets/movie_screens/movie_details_screen/movie_details_model.dart';
+import 'package:the_movie_app/widgets/tv_show_screens/tv_show_details_screen/tv_show_details_model.dart';
 
-class ActionButtonsWidget extends StatelessWidget {
-  const ActionButtonsWidget({
+class TvShowActionButtonsWidget extends StatelessWidget {
+  const TvShowActionButtonsWidget({
     super.key,
   });
 
@@ -73,7 +73,7 @@ class _FavoriteButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<MovieDetailsModel>(context);
+    final model = NotifierProvider.watch<TvShowDetailsModel>(context);
     final favorite = model?.isFavorite;
 
     if(favorite == null) {

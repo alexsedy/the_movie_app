@@ -25,7 +25,7 @@ class _MovieDetailsWidgetState extends State<MovieDetailsWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:  CustomScrollView(
+      body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
             stretch: true,
@@ -54,7 +54,7 @@ class _HeaderWidget extends StatelessWidget {
     final movieDetails = NotifierProvider.watch<MovieDetailsModel>(context)?.movieDetails;
 
     if(movieDetails == null) {
-      return const ShimmerHeaderSkeletonWidget();
+      return const MovieShimmerHeaderSkeletonWidget();
     }
 
     return const FlexibleSpaceBar(
@@ -95,26 +95,10 @@ class _TopPosterWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<MovieDetailsModel>(context);
     final backdropPath = model?.movieDetails?.backdropPath;
-    // final posterPath = model?.movieDetails?.posterPath;
 
-    return Stack(
-      children: [
-        backdropPath != null
-            ? Image.network(ApiClient.getImageByUrl(backdropPath))
-            : Image.asset(AppImages.noBackdropPoster),
-        // Positioned(
-        //   top: 20,
-        //   left: 15,
-        //   bottom: 20,
-        //   child: SizedBox(
-        //     height: 140, width: 90,
-        //     child: posterPath != null
-        //         ? Image.network(ApiClient.imageUrl(posterPath))
-        //         : Image.asset("images/no_backdrop_poster.jpg"),
-        //   ),
-        // ),
-      ],
-    );
+    return backdropPath != null
+        ? Image.network(ApiClient.getImageByUrl(backdropPath))
+        : Image.asset(AppImages.noBackdropPoster);
   }
 }
 

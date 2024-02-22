@@ -2,36 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/provider/provider.dart';
-import 'package:the_movie_app/widgets/movie_screens/movie_details_screen/movie_details_model.dart';
-import 'package:the_movie_app/widgets/movie_screens/movie_details_screen/movie_details_shimmer_skeleton_widget.dart';
+import 'package:the_movie_app/widgets/tv_show_screens/tv_show_details_screen/tv_show_details_main_info_widget.dart';
+import 'package:the_movie_app/widgets/tv_show_screens/tv_show_details_screen/tv_show_details_model.dart';
+import 'package:the_movie_app/widgets/tv_show_screens/tv_show_details_screen/tv_show_details_shimmer_skeleton_widget.dart';
 
-import 'movie_details_main_info_widget.dart';
-
-class MovieDetailsWidget extends StatefulWidget {
-  const MovieDetailsWidget({super.key});
+class TvShowDetailsWidget extends StatefulWidget {
+  const TvShowDetailsWidget({super.key});
 
   @override
-  State<MovieDetailsWidget> createState() => _MovieDetailsWidgetState();
+  State<TvShowDetailsWidget> createState() => _TvShowDetailsWidgetState();
 }
 
-class _MovieDetailsWidgetState extends State<MovieDetailsWidget> {
+class _TvShowDetailsWidgetState extends State<TvShowDetailsWidget> {
 
   @override
   void initState() {
-    NotifierProvider.read<MovieDetailsModel>(context)?.loadMovieDetails();
+    NotifierProvider.read<TvShowDetailsModel>(context)?.loadTvShowDetails();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:  CustomScrollView(
+      body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
             stretch: true,
             pinned: true,
             onStretchTrigger: () async {
-              NotifierProvider.read<MovieDetailsModel>(context)?.loadMovieDetails();
+              NotifierProvider.read<TvShowDetailsModel>(context)?.loadTvShowDetails();
             },
             stretchTriggerOffset: 200.0,
             expandedHeight: 183.0,
@@ -51,10 +50,10 @@ class _HeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final movieDetails = NotifierProvider.watch<MovieDetailsModel>(context)?.movieDetails;
+    final tvShowDetails = NotifierProvider.watch<TvShowDetailsModel>(context)?.tvShowDetails;
 
-    if(movieDetails == null) {
-      return const ShimmerHeaderSkeletonWidget();
+    if(tvShowDetails == null) {
+      return const TvShowShimmerHeaderSkeletonWidget();
     }
 
     return const FlexibleSpaceBar(
@@ -71,16 +70,16 @@ class _BodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final movieDetails = NotifierProvider.watch<MovieDetailsModel>(context)?.movieDetails;
+    final tvShowDetails = NotifierProvider.watch<TvShowDetailsModel>(context)?.tvShowDetails;
 
-    if(movieDetails == null) {
-      return const ShimmerBodySkeletonWidget();
+    if(tvShowDetails == null) {
+      return const TvShowShimmerBodySkeletonWidget();
     }
 
     return SliverList(
       delegate: SliverChildListDelegate(
         [
-          const MovieDetailsMainInfoWidget(),
+          const TvShowDetailsMainInfoWidget(),
           const SizedBox(height: 20,),
         ],
       ),
@@ -93,8 +92,8 @@ class _TopPosterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<MovieDetailsModel>(context);
-    final backdropPath = model?.movieDetails?.backdropPath;
+    final model = NotifierProvider.watch<TvShowDetailsModel>(context);
+    final backdropPath = model?.tvShowDetails?.backdropPath;
     // final posterPath = model?.movieDetails?.posterPath;
 
     return Stack(
@@ -123,17 +122,17 @@ class _MovieNameWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<MovieDetailsModel>(context);
-    final releaseDate = model?.movieDetails?.releaseDate;
-    final releaseText = releaseDate != null && releaseDate.isNotEmpty
-        ? " (${releaseDate.substring(0, 4)})" : "";
+    final model = NotifierProvider.watch<TvShowDetailsModel>(context);
+    final firstAirDate = model?.tvShowDetails?.firstAirDate;
+    final releaseText = firstAirDate != null && firstAirDate.isNotEmpty
+        ? " (${firstAirDate.substring(0, 4)})" : "";
 
     return RichText(
       maxLines: 3,
       text: TextSpan(
         children: [
           TextSpan(
-            text: model?.movieDetails?.title,
+            text: model?.tvShowDetails?.name,
             style: const TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 21,

@@ -3,7 +3,9 @@ import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/movie_api_client.dart';
 import 'package:the_movie_app/domain/cache_management/account_management.dart';
 import 'package:the_movie_app/domain/entity/account/account_state/account_state.dart';
+import 'package:the_movie_app/domain/entity/movie_and_tv_show/credits/credits_details.dart';
 import 'package:the_movie_app/domain/entity/movie_and_tv_show/state/item_state.dart';
+import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:the_movie_app/domain/entity/movie/details/movie_details.dart';
 
@@ -41,8 +43,6 @@ class MovieDetailsModel extends ChangeNotifier {
       return;
     }
 
-    // final newFavoriteValue = !_isFavorite;
-    // _isFavorite = newFavoriteValue;
     _isFavorite = !_isFavorite;
 
     await _apiClient.makeFavorite(
@@ -54,6 +54,13 @@ class MovieDetailsModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void onMovieCast(BuildContext context, List<Cast> cast) {
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.movieCast, arguments: cast);
+  }
+
+  void onMovieCrew(BuildContext context, List<Crew> crew) {
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.movieCrew, arguments: crew);
+  }
 
   Future<void> launchYouTubeVideo(String videoKey) async {
     final Uri url = Uri.parse('https://www.youtube.com/watch?v=$videoKey');

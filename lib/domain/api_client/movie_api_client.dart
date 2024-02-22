@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/domain/entity/movie/details/movie_details.dart';
 import 'package:the_movie_app/domain/entity/movie/movie_list/movie_list.dart';
+import 'package:the_movie_app/domain/entity/movie_and_tv_show/credits/credits_details.dart';
 import 'package:the_movie_app/domain/entity/movie_and_tv_show/state/item_state.dart';
 
 class MovieApiClient extends ApiClient {
@@ -134,5 +135,29 @@ class MovieApiClient extends ApiClient {
         throw ApiClientException(ApiClientExceptionType.Other);
       // }
     }
+  }
+
+  Future<Credits> getCredits(int movieId) async {
+
+    final url = makeUri(
+      "/movie/$movieId/credits",
+      <String, dynamic>{
+        "api_key": apiKey,
+        // "language": "uk-UA"
+      },
+    );
+    final request = await client.getUrl(url);
+    final response = await request.close();
+    final json = (await response.jsonDecode()) as Map<String, dynamic>;
+
+    if(response.statusCode == 401) {
+      final responseCode = json["status_code"] as int;
+      if(responseCode == 7) {
+        throw ApiClientException(ApiClientExceptionType.Other);
+      }
+    }
+
+    final movieCredits = Credits.fromJson(json);
+    return movieCredits;
   }
 }

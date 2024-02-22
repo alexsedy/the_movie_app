@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/tv_show_api_client.dart';
 import 'package:the_movie_app/domain/entity/tv_show/tv_show_list/tv_show_list.dart';
+import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
 class TvShowListModel extends ChangeNotifier {
   final ScrollController scrollController = ScrollController();
@@ -79,7 +80,7 @@ class TvShowListModel extends ChangeNotifier {
 
   void onTvShowTab(BuildContext context, int index) {
     final id = _tvShows[index].id;
-    // Navigator.of(context).pushNamed(MainNavigationRouteNames.movieDetails, arguments: id);
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.tvShowDetails, arguments: id);
   }
 
   void setupLocale(BuildContext context) {

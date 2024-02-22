@@ -1,13 +1,14 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:the_movie_app/domain/entity/movie_and_tv_show/credits/credits_details.dart';
 import 'package:the_movie_app/domain/entity/movie_and_tv_show/video/video.dart';
+import 'package:the_movie_app/domain/entity/tv_show/content_ratings/content_ratings.dart';
 
 part 'tv_show_details.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class TvShowDetails {
   final bool adult;
-  final String backdropPath;
+  final String? backdropPath;
   final List<CreatedBy> createdBy;
   final List<int> episodeRunTime;
   final String firstAirDate;
@@ -16,7 +17,7 @@ class TvShowDetails {
   final int id;
   final bool inProduction;
   final List<String> languages;
-  final String lastAirDate;
+  final String? lastAirDate;
   final LastEpisodeToAir? lastEpisodeToAir;
   final String name;
   final NextEpisodeToAir? nextEpisodeToAir;
@@ -40,6 +41,7 @@ class TvShowDetails {
   final int voteCount;
   final Credits credits;
   final Videos videos;
+  final ContentRatings contentRatings;
 
   TvShowDetails(
       this.adult,
@@ -75,7 +77,8 @@ class TvShowDetails {
       this.voteAverage,
       this.voteCount,
       this.credits,
-      this.videos);
+      this.videos,
+      this.contentRatings);
 
   factory TvShowDetails.fromJson(Map<String, dynamic> json) => _$TvShowDetailsFromJson(json);
 
@@ -88,7 +91,7 @@ class CreatedBy {
   final String creditId;
   final String name;
   final int gender;
-  final String profilePath;
+  final String? profilePath;
 
   CreatedBy(this.id, this.creditId, this.name, this.gender, this.profilePath);
 
@@ -119,10 +122,10 @@ class LastEpisodeToAir {
   final String airDate;
   final int episodeNumber;
   final String productionCode;
-  final int runtime;
+  final int? runtime;
   final int seasonNumber;
   final int showId;
-  final String stillPath;
+  final String? stillPath;
 
   LastEpisodeToAir(
       this.id,
@@ -153,10 +156,10 @@ class NextEpisodeToAir {
   final String airDate;
   final int episodeNumber;
   final String productionCode;
-  final int runtime;
+  final int? runtime;
   final int seasonNumber;
   final int showId;
-  final String stillPath;
+  final String? stillPath;
 
   NextEpisodeToAir(
       this.id,
@@ -180,7 +183,7 @@ class NextEpisodeToAir {
 @JsonSerializable(fieldRename: FieldRename.snake)
 class Network {
   final int id;
-  final String logoPath;
+  final String? logoPath;
   final String name;
   final String originCountry;
 
@@ -194,7 +197,7 @@ class Network {
 @JsonSerializable(fieldRename: FieldRename.snake)
 class ProductionCompany {
   final int id;
-  final String logoPath;
+  final String? logoPath;
   final String name;
   final String originCountry;
 
@@ -220,12 +223,12 @@ class ProductionCountry {
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class Season {
-  final String airDate;
+  final String? airDate;
   final int episodeCount;
   final int id;
   final String name;
   final String overview;
-  final String posterPath;
+  final String? posterPath;
   final int seasonNumber;
   final double voteAverage;
 

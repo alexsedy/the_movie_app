@@ -9,7 +9,7 @@ part of 'tv_show_details.dart';
 TvShowDetails _$TvShowDetailsFromJson(Map<String, dynamic> json) =>
     TvShowDetails(
       json['adult'] as bool,
-      json['backdrop_path'] as String,
+      json['backdrop_path'] as String?,
       (json['created_by'] as List<dynamic>)
           .map((e) => CreatedBy.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -22,7 +22,7 @@ TvShowDetails _$TvShowDetailsFromJson(Map<String, dynamic> json) =>
       json['id'] as int,
       json['in_production'] as bool,
       (json['languages'] as List<dynamic>).map((e) => e as String).toList(),
-      json['last_air_date'] as String,
+      json['last_air_date'] as String?,
       json['last_episode_to_air'] == null
           ? null
           : LastEpisodeToAir.fromJson(
@@ -64,6 +64,7 @@ TvShowDetails _$TvShowDetailsFromJson(Map<String, dynamic> json) =>
       json['vote_count'] as int,
       Credits.fromJson(json['credits'] as Map<String, dynamic>),
       Videos.fromJson(json['videos'] as Map<String, dynamic>),
+      ContentRatings.fromJson(json['content_ratings'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$TvShowDetailsToJson(TvShowDetails instance) =>
@@ -105,6 +106,7 @@ Map<String, dynamic> _$TvShowDetailsToJson(TvShowDetails instance) =>
       'vote_count': instance.voteCount,
       'credits': instance.credits.toJson(),
       'videos': instance.videos.toJson(),
+      'content_ratings': instance.contentRatings.toJson(),
     };
 
 CreatedBy _$CreatedByFromJson(Map<String, dynamic> json) => CreatedBy(
@@ -112,7 +114,7 @@ CreatedBy _$CreatedByFromJson(Map<String, dynamic> json) => CreatedBy(
       json['credit_id'] as String,
       json['name'] as String,
       json['gender'] as int,
-      json['profile_path'] as String,
+      json['profile_path'] as String?,
     );
 
 Map<String, dynamic> _$CreatedByToJson(CreatedBy instance) => <String, dynamic>{
@@ -143,10 +145,10 @@ LastEpisodeToAir _$LastEpisodeToAirFromJson(Map<String, dynamic> json) =>
       json['air_date'] as String,
       json['episode_number'] as int,
       json['production_code'] as String,
-      json['runtime'] as int,
+      json['runtime'] as int?,
       json['season_number'] as int,
       json['show_id'] as int,
-      json['still_path'] as String,
+      json['still_path'] as String?,
     );
 
 Map<String, dynamic> _$LastEpisodeToAirToJson(LastEpisodeToAir instance) =>
@@ -175,10 +177,10 @@ NextEpisodeToAir _$NextEpisodeToAirFromJson(Map<String, dynamic> json) =>
       json['air_date'] as String,
       json['episode_number'] as int,
       json['production_code'] as String,
-      json['runtime'] as int,
+      json['runtime'] as int?,
       json['season_number'] as int,
       json['show_id'] as int,
-      json['still_path'] as String,
+      json['still_path'] as String?,
     );
 
 Map<String, dynamic> _$NextEpisodeToAirToJson(NextEpisodeToAir instance) =>
@@ -199,7 +201,7 @@ Map<String, dynamic> _$NextEpisodeToAirToJson(NextEpisodeToAir instance) =>
 
 Network _$NetworkFromJson(Map<String, dynamic> json) => Network(
       json['id'] as int,
-      json['logo_path'] as String,
+      json['logo_path'] as String?,
       json['name'] as String,
       json['origin_country'] as String,
     );
@@ -214,7 +216,7 @@ Map<String, dynamic> _$NetworkToJson(Network instance) => <String, dynamic>{
 ProductionCompany _$ProductionCompanyFromJson(Map<String, dynamic> json) =>
     ProductionCompany(
       json['id'] as int,
-      json['logo_path'] as String,
+      json['logo_path'] as String?,
       json['name'] as String,
       json['origin_country'] as String,
     );
@@ -240,12 +242,12 @@ Map<String, dynamic> _$ProductionCountryToJson(ProductionCountry instance) =>
     };
 
 Season _$SeasonFromJson(Map<String, dynamic> json) => Season(
-      json['air_date'] as String,
+      json['air_date'] as String?,
       json['episode_count'] as int,
       json['id'] as int,
       json['name'] as String,
       json['overview'] as String,
-      json['poster_path'] as String,
+      json['poster_path'] as String?,
       json['season_number'] as int,
       (json['vote_average'] as num).toDouble(),
     );

@@ -1,32 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:the_movie_app/domain/api_client/movie_api_client.dart';
+import 'package:the_movie_app/domain/api_client/tv_show_api_client.dart';
 import 'package:the_movie_app/domain/cache_management/account_management.dart';
 import 'package:the_movie_app/domain/entity/account/account_state/account_state.dart';
 import 'package:the_movie_app/domain/entity/movie_and_tv_show/state/item_state.dart';
+import 'package:the_movie_app/domain/entity/tv_show/details/tv_show_details.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:the_movie_app/domain/entity/movie/details/movie_details.dart';
 
-class MovieDetailsModel extends ChangeNotifier {
-  final _apiClient = MovieApiClient();
-  MovieDetails? _movieDetails;
-  ItemState? _movieState;
+
+class TvShowDetailsModel extends ChangeNotifier {
+  final _apiClient = TvShowApiClient();
+  TvShowDetails? _tvShowDetails;
+  ItemState? _tvShowState;
   AccountSate? _accountSate;
-  final int _movieId;
+  final int _seriesId;
   final _dateFormat = DateFormat.yMMMMd();
+  final _dateFormatTwo = DateFormat.yMMMd();
   bool _isFavorite = false;
 
-  MovieDetails? get movieDetails => _movieDetails;
-  ItemState? get movieState => _movieState;
+  TvShowDetails? get tvShowDetails => _tvShowDetails;
+  ItemState? get tvShowState => _tvShowState;
   bool get isFavorite => _isFavorite;
 
-  MovieDetailsModel(this._movieId);
+  TvShowDetailsModel(this._seriesId);
 
-  Future<void> loadMovieDetails() async {
-    _movieDetails = await _apiClient.getMovieById(_movieId);
-    _movieState = await _apiClient.getMovieState(_movieId);
+  Future<void> loadTvShowDetails() async {
+    _tvShowDetails = await _apiClient.getTvShowById(_seriesId);
+    _tvShowState = await _apiClient.getTvShowState(_seriesId);
 
-    final favorite = _movieState?.favorite;
+    final favorite = _tvShowState?.favorite;
     if(favorite != null) {
       _isFavorite = favorite;
     }
@@ -41,13 +43,11 @@ class MovieDetailsModel extends ChangeNotifier {
       return;
     }
 
-    // final newFavoriteValue = !_isFavorite;
-    // _isFavorite = newFavoriteValue;
     _isFavorite = !_isFavorite;
 
     await _apiClient.makeFavorite(
       accountId: accountId,
-      movieId: _movieId,
+      movieId: _seriesId,
       isFavorite: _isFavorite,
     );
 
@@ -64,4 +64,8 @@ class MovieDetailsModel extends ChangeNotifier {
 
   String formatDate(String? date) =>
       date != "" ? _dateFormat.format(DateTime.parse(date ?? "")) : "";
+
+
+  String formatDateTwo(String? date) =>
+      date != "" ? _dateFormatTwo.format(DateTime.parse(date ?? "")) : "";
 }

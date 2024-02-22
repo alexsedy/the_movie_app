@@ -7,7 +7,7 @@ import 'package:the_movie_app/domain/entity/tv_show/details/tv_show_details.dart
 import 'package:the_movie_app/domain/entity/tv_show/tv_show_list/tv_show_list.dart';
 
 class TvShowApiClient extends ApiClient {
-  Future<TvShowResponse> getDiscoverTvShow(int page) async {
+    Future<TvShowResponse> getDiscoverTvShow(int page) async {
 
     final url = makeUri(
       "/discover/tv",
@@ -62,7 +62,7 @@ class TvShowApiClient extends ApiClient {
       "/tv/$seriesId",
       <String, dynamic>{
         "api_key": apiKey,
-        "append_to_response": "credits,videos",
+        "append_to_response": "credits,videos,content_ratings",
         // "language": "uk-UA"
       },
     );
