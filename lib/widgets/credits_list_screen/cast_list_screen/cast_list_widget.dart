@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/provider/provider.dart';
-import 'package:the_movie_app/widgets/movie_screens/movie_cast_screen/movie_cast_model.dart';
+import 'package:the_movie_app/widgets/credits_list_screen/cast_list_screen/cast_list_model.dart';
 
-class MovieCastWidget extends StatelessWidget {
-  const MovieCastWidget({super.key});
+class CastListWidget extends StatelessWidget {
+  const CastListWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Movie Cast"),
+        title: const Text("Cast"),
       ),
       body: const _BodyWidget(),
     );
@@ -25,7 +25,7 @@ class _BodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<MovieCastModel>(context);
+    final model = NotifierProvider.watch<CastListModel>(context);
     final cast = model?.cast;
 
     if(cast == null) {
@@ -49,15 +49,30 @@ class _BodyWidget extends StatelessWidget {
             child: Card(
               clipBehavior: Clip.hardEdge,
               child: ListTile(
+                onTap: () => model?.onPeopleTab(context, index),
                 minVerticalPadding: 0,
                 contentPadding: EdgeInsets.zero,
                 title: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    profilePath != null
-                      ? Image.network(ApiClient.getImageByUrl(profilePath))
-                      : Image.asset(AppImages.noProfile),
+                    AspectRatio(
+                      aspectRatio: 500 / 750,
+                      child: profilePath != null
+                          ? Image.network(
+                              loadingBuilder: (context, child, loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return const Center(
+                                  child: SizedBox(
+                                    width: 60,
+                                    height: 60,
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              },
+                        ApiClient.getImageByUrl(profilePath),)
+                          : Image.asset(AppImages.noProfile,),
+                    ),
                     const SizedBox(width: 14,),
                     Expanded(
                       child: Column(

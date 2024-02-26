@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:the_movie_app/domain/entity/movie_and_tv_show/credits/credits_details.dart';
+import 'package:the_movie_app/domain/entity/credits/credits_list/credits_details.dart';
 import 'package:the_movie_app/domain/entity/movie_and_tv_show/video/video.dart';
 import 'package:the_movie_app/domain/entity/tv_show/content_ratings/content_ratings.dart';
 

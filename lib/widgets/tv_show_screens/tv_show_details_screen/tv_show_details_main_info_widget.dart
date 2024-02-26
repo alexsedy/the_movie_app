@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/provider/provider.dart';
-import 'package:the_movie_app/widgets/elements/score_radial_percent_widget.dart';
+import 'package:the_movie_app/widgets/elements_widget/score_radial_percent_widget.dart';
 import 'package:the_movie_app/widgets/tv_show_screens/tv_show_details_screen/tv_show_action_info/tv_show_action_buttons_widget.dart';
 import 'package:the_movie_app/widgets/tv_show_screens/tv_show_details_screen/tv_show_details_model.dart';
 
@@ -144,18 +144,67 @@ class _ScoreAndTrailerWidget extends StatelessWidget {
   }
 }
 
-class _DescriptionWidget extends StatelessWidget {
-  const _DescriptionWidget({
-    super.key,
-  });
+// class _DescriptionWidget extends StatelessWidget {
+//   const _DescriptionWidget({
+//     super.key,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final tvShowDetails = NotifierProvider.watch<TvShowDetailsModel>(context)?.tvShowDetails;
+//
+//     return Padding(
+//       padding: const EdgeInsets.all(10.0),
+//       child: Text(tvShowDetails?.overview ?? ""),
+//     );
+//   }
+// }
+
+class _DescriptionWidget extends StatefulWidget {
+  const _DescriptionWidget({Key? key}) : super(key: key);
+
+  @override
+  _DescriptionWidgetState createState() => _DescriptionWidgetState();
+}
+
+class _DescriptionWidgetState extends State<_DescriptionWidget> {
+  bool _isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
-    final tvShowDetails = NotifierProvider.watch<TvShowDetailsModel>(context)?.tvShowDetails;
+    final overview = NotifierProvider.watch<TvShowDetailsModel>(context)?.tvShowDetails?.overview;
 
     return Padding(
       padding: const EdgeInsets.all(10.0),
-      child: Text(tvShowDetails?.overview ?? ""),
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            _isExpanded = !_isExpanded;
+          });
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            AnimatedCrossFade(
+              duration: const Duration(milliseconds: 300),
+              crossFadeState: _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+              firstChild: Text(
+                overview ?? "", // показываем только часть описания
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
+              ),
+              secondChild: Text(
+                overview ?? "", // показываем полное описание
+              ),
+            ),
+            overview != null && overview.length <= 190
+                ? const SizedBox.shrink()
+                : Icon(
+              _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -294,7 +343,8 @@ class _TvShowCrewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final crew = NotifierProvider.watch<TvShowDetailsModel>(context)?.tvShowDetails?.credits.crew;
+    final model = NotifierProvider.watch<TvShowDetailsModel>(context);
+    final crew = model?.tvShowDetails?.credits.crew;
 
     const styleOfName = TextStyle(fontSize: 16,);
     const styleOfRole = TextStyle(fontSize: 16, fontStyle: FontStyle.italic);
@@ -311,7 +361,7 @@ class _TvShowCrewWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
             child: InkWell(
               borderRadius: BorderRadius.circular(24),
-              onTap: () {},
+              onTap: () => model?.onCrewListTab(context, crew),
               child: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 child: Text(
@@ -360,7 +410,7 @@ class _TvShowCrewWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
           child: InkWell(
             borderRadius: BorderRadius.circular(24),
-            onTap: () {},
+            onTap: () => model?.onCrewListTab(context, crew),
             child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               child: Text(
@@ -433,7 +483,8 @@ class _TvShowCastWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cast = NotifierProvider.watch<TvShowDetailsModel>(context)?.tvShowDetails?.credits.cast;
+    final model = NotifierProvider.watch<TvShowDetailsModel>(context);
+    final cast = model?.tvShowDetails?.credits.cast;
 
     if(cast == null) {
       return const SizedBox.shrink();
@@ -448,7 +499,7 @@ class _TvShowCastWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
           child: InkWell(
             borderRadius: BorderRadius.circular(24),
-            onTap: () {},
+            onTap: () => model?.onCastListTab(context, cast),
             child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               child: Text(
@@ -474,58 +525,75 @@ class _TvShowCastWidget extends StatelessWidget {
 
                 return Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: Colors.black.withOpacity(0.2)),
-                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 8,
-                              offset: const Offset(1, 2),
-                            )
-                          ]
-                      ),
-                      clipBehavior: Clip.hardEdge,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          profilePath != null
-                            ? Image.network(ApiClient.getImageByUrl(profilePath))
-                            : Image.asset(AppImages.noProfile),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 10,),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 4),
-                                child: Text(
-                                  name.isNotEmpty ? name : "",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w700
+                    child: InkWell(
+                      onTap: () => model?.onPeopleDetailsTab(context, index),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Colors.black.withOpacity(0.2)),
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 8,
+                                offset: const Offset(1, 2),
+                              )
+                            ]
+                        ),
+                        clipBehavior: Clip.hardEdge,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AspectRatio(
+                              aspectRatio: 500 / 750,
+                              child: profilePath != null
+                                  ? Image.network(
+                                      loadingBuilder: (context, child, loadingProgress) {
+                                        if (loadingProgress == null) return child;
+                                        return const Center(
+                                          child: SizedBox(
+                                            width: 60,
+                                            height: 60,
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        );
+                                      },
+                                      ApiClient.getImageByUrl(profilePath),)
+                                  : Image.asset(AppImages.noProfile,),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 10,),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                                  child: Text(
+                                    name.isNotEmpty ? name : "",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: 10,),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 4),
-                                child: Text(
-                                  character.isNotEmpty ? character : "",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                      fontSize: 14,
-                                      fontStyle: FontStyle.italic
+                                const SizedBox(height: 10,),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                                  child: Text(
+                                    character.isNotEmpty ? character : "",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontStyle: FontStyle.italic
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     )
                 );
@@ -611,9 +679,23 @@ class _SeasonsWidget extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          posterPath != null
-                              ? Image.network(ApiClient.getImageByUrl(posterPath))
-                              : Image.asset(AppImages.noPoster),
+                          AspectRatio(
+                            aspectRatio: 500 / 750,
+                            child: posterPath != null
+                                ? Image.network(
+                                    loadingBuilder: (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return const Center(
+                                        child: SizedBox(
+                                          width: 60,
+                                          height: 60,
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      );
+                                    },
+                                    ApiClient.getImageByUrl(posterPath), width: 95,)
+                                : Image.asset(AppImages.noPoster, width: 95,),
+                          ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -735,13 +817,24 @@ class _NetworkWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           AspectRatio(
-                            aspectRatio: 1/1,
+                            aspectRatio: 1 / 1,
                             child: logoPath != null
                                 ? Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Image.network(ApiClient.getImageByUrl(logoPath)),
-                                  )
-                                : Image.asset(AppImages.noLogo),
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Image.network(
+                                    loadingBuilder: (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return const Center(
+                                        child: SizedBox(
+                                          width: 60,
+                                          height: 60,
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      );
+                                    },
+                                    ApiClient.getImageByUrl(logoPath),),
+                                )
+                                : Image.asset(AppImages.noLogo,),
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -851,13 +944,24 @@ class _ProductionCompanyWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           AspectRatio(
-                            aspectRatio: 1/1,
+                            aspectRatio: 1 / 1,
                             child: logoPath != null
                                 ? Padding(
                                     padding: const EdgeInsets.all(4.0),
-                                    child: Image.network(ApiClient.getImageByUrl(logoPath)),
+                                    child: Image.network(
+                                      loadingBuilder: (context, child, loadingProgress) {
+                                        if (loadingProgress == null) return child;
+                                        return const Center(
+                                          child: SizedBox(
+                                            width: 60,
+                                            height: 60,
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        );
+                                      },
+                                      ApiClient.getImageByUrl(logoPath),),
                                   )
-                                : Image.asset(AppImages.noLogo),
+                                : Image.asset(AppImages.noLogo,),
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

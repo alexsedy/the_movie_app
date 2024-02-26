@@ -65,8 +65,18 @@ class _MovieListWidgetState extends State<MovieListWidget> {
                               aspectRatio: 500 / 750,
                               child: posterPath != null
                                   ? Image.network(
+                                    loadingBuilder: (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return const Center(
+                                        child: SizedBox(
+                                          width: 60,
+                                          height: 60,
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      );
+                                },
                                 ApiClient.getImageByUrl(posterPath), width: 95,)
-                                  : Image.asset(AppImages.noPoster),
+                                  : Image.asset(AppImages.noPoster, width: 95,),
                             ),
                             Expanded(
                               child: Padding(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/provider/provider.dart';
-import 'package:the_movie_app/widgets/elements/score_radial_percent_widget.dart';
+import 'package:the_movie_app/widgets/elements_widget/score_radial_percent_widget.dart';
 import 'package:the_movie_app/widgets/movie_screens/movie_details_screen/movie_details_model.dart';
 import 'package:the_movie_app/widgets/movie_screens/movie_details_screen/movie_main_info/movie_action_buttons_widget.dart';
 
@@ -196,7 +196,7 @@ class _DescriptionWidgetState extends State<_DescriptionWidget> {
                 overview ?? "", // показываем полное описание
               ),
             ),
-            overview != null && overview.length <= 150
+            overview != null && overview.length <= 190
                 ? const SizedBox.shrink()
                 : Icon(
                     _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
@@ -349,7 +349,7 @@ class _MovieCrewWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
             child: InkWell(
               borderRadius: BorderRadius.circular(24),
-              onTap: () => model?.onMovieCrew(context, crew),
+              onTap: () => model?.onCrewListTab(context, crew),
               child: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 child: Text(
@@ -398,7 +398,7 @@ class _MovieCrewWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
           child: InkWell(
             borderRadius: BorderRadius.circular(24),
-            onTap: () => model?.onMovieCrew(context, crew),
+            onTap: () => model?.onCrewListTab(context, crew),
             child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               child: Text(
@@ -523,7 +523,7 @@ class _MovieCastWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
           child: InkWell(
             borderRadius: BorderRadius.circular(24),
-            onTap: () => model?.onMovieCast(context, cast),
+            onTap: () => model?.onCastListTab(context, cast),
             child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               child: Text(
@@ -549,58 +549,75 @@ class _MovieCastWidget extends StatelessWidget {
 
                 return Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: Colors.black.withOpacity(0.2)),
-                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 8,
-                              offset: const Offset(1, 2),
-                            )
-                          ]
-                      ),
-                      clipBehavior: Clip.hardEdge,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          profilePath != null
-                            ? Image.network(ApiClient.getImageByUrl(profilePath))
-                            : Image.asset(AppImages.noProfile),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 10,),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 4),
-                                child: Text(
-                                  name.isNotEmpty ? name : "",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w700
+                    child: InkWell(
+                      onTap: () => model?.onPeopleDetailsTab(context, index),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Colors.black.withOpacity(0.2)),
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 8,
+                                offset: const Offset(1, 2),
+                              )
+                            ]
+                        ),
+                        clipBehavior: Clip.hardEdge,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AspectRatio(
+                              aspectRatio: 500 / 750,
+                              child: profilePath != null
+                                  ? Image.network(
+                                      loadingBuilder: (context, child, loadingProgress) {
+                                        if (loadingProgress == null) return child;
+                                        return const Center(
+                                          child: SizedBox(
+                                            width: 60,
+                                            height: 60,
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        );
+                                      },
+                                ApiClient.getImageByUrl(profilePath),)
+                                  : Image.asset(AppImages.noProfile,),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 10,),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                                  child: Text(
+                                    name.isNotEmpty ? name : "",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: 10,),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 4),
-                                child: Text(
-                                  character.isNotEmpty ? character : "",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                      fontSize: 14,
-                                      fontStyle: FontStyle.italic
+                                const SizedBox(height: 10,),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                                  child: Text(
+                                    character.isNotEmpty ? character : "",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontStyle: FontStyle.italic
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     )
                 );
@@ -677,13 +694,24 @@ class _ProductionCompanyWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           AspectRatio(
-                            aspectRatio: 1/1,
+                            aspectRatio: 1 / 1,
                             child: logoPath != null
                                 ? Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Image.network(ApiClient.getImageByUrl(logoPath)),
-                                )
-                                : Image.asset(AppImages.noLogo),
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Image.network(
+                                      loadingBuilder: (context, child, loadingProgress) {
+                                        if (loadingProgress == null) return child;
+                                        return const Center(
+                                          child: SizedBox(
+                                            width: 60,
+                                            height: 60,
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        );
+                                      },
+                                      ApiClient.getImageByUrl(logoPath),),
+                                  )
+                                : Image.asset(AppImages.noLogo,),
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

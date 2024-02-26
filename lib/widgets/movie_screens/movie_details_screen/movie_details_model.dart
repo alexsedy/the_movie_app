@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/movie_api_client.dart';
 import 'package:the_movie_app/domain/cache_management/account_management.dart';
 import 'package:the_movie_app/domain/entity/account/account_state/account_state.dart';
-import 'package:the_movie_app/domain/entity/movie_and_tv_show/credits/credits_details.dart';
+import 'package:the_movie_app/domain/entity/credits/credits_list/credits_details.dart';
 import 'package:the_movie_app/domain/entity/movie_and_tv_show/state/item_state.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -54,12 +54,17 @@ class MovieDetailsModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void onMovieCast(BuildContext context, List<Cast> cast) {
-    Navigator.of(context).pushNamed(MainNavigationRouteNames.movieCast, arguments: cast);
+  void onCastListTab(BuildContext context, List<Cast> cast) {
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.castList, arguments: cast);
   }
 
-  void onMovieCrew(BuildContext context, List<Crew> crew) {
-    Navigator.of(context).pushNamed(MainNavigationRouteNames.movieCrew, arguments: crew);
+  void onCrewListTab(BuildContext context, List<Crew> crew) {
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.crewList, arguments: crew);
+  }
+
+  void onPeopleDetailsTab(BuildContext context, int index) {
+    final id = _movieDetails?.credits.cast[index].id;
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.personDetails, arguments: id);
   }
 
   Future<void> launchYouTubeVideo(String videoKey) async {

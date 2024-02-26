@@ -3,8 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/tv_show_api_client.dart';
 import 'package:the_movie_app/domain/cache_management/account_management.dart';
 import 'package:the_movie_app/domain/entity/account/account_state/account_state.dart';
+import 'package:the_movie_app/domain/entity/credits/credits_list/credits_details.dart';
 import 'package:the_movie_app/domain/entity/movie_and_tv_show/state/item_state.dart';
 import 'package:the_movie_app/domain/entity/tv_show/details/tv_show_details.dart';
+import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -54,6 +56,18 @@ class TvShowDetailsModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void onCastListTab(BuildContext context, List<Cast> cast) {
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.castList, arguments: cast);
+  }
+
+  void onCrewListTab(BuildContext context, List<Crew> crew) {
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.crewList, arguments: crew);
+  }
+
+  void onPeopleDetailsTab(BuildContext context, int index) {
+    final id = _tvShowDetails?.credits.cast[index].id;
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.personDetails, arguments: id);
+  }
 
   Future<void> launchYouTubeVideo(String videoKey) async {
     final Uri url = Uri.parse('https://www.youtube.com/watch?v=$videoKey');
