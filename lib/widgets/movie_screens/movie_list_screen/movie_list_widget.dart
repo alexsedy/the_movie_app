@@ -120,7 +120,6 @@ class _MovieListWidgetState extends State<MovieListWidget> {
                         color: Colors.transparent,
                         child: InkWell(
                           borderRadius: const BorderRadius.all(Radius.circular(10)),
-                          splashColor: AppColors.mainBlue.withOpacity(0.1),
                           onTap: () => model.onMovieTab(context, index),
                         ),
                       )

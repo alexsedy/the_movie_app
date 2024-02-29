@@ -1,22 +1,22 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'credits_people.g.dart';
+part 'movie_credits_people.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-class CreditsPeople {
-  final List<Cast> cast;
-  final List<Crew> crew;
+class MovieCreditsPeople {
+  final List<MovieCast> cast;
+  final List<MovieCrew> crew;
   final int? id;
 
-  CreditsPeople(this.cast, this.crew, this.id);
+  MovieCreditsPeople(this.cast, this.crew, this.id);
 
-  factory CreditsPeople.fromJson(Map<String, dynamic> json) => _$CreditsPeopleFromJson(json);
+  factory MovieCreditsPeople.fromJson(Map<String, dynamic> json) => _$MovieCreditsPeopleFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CreditsPeopleToJson(this);
+  Map<String, dynamic> toJson() => _$MovieCreditsPeopleToJson(this);
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class Cast {
+class MovieCast {
   final bool adult;
   final String? backdropPath;
   final List<int> genreIds;
@@ -35,7 +35,7 @@ class Cast {
   final String creditId;
   final int? order;
 
-  Cast(
+  MovieCast(
       this.adult,
       this.backdropPath,
       this.genreIds,
@@ -54,13 +54,13 @@ class Cast {
       this.creditId,
       this.order);
 
-  factory Cast.fromJson(Map<String, dynamic> json) => _$CastFromJson(json);
+  factory MovieCast.fromJson(Map<String, dynamic> json) => _$MovieCastFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CastToJson(this);
+  Map<String, dynamic> toJson() => _$MovieCastToJson(this);
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class Crew {
+class MovieCrew {
   final bool adult;
   final String? backdropPath;
   final List<int> genreIds;
@@ -79,7 +79,7 @@ class Crew {
   final String department; //1
   final String job; //1
 
-  Crew(
+  MovieCrew(
       this.adult,
       this.backdropPath,
       this.genreIds,
@@ -98,12 +98,12 @@ class Crew {
       this.department,
       this.job);
 
-  factory Crew.fromJson(Map<String, dynamic> json) => _$CrewFromJson(json);
+  factory MovieCrew.fromJson(Map<String, dynamic> json) => _$MovieCrewFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CrewToJson(this);
+  Map<String, dynamic> toJson() => _$MovieCrewToJson(this);
 }
 
-class CreditList {
+class MovieCreditList {
   final int id;
   final String? originalTitle;
   final String? title;
@@ -112,11 +112,11 @@ class CreditList {
   final String department;
   final String? job;
 
-  CreditList({required this.id, required this.originalTitle, required this.title, required this.releaseDate,
+  MovieCreditList({required this.id, required this.originalTitle, required this.title, required this.releaseDate,
     required this.character, required this.department, required this.job});
 
-  factory CreditList.fromCast(Cast cast) {
-    return CreditList(
+  factory MovieCreditList.fromCast(MovieCast cast) {
+    return MovieCreditList(
       id: cast.id,
       originalTitle: cast.originalTitle,
       title: cast.title,
@@ -127,8 +127,8 @@ class CreditList {
     );
   }
 
-  factory CreditList.fromCrew(Crew crew) {
-    return CreditList(
+  factory MovieCreditList.fromCrew(MovieCrew crew) {
+    return MovieCreditList(
       id: crew.id,
       originalTitle: crew.originalTitle,
       title: crew.title,

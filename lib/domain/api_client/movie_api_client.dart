@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:the_movie_app/domain/api_client/api_client.dart';
-import 'package:the_movie_app/domain/entity/credits/credits_list/credits_details.dart';
 import 'package:the_movie_app/domain/entity/movie/details/movie_details.dart';
 import 'package:the_movie_app/domain/entity/movie/movie_list/movie_list.dart';
+import 'package:the_movie_app/domain/entity/movie_and_tv_show/credits/credits_details.dart';
 import 'package:the_movie_app/domain/entity/movie_and_tv_show/state/item_state.dart';
 
 class MovieApiClient extends ApiClient {

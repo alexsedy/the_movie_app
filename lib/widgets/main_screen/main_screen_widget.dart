@@ -7,8 +7,6 @@ import 'package:the_movie_app/widgets/movie_screens/movie_list_screen/movie_list
 import 'package:the_movie_app/widgets/tv_show_screens/tv_show_list_screen/tv_show_list_model.dart';
 import 'package:the_movie_app/widgets/tv_show_screens/tv_show_list_screen/tv_show_list_widget.dart';
 
-
-
 class MainScreenWidget extends StatefulWidget {
   const MainScreenWidget({super.key});
 
@@ -34,6 +32,13 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
     setState(() {
       _selectedTab = index;
     });
+
+    //todo подумать над другим способом реализации закрытии поиска (лучший варинат переключать фокус поиска)
+    if(isSearchOpen) {
+      isSearchOpen = !isSearchOpen;
+      movieListModel.closeSearch();
+      tvShowListModel.closeSearch();
+    }
   }
 
   @override
@@ -68,14 +73,10 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
               });
               if(!isSearchOpen) {
                 if(_selectedTab == 1) {
-                  movieListModel.resetList();
-                  movieListModel.loadMovies();
-                  movieListModel.scrollToTop();
+                  movieListModel.closeSearch();
                 }
                 if (_selectedTab == 2) {
-                  tvShowListModel.resetList();
-                  tvShowListModel.loadTvShows();
-                  tvShowListModel.scrollToTop();
+                  tvShowListModel.closeSearch();
                 }
               }
             },
@@ -89,15 +90,6 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
           ),
         ],
       ),
-      // floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,  //todo реализовать кнопку вверх
-      // floatingActionButton: Container(
-      //   decoration: BoxDecoration(color: AppColors.mainBlue, borderRadius: BorderRadius.circular(30.0)),
-      //   child: IconButton(
-      //     color: Colors.white,
-      //     splashRadius: 30,
-      //     onPressed: () {  },
-      //     icon: Icon(Icons.arrow_upward),),
-      // ),
       body: IndexedStack(
         index: _selectedTab,
         children: [
@@ -121,6 +113,7 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedTab,
+        onTap: onSelectTab,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -135,7 +128,6 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
             label: "TV Shows"
           ),
         ],
-        onTap: onSelectTab,
       ),
     );
   }
@@ -179,4 +171,3 @@ class SearchFieldWidget extends StatelessWidget {
     );
   }
 }
-

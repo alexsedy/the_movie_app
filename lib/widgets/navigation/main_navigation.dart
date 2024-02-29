@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:the_movie_app/domain/entity/credits/credits_list/credits_details.dart';
+import 'package:the_movie_app/domain/entity/movie_and_tv_show/credits/credits_details.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/auth_screen/auth_model.dart';
 import 'package:the_movie_app/widgets/auth_screen/auth_widget.dart';
@@ -19,9 +19,9 @@ abstract class MainNavigationRouteNames {
   static const auth = "auth";
   static const mainScreen = "/";
   static const movieDetails = "/movie_details";
+  static const tvShowDetails = "/tv_show_details";
   static const castList = "/cast_list";
   static const crewList = "/crew_list";
-  static const tvShowDetails = "/tv_show_details";
   static const personDetails = "/person_details";
 }
 

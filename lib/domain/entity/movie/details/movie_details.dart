@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:the_movie_app/domain/entity/credits/credits_list/credits_details.dart';
 import 'package:the_movie_app/domain/entity/movie/movie_release/movie_release_date.dart';
+import 'package:the_movie_app/domain/entity/movie_and_tv_show/credits/credits_details.dart';
 import 'package:the_movie_app/domain/entity/movie_and_tv_show/video/video.dart';
 
 part 'movie_details.g.dart';

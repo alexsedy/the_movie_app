@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:the_movie_app/domain/entity/credits/credits_people/credits_people.dart';
+import 'package:the_movie_app/domain/entity/person/credits_people/movie_credits_people/movie_credits_people.dart';
+import 'package:the_movie_app/domain/entity/person/credits_people/tv_show_credits_people/tv_show_credits_people.dart';
 import 'package:the_movie_app/domain/entity/person/external_ids/external_ids.dart';
 import 'package:the_movie_app/domain/entity/person/images/images.dart';
 
@@ -23,8 +24,8 @@ class PersonDetails {
   final String? profilePath;
   final ExternalIds externalIds;
   final Images? images;
-  final CreditsPeople movieCredits;
-  final CreditsPeople tvCredits;
+  final MovieCreditsPeople movieCredits;
+  final TvShowCreditsPeople tvCredits;
 
   PersonDetails(
       this.adult,

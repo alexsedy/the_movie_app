@@ -102,4 +102,10 @@ class TvShowListModel extends ChangeNotifier {
       curve: Curves.easeInOut,
     );
   }
+
+  void closeSearch() {
+    resetList();
+    loadTvShows();
+    scrollToTop();
+  }
 }

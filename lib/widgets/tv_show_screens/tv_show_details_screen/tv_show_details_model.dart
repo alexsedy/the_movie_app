@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/tv_show_api_client.dart';
 import 'package:the_movie_app/domain/cache_management/account_management.dart';
 import 'package:the_movie_app/domain/entity/account/account_state/account_state.dart';
-import 'package:the_movie_app/domain/entity/credits/credits_list/credits_details.dart';
+import 'package:the_movie_app/domain/entity/movie_and_tv_show/credits/credits_details.dart';
 import 'package:the_movie_app/domain/entity/movie_and_tv_show/state/item_state.dart';
 import 'package:the_movie_app/domain/entity/tv_show/details/tv_show_details.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';

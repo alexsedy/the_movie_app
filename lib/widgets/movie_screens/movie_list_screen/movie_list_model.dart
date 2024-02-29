@@ -108,4 +108,10 @@ class MovieListModel extends ChangeNotifier {
       curve: Curves.easeInOut,
     );
   }
+
+  void closeSearch() {
+    resetList();
+    loadMovies();
+    scrollToTop();
+  }
 }

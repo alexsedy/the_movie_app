@@ -4,6 +4,7 @@ import 'package:the_movie_app/widgets/person_screen/people_details_screen/image_
 import 'package:the_movie_app/widgets/person_screen/people_details_screen/other_projects_widget.dart';
 import 'package:the_movie_app/widgets/person_screen/people_details_screen/people_bio_widget.dart';
 import 'package:the_movie_app/widgets/person_screen/people_details_screen/people_details_model.dart';
+import 'package:the_movie_app/widgets/person_screen/people_details_screen/people_details_shimmer_skeleton_widget.dart';
 
 class PeopleDetailsWidget extends StatefulWidget {
   const PeopleDetailsWidget({super.key});
@@ -41,7 +42,7 @@ class _BodyPeopleDetailsWidget extends StatelessWidget {
     final person =  NotifierProvider.watch<PeopleDetailsModel>(context)?.personDetails;
 
     if(person == null) {
-      return const Center(child: CircularProgressIndicator());
+      return const PeopleDetailsShimmerSkeletonWidget();
     }
 
     return const Padding(
