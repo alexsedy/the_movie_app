@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/domain/api_client/movie_api_client.dart';
 import 'package:the_movie_app/domain/cache_management/account_management.dart';
 import 'package:the_movie_app/domain/entity/account/account_state/account_state.dart';
@@ -36,10 +37,10 @@ class MovieDetailsModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleFavorite() async {
+  Future<void> toggleFavorite(BuildContext context) async {
     _accountSate = await AccountManager.getAccountData();
     final accountId = _accountSate?.id;
-    if(accountId == null) {
+    if (accountId == null) {
       return;
     }
 
@@ -50,8 +51,27 @@ class MovieDetailsModel extends ChangeNotifier {
       movieId: _movieId,
       isFavorite: _isFavorite,
     );
-
     notifyListeners();
+
+    //todo catch when session expired
+    // try {
+    //   await _apiClient.makeFavorite(
+    //     accountId: accountId,
+    //     movieId: _movieId,
+    //     isFavorite: _isFavorite,
+    //   );
+    //   notifyListeners();
+    // } on ApiClientException catch (e) {
+    //   switch (e.type) {
+    //     case ApiClientExceptionType.sessionExpired:
+    //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+    //         content: Text('Error'),
+    //       ));
+    //       break;
+    //     default:
+    //       break;
+    //   }
+    // }
   }
 
   void onCastListTab(BuildContext context, List<Cast> cast) {

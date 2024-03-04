@@ -22,12 +22,7 @@ class MovieApiClient extends ApiClient {
     final response = await request.close();
     final json = (await response.jsonDecode()) as Map<String, dynamic>;
 
-    if(response.statusCode == 401) {
-      final responseCode = json["status_code"] as int;
-      if(responseCode == 7) {
-        throw ApiClientException(ApiClientExceptionType.Other);
-      }
-    }
+    validateError(response, json);
 
     final movieResponse = MovieResponse.fromJson(json);
     return movieResponse;
@@ -47,12 +42,7 @@ class MovieApiClient extends ApiClient {
     final response = await request.close();
     final json = (await response.jsonDecode()) as Map<String, dynamic>;
 
-    if(response.statusCode == 401) {
-      final responseCode = json["status_code"] as int;
-      if(responseCode == 7) {
-        throw ApiClientException(ApiClientExceptionType.Other);
-      }
-    }
+    validateError(response, json);
 
     final movieResponse = MovieResponse.fromJson(json);
     return movieResponse;
@@ -71,19 +61,18 @@ class MovieApiClient extends ApiClient {
     final response = await request.close();
     final json = (await response.jsonDecode()) as Map<String, dynamic>;
 
-    if(response.statusCode == 401) {
-      final responseCode = json["status_code"] as int;
-      if(responseCode == 7) {
-        throw ApiClientException(ApiClientExceptionType.Other);
-      }
-    }
+    validateError(response, json);
 
     final movieDetailsResponse = MovieDetails.fromJson(json);
     return movieDetailsResponse;
   }
 
-  Future<ItemState> getMovieState(int movieId) async {
+  Future<ItemState?> getMovieState(int movieId) async {
     final sessionId = await sessionDataProvider.getSessionId();
+
+    if(sessionId == null) {
+      return null;
+    }
 
     final url = makeUri(
       "/movie/$movieId/account_states",
@@ -96,12 +85,7 @@ class MovieApiClient extends ApiClient {
     final response = await request.close();
     final json = (await response.jsonDecode()) as Map<String, dynamic>;
 
-    if(response.statusCode == 401) {
-      final responseCode = json["status_code"] as int;
-      if(responseCode == 7) {
-        throw ApiClientException(ApiClientExceptionType.Other);
-      }
-    }
+    validateError(response, json);
 
     final movieStateResponse = ItemState.fromJson(json);
     return movieStateResponse;
@@ -128,13 +112,9 @@ class MovieApiClient extends ApiClient {
     request.headers.contentType = ContentType.json;
     request.write(jsonEncode(parameters));
     final response = await request.close();
+    final json = (await response.jsonDecode()) as Map<String, dynamic>;
 
-    if(response.statusCode == 400) {
-      // final responseCode = json["status_code"] as int;
-      // if(responseCode == 5) {
-        throw ApiClientException(ApiClientExceptionType.Other);
-      // }
-    }
+    validateError(response, json);
   }
 
   Future<Credits> getCredits(int movieId) async {
@@ -150,12 +130,7 @@ class MovieApiClient extends ApiClient {
     final response = await request.close();
     final json = (await response.jsonDecode()) as Map<String, dynamic>;
 
-    if(response.statusCode == 401) {
-      final responseCode = json["status_code"] as int;
-      if(responseCode == 7) {
-        throw ApiClientException(ApiClientExceptionType.Other);
-      }
-    }
+    validateError(response, json);
 
     final movieCredits = Credits.fromJson(json);
     return movieCredits;

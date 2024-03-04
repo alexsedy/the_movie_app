@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/domain/api_client/auth_api_client.dart';
 import 'package:the_movie_app/domain/data_providers/session_data_provider.dart';
 import 'package:the_movie_app/provider/provider.dart';
+import 'package:the_movie_app/widgets/account_screen/account_model.dart';
+import 'package:the_movie_app/widgets/account_screen/account_widget.dart';
 import 'package:the_movie_app/widgets/main_screen/filter_widget.dart';
 import 'package:the_movie_app/widgets/movie_screens/movie_list_screen/movie_list_model.dart';
 import 'package:the_movie_app/widgets/movie_screens/movie_list_screen/movie_list_widget.dart';
@@ -17,6 +20,7 @@ class MainScreenWidget extends StatefulWidget {
 class _MainScreenWidgetState extends State<MainScreenWidget> {
   final movieListModel = MovieListModel();
   final tvShowListModel = TvShowListModel();
+  final accountModel = AccountModel();
   int _selectedTab = 0;
   bool isSearchOpen = false;
 
@@ -64,7 +68,7 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
           child: isSearchOpen ? const SearchFieldWidget() : const Text("The Movie"),
         ),
         actions: [
-          if(_selectedTab == 1) FilterMoviesButtonWidget(),
+          if(_selectedTab == 1) const FilterMoviesButtonWidget(),
           IconButton(
             onPressed: () {
               setState(() {
@@ -95,23 +99,26 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
         children: [
           Center(
             child: IconButton(
-              onPressed: () => SessionDataProvider().setSessionId(null),
+              onPressed: () {},
               icon: const Icon(Icons.exit_to_app),
             )
           ),
           NotifierProvider(
-              create: () => movieListModel,
-              isManagingModel: false,
-            // model: movieListModel,
+            create: () => movieListModel,
+            isManagingModel: false,
             child: const MovieListWidget()),
           NotifierProvider(
-              create: () => tvShowListModel,
-              isManagingModel: false,
-              // model: tvShowListModel,
+            create: () => tvShowListModel,
+            isManagingModel: false,
               child: const TvShowListWidget()),
+          NotifierProvider(
+              create: () => accountModel,
+              isManagingModel: false,
+              child: const AccountWidget()),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: _selectedTab,
         onTap: onSelectTab,
         items: const [
@@ -126,6 +133,10 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
           BottomNavigationBarItem(
             icon: Icon(Icons.tv),
             label: "TV Shows"
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: "Profile"
           ),
         ],
       ),

@@ -19,10 +19,10 @@ class _AuthWidgetState extends State<AuthWidget> {
         //   color: Colors.white,
         //   fontSize: 24,
         // ),
-        title: Text("Login to your account"),
+        title: const Text("Login to your account"),
       ),
       body: ListView(
-        children: [
+        children: const [
           _HeaderWidget(),
         ],
       ),
@@ -35,7 +35,7 @@ class _HeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _textStyle = const TextStyle(fontSize: 16, color: Colors.black,);
+    const textStyle = TextStyle(fontSize: 16, color: Colors.black,);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -45,9 +45,9 @@ class _HeaderWidget extends StatelessWidget {
           const SizedBox(height: 25,),
           const _FormWidget(),
           const SizedBox(height: 25,),
-          Text(
+          const Text(
             "In order to use the editing and rating capabilities of TMDB, as well as get personal recommendations you will need to login to your account. If you do not have an account, registering for an account is free and simple.",
-            style: _textStyle,
+            style: textStyle,
           ),
           TextButton(
             onPressed: (){},
@@ -55,9 +55,9 @@ class _HeaderWidget extends StatelessWidget {
               child: const Text("Register")
           ),
           const SizedBox(height: 25,),
-          Text(
+          const Text(
             "If you signed up but didn't get your verification email.",
-            style: _textStyle,
+            style: textStyle,
           ),
           TextButton(
             onPressed: (){},

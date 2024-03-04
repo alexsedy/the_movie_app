@@ -38,14 +38,16 @@ class AuthModel extends ChangeNotifier {
       sessionId = await _apiClient.auth(username: username, password: password);
     } on ApiClientException catch (e) {
       switch (e.type) {
-        case ApiClientExceptionType.Network:
+        case ApiClientExceptionType.network:
           _errorMessage = "Server is not available. Please check the connection or try again later.";
           break;
-        case ApiClientExceptionType.Auth:
+        case ApiClientExceptionType.auth:
           _errorMessage = "Invalid Username and/or Password";
           break;
-        case ApiClientExceptionType.Other:
+        case ApiClientExceptionType.other:
           _errorMessage = "An error has occurred. Try again.";
+          break;
+        default:
           break;
       }
     } on SocketException catch (_) {

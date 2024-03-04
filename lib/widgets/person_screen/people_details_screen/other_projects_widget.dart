@@ -76,6 +76,7 @@ class _MoviesButtonWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(24),
                     ),
                     child: GroupedListView<MovieCreditList, String>(
+                      sort: true,
                       controller: scrollController,
                       useStickyGroupSeparators: true,
                       elements: movieCreditList,
@@ -207,6 +208,7 @@ class _TvShowButtonWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(24),
                     ),
                     child: GroupedListView<TvShowCreditList, String>(
+                      sort: true,
                       controller: scrollController,
                       useStickyGroupSeparators: true,
                       elements: tvShowCreditList,

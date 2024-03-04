@@ -21,12 +21,7 @@ class TvShowApiClient extends ApiClient {
     final response = await request.close();
     final json = (await response.jsonDecode()) as Map<String, dynamic>;
 
-    if(response.statusCode == 401) {
-      final responseCode = json["status_code"] as int;
-      if(responseCode == 7) {
-        throw ApiClientException(ApiClientExceptionType.Other);
-      }
-    }
+    validateError(response, json);
 
     final tvShowResponse = TvShowResponse.fromJson(json);
     return tvShowResponse;
@@ -46,12 +41,7 @@ class TvShowApiClient extends ApiClient {
     final response = await request.close();
     final json = (await response.jsonDecode()) as Map<String, dynamic>;
 
-    if(response.statusCode == 401) {
-      final responseCode = json["status_code"] as int;
-      if(responseCode == 7) {
-        throw ApiClientException(ApiClientExceptionType.Other);
-      }
-    }
+    validateError(response, json);
 
     final tvShowResponse = TvShowResponse.fromJson(json);
     return tvShowResponse;
@@ -70,19 +60,18 @@ class TvShowApiClient extends ApiClient {
     final response = await request.close();
     final json = (await response.jsonDecode()) as Map<String, dynamic>;
 
-    if(response.statusCode == 401) {
-      final responseCode = json["status_code"] as int;
-      if(responseCode == 7) {
-        throw ApiClientException(ApiClientExceptionType.Other);
-      }
-    }
+    validateError(response, json);
 
     final tvShowDetailsResponse = TvShowDetails.fromJson(json);
     return tvShowDetailsResponse;
   }
 
-  Future<ItemState> getTvShowState(int seriesId) async {
+  Future<ItemState?> getTvShowState(int seriesId) async {
     final sessionId = await sessionDataProvider.getSessionId();
+
+    if(sessionId == null) {
+      return null;
+    }
 
     final url = makeUri(
       "/tv/$seriesId/account_states",
@@ -98,7 +87,7 @@ class TvShowApiClient extends ApiClient {
     if(response.statusCode == 401) {
       final responseCode = json["status_code"] as int;
       if(responseCode == 7) {
-        throw ApiClientException(ApiClientExceptionType.Other);
+        throw ApiClientException(ApiClientExceptionType.other);
       }
     }
 
@@ -127,12 +116,8 @@ class TvShowApiClient extends ApiClient {
     request.headers.contentType = ContentType.json;
     request.write(jsonEncode(parameters));
     final response = await request.close();
+    final json = (await response.jsonDecode()) as Map<String, dynamic>;
 
-    if(response.statusCode == 400) {
-      // final responseCode = json["status_code"] as int;
-      // if(responseCode == 5) {
-      throw ApiClientException(ApiClientExceptionType.Other);
-      // }
-    }
+    validateError(response, json);
   }
 }

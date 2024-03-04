@@ -15,12 +15,7 @@ class PeopleApiClient extends ApiClient {
     final response = await request.close();
     final json = (await response.jsonDecode()) as Map<String, dynamic>;
 
-    if(response.statusCode == 401) {
-      final responseCode = json["status_code"] as int;
-      if(responseCode == 7) {
-        throw ApiClientException(ApiClientExceptionType.Other);
-      }
-    }
+    validateError(response, json);
 
     final personDetailsResponse = PersonDetails.fromJson(json);
     return personDetailsResponse;

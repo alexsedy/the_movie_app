@@ -24,20 +24,17 @@ class _MovieDetailsWidgetState extends State<MovieDetailsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
             stretch: true,
             pinned: true,
-            onStretchTrigger: () async {
-              NotifierProvider.read<MovieDetailsModel>(context)?.loadMovieDetails();
-            },
             stretchTriggerOffset: 200.0,
             expandedHeight: 183.0,
-            flexibleSpace: const _HeaderWidget(),
+            flexibleSpace: _HeaderWidget(),
           ),
-          const _BodyWidget(),
+          _BodyWidget(),
         ],
       ),
     );
@@ -81,7 +78,6 @@ class _BodyWidget extends StatelessWidget {
       delegate: SliverChildListDelegate(
         [
           const MovieDetailsMainInfoWidget(),
-          const SizedBox(height: 20,),
         ],
       ),
     );

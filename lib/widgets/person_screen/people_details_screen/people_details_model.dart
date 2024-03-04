@@ -50,32 +50,7 @@ class PeopleDetailsModel extends ChangeNotifier{
     }
     _movieCreditList.addAll(movieCredits.cast.map((cast) => MovieCreditList.fromCast(cast)));
     _movieCreditList.addAll(movieCredits.crew.map((crew) => MovieCreditList.fromCrew(crew)));
-
-    // work
-    // _movieCreditList.sort((a, b) {
-    //   int departmentComparison = (order[a.department] ?? 99) - (order[b.department] ?? 99);
-    //   if (departmentComparison != 0) {
-    //     return departmentComparison; // Сортировка по department сначала
-    //   } else {
-    //     // Если department совпадают, сортируем по releaseDate (убывающий порядок)
-    //     if (a.releaseDate == null && b.releaseDate == null) {
-    //       return 0;
-    //     } else if (a.releaseDate == null) {
-    //       return 1;
-    //     } else if (b.releaseDate == null) {
-    //       return -1;
-    //     } else {
-    //       // Обратное сравнение для сортировки по убыванию
-    //       return b.releaseDate!.compareTo(a.releaseDate!);
-    //     }
-    //   }
-    // });
-    // work, it is short form method above
-    _movieCreditList.sort((a, b) {
-      int departmentComparison = (order[a.department] ?? 99) - (order[b.department] ?? 99);
-      return departmentComparison != 0 ? departmentComparison :
-      (b.releaseDate ?? '') .compareTo(a.releaseDate ?? '');
-    });
+    _movieCreditList.sort((a, b) => (b.releaseDate ?? '') .compareTo(a.releaseDate ?? ''));
   }
 
   Future<void> _addAndSortTvShowCredits() async {
@@ -86,11 +61,7 @@ class PeopleDetailsModel extends ChangeNotifier{
     _tvShowCreditList.addAll(tvCredits.cast.map((cast) => TvShowCreditList.fromCast(cast)));
     _tvShowCreditList.addAll(tvCredits.crew.map((crew) => TvShowCreditList.fromCrew(crew)));
 
-    _tvShowCreditList.sort((a, b) {
-      int departmentComparison = (order[a.department] ?? 99) - (order[b.department] ?? 99);
-      return departmentComparison != 0 ? departmentComparison :
-      (b.firstAirDate ?? '') .compareTo(a.firstAirDate ?? '');
-    });
+    _tvShowCreditList.sort((a, b) => (b.firstAirDate ?? '') .compareTo(a.firstAirDate ?? ''));
   }
 
   void onMovieDetailsTab(BuildContext context, int index) {

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_movie_app/domain/api_client/account_api_client.dart';
+import 'package:the_movie_app/domain/data_providers/session_data_provider.dart';
 import 'package:the_movie_app/domain/entity/account/account_state/account_state.dart';
 
 class AccountManager {
@@ -21,5 +22,10 @@ class AccountManager {
 
       return accountResponseState;
     }
+  }
+
+  static Future<void> resetAccountData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove(_key);
   }
 }
