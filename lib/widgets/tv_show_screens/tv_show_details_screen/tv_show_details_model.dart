@@ -48,8 +48,7 @@ class TvShowDetailsModel extends ChangeNotifier {
     _isFavorite = !_isFavorite;
 
     await _apiClient.makeFavorite(
-      accountId: accountId,
-      movieId: _seriesId,
+      tvShowId: _seriesId,
       isFavorite: _isFavorite,
     );
 

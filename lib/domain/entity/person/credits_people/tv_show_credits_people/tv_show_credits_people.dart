@@ -113,11 +113,12 @@ class TvShowCreditList {
   final String? firstAirDate;
   final String? character;
   final String department;
+  final String? posterPath;
   final String? job;
 
   TvShowCreditList({required this.id, required this.episodeCount, required this.originalName,
     required this.name, required this.firstAirDate, required this.character, required this.department,
-    required this.job});
+    required this.job, required this.posterPath});
 
   factory TvShowCreditList.fromCast(TvShowCast cast) {
     return TvShowCreditList(
@@ -128,6 +129,7 @@ class TvShowCreditList {
       firstAirDate: cast.firstAirDate,
       character: cast.character,
       job: null,
+      posterPath: cast.posterPath,
       department: "Actor",
     );
   }
@@ -141,6 +143,7 @@ class TvShowCreditList {
       firstAirDate: crew.firstAirDate,
       character: null,
       job: crew.job,
+      posterPath: crew.posterPath,
       department: crew.department,
     );
   }

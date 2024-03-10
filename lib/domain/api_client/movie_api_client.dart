@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:the_movie_app/domain/api_client/api_client.dart';
+import 'package:the_movie_app/domain/cache_management/account_management.dart';
 import 'package:the_movie_app/domain/entity/movie/details/movie_details.dart';
 import 'package:the_movie_app/domain/entity/movie/movie_list/movie_list.dart';
 import 'package:the_movie_app/domain/entity/movie_and_tv_show/credits/credits_details.dart';
@@ -91,7 +92,10 @@ class MovieApiClient extends ApiClient {
     return movieStateResponse;
   }
 
-  Future<void> makeFavorite({required int accountId, required int movieId, required bool isFavorite}) async {
+  Future<void> addToFavorite({required int movieId, required bool isFavorite}) async {
+    final accountSate = await AccountManager.getAccountData();
+    final accountId = accountSate.id;
+
     final sessionId = await sessionDataProvider.getSessionId();
 
     final url = makeUri(
@@ -134,5 +138,34 @@ class MovieApiClient extends ApiClient {
 
     final movieCredits = Credits.fromJson(json);
     return movieCredits;
+  }
+
+  Future<void> addToWatchlist({required int movieId, required bool isWatched}) async {
+    final accountSate = await AccountManager.getAccountData();
+    final accountId = accountSate.id;
+
+    final sessionId = await sessionDataProvider.getSessionId();
+
+    final url = makeUri(
+      "/account/$accountId/watchlist",
+      <String, dynamic>{
+        "api_key": apiKey,
+        "session_id": sessionId,
+      },
+    );
+
+    final parameters = <String, dynamic>{
+      "media_type": "movie",
+      "media_id": movieId,
+      "watchlist": isWatched,
+    };
+
+    final request = await client.postUrl(url);
+    request.headers.contentType = ContentType.json;
+    request.write(jsonEncode(parameters));
+    final response = await request.close();
+    final json = (await response.jsonDecode()) as Map<String, dynamic>;
+
+    validateError(response, json);
   }
 }

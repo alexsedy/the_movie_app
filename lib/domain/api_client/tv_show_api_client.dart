@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:the_movie_app/domain/api_client/api_client.dart';
+import 'package:the_movie_app/domain/cache_management/account_management.dart';
 import 'package:the_movie_app/domain/entity/movie_and_tv_show/state/item_state.dart';
 import 'package:the_movie_app/domain/entity/tv_show/details/tv_show_details.dart';
 import 'package:the_movie_app/domain/entity/tv_show/tv_show_list/tv_show_list.dart';
@@ -95,7 +96,10 @@ class TvShowApiClient extends ApiClient {
     return tvShowStateResponse;
   }
 
-  Future<void> makeFavorite({required int accountId, required int movieId, required bool isFavorite}) async {
+  Future<void> makeFavorite({required int tvShowId, required bool isFavorite}) async {
+    final accountSate = await AccountManager.getAccountData();
+    final accountId = accountSate.id;
+
     final sessionId = await sessionDataProvider.getSessionId();
 
     final url = makeUri(
@@ -108,7 +112,7 @@ class TvShowApiClient extends ApiClient {
 
     final parameters = <String, dynamic>{
       "media_type": "tv",
-      "media_id": movieId,
+      "media_id": tvShowId,
       "favorite": isFavorite,
     };
 

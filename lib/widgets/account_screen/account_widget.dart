@@ -15,7 +15,6 @@ class _AccountWidgetState extends State<AccountWidget> {
   void initState() {
     super.initState();
     NotifierProvider.read<AccountModel>(context)?.checkLoginStatus();
-    NotifierProvider.read<AccountModel>(context)?.getAccountState();
   }
 
   @override
@@ -26,19 +25,22 @@ class _AccountWidgetState extends State<AccountWidget> {
         child: Column(
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _ColorPaletteWidget(),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _WelcomeTextWidget(),
-                      _LoginButtonWidget(),
-                    ],
-                  ),
-                )
+                Row(
+                  children: [
+                    _ColorPaletteWidget(),
+                    SizedBox(width: 10,),
+                    _WelcomeTextWidget(),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: _LoginButtonWidget(),
+                ),
               ],
             ),
+            SizedBox(height: 70,),
             _AccountBodyWidget(),
           ],
         ),
@@ -60,9 +62,18 @@ class _WelcomeTextWidget extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Text(
-        username != null ? "Hello, $username" : "Hello, Guest",
-        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+           "Hello,",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            username ?? "Guest",
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
     );
   }
@@ -86,7 +97,7 @@ class _LoginButtonWidget extends StatelessWidget {
       return ElevatedButton(
         onPressed: () {
           model?.makeLogout();
-          Navigator.of(context).pushReplacementNamed(MainNavigationRouteNames.mainScreen);
+          Navigator.of(context).pushNamedAndRemoveUntil(MainNavigationRouteNames.mainScreen, (route) => false,);
         },
         style: ButtonStyle(
           backgroundColor: MaterialStatePropertyAll(Colors.redAccent.shade100),
@@ -95,7 +106,7 @@ class _LoginButtonWidget extends StatelessWidget {
       );
     } else {
       return ElevatedButton(
-        onPressed: () => Navigator.of(context).pushReplacementNamed(MainNavigationRouteNames.auth),
+        onPressed: () => Navigator.of(context).pushNamed(MainNavigationRouteNames.auth),
         child: const Text("Login"),
       );
     }
@@ -121,7 +132,150 @@ class _AccountBodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: InkWell(
+            onTap: (){},
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              width: double.infinity,
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.list, size: 40,),
+                        SizedBox(width: 15,),
+                        Text(
+                          "Lists",
+                          style: TextStyle(
+                            fontSize: 24
+                          ),
+                        ),
+                      ],
+                    ),
+                    Icon(Icons.arrow_forward_ios),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: InkWell(
+            onTap: (){},
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              width: double.infinity,
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.favorite, size: 40,),
+                        SizedBox(width: 15,),
+                        Text(
+                          "Favorite",
+                          style: TextStyle(
+                              fontSize: 24
+                          ),
+                        ),
+                      ],
+                    ),
+                    Icon(Icons.arrow_forward_ios),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: InkWell(
+            onTap: (){},
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              width: double.infinity,
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.bookmark, size: 40,),
+                        SizedBox(width: 15,),
+                        Text(
+                          "Watchlist",
+                          style: TextStyle(
+                              fontSize: 24
+                          ),
+                        ),
+                      ],
+                    ),
+                    Icon(Icons.arrow_forward_ios),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: InkWell(
+            onTap: (){},
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              width: double.infinity,
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.star, size: 40,),
+                        SizedBox(width: 15,),
+                        Text(
+                          "Rated",
+                          style: TextStyle(
+                              fontSize: 24
+                          ),
+                        ),
+                      ],
+                    ),
+                    Icon(Icons.arrow_forward_ios),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
 

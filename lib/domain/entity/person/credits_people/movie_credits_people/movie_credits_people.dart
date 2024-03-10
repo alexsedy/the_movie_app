@@ -111,9 +111,10 @@ class MovieCreditList {
   final String? character;
   final String department;
   final String? job;
+  final String? posterPath;
 
   MovieCreditList({required this.id, required this.originalTitle, required this.title, required this.releaseDate,
-    required this.character, required this.department, required this.job});
+    required this.character, required this.department, required this.job, required this.posterPath});
 
   factory MovieCreditList.fromCast(MovieCast cast) {
     return MovieCreditList(
@@ -123,6 +124,7 @@ class MovieCreditList {
       releaseDate: cast.releaseDate,
       character: cast.character,
       job: null,
+      posterPath: cast.posterPath,
       department: "Actor",
     );
   }
@@ -135,6 +137,7 @@ class MovieCreditList {
       releaseDate: crew.releaseDate,
       character: null,
       job: crew.job,
+      posterPath: crew.posterPath,
       department: crew.department,
     );
   }

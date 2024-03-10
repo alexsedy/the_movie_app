@@ -6,6 +6,7 @@ import 'package:the_movie_app/domain/cache_management/account_management.dart';
 import 'package:the_movie_app/domain/entity/account/account_state/account_state.dart';
 import 'package:the_movie_app/domain/entity/movie_and_tv_show/credits/credits_details.dart';
 import 'package:the_movie_app/domain/entity/movie_and_tv_show/state/item_state.dart';
+import 'package:the_movie_app/helpers/snack_bar_helper.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:the_movie_app/domain/entity/movie/details/movie_details.dart';
@@ -14,14 +15,15 @@ class MovieDetailsModel extends ChangeNotifier {
   final _apiClient = MovieApiClient();
   MovieDetails? _movieDetails;
   ItemState? _movieState;
-  AccountSate? _accountSate;
   final int _movieId;
   final _dateFormat = DateFormat.yMMMMd();
   bool _isFavorite = false;
+  bool _isWatched = false;
 
   MovieDetails? get movieDetails => _movieDetails;
   ItemState? get movieState => _movieState;
   bool get isFavorite => _isFavorite;
+  bool get isWatched => _isWatched;
 
   MovieDetailsModel(this._movieId);
 
@@ -29,49 +31,34 @@ class MovieDetailsModel extends ChangeNotifier {
     _movieDetails = await _apiClient.getMovieById(_movieId);
     _movieState = await _apiClient.getMovieState(_movieId);
 
-    final favorite = _movieState?.favorite;
-    if(favorite != null) {
-      _isFavorite = favorite;
+    if(_movieState != null) {
+      _isFavorite = _movieState?.favorite ?? false;
+      _isWatched = _movieState?.watchlist ?? false;
     }
 
     notifyListeners();
   }
 
   Future<void> toggleFavorite(BuildContext context) async {
-    _accountSate = await AccountManager.getAccountData();
-    final accountId = _accountSate?.id;
-    if (accountId == null) {
-      return;
-    }
-
-    _isFavorite = !_isFavorite;
-
-    await _apiClient.makeFavorite(
-      accountId: accountId,
-      movieId: _movieId,
-      isFavorite: _isFavorite,
+    final result = await SnackBarHelper.handleError(
+      apiReq: () => _apiClient.addToFavorite(movieId: _movieId, isFavorite: _isFavorite,),
+      context: context,
     );
-    notifyListeners();
+    if(result) {
+      _isFavorite = !_isFavorite;
+      notifyListeners();
+    }
+  }
 
-    //todo catch when session expired
-    // try {
-    //   await _apiClient.makeFavorite(
-    //     accountId: accountId,
-    //     movieId: _movieId,
-    //     isFavorite: _isFavorite,
-    //   );
-    //   notifyListeners();
-    // } on ApiClientException catch (e) {
-    //   switch (e.type) {
-    //     case ApiClientExceptionType.sessionExpired:
-    //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-    //         content: Text('Error'),
-    //       ));
-    //       break;
-    //     default:
-    //       break;
-    //   }
-    // }
+  Future<void> toggleWatchlist(BuildContext context) async {
+    final result = await SnackBarHelper.handleError(
+      apiReq: () => _apiClient.addToWatchlist(movieId: _movieId, isWatched: _isWatched,),
+      context: context,
+    );
+    if(result) {
+      _isWatched = !_isWatched;
+      notifyListeners();
+    }
   }
 
   void onCastListTab(BuildContext context, List<Cast> cast) {

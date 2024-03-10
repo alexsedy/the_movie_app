@@ -69,6 +69,6 @@ class AuthModel extends ChangeNotifier {
       return;
     }
     await _sessionDataProvider.setSessionId(sessionId);
-    Navigator.of(context).pushReplacementNamed(MainNavigationRouteNames.mainScreen);
+    Navigator.of(context).pushNamedAndRemoveUntil(MainNavigationRouteNames.mainScreen, (route) => false,);
   }
 }

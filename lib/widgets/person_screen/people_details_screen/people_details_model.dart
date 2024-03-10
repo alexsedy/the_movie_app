@@ -50,7 +50,16 @@ class PeopleDetailsModel extends ChangeNotifier{
     }
     _movieCreditList.addAll(movieCredits.cast.map((cast) => MovieCreditList.fromCast(cast)));
     _movieCreditList.addAll(movieCredits.crew.map((crew) => MovieCreditList.fromCrew(crew)));
-    _movieCreditList.sort((a, b) => (b.releaseDate ?? '') .compareTo(a.releaseDate ?? ''));
+
+    // _movieCreditList.sort((a, b) => (b.releaseDate ?? '') .compareTo(a.releaseDate ?? ''));
+
+    _movieCreditList.sort((a, b) {
+      int departmentComparison = a.department.compareTo(b.department);
+      if (departmentComparison == 0) {
+        return b.releaseDate?.compareTo(a.releaseDate ?? "") ?? 1;
+      }
+      return departmentComparison;
+    });
   }
 
   Future<void> _addAndSortTvShowCredits() async {
@@ -61,7 +70,13 @@ class PeopleDetailsModel extends ChangeNotifier{
     _tvShowCreditList.addAll(tvCredits.cast.map((cast) => TvShowCreditList.fromCast(cast)));
     _tvShowCreditList.addAll(tvCredits.crew.map((crew) => TvShowCreditList.fromCrew(crew)));
 
-    _tvShowCreditList.sort((a, b) => (b.firstAirDate ?? '') .compareTo(a.firstAirDate ?? ''));
+    _tvShowCreditList.sort((a, b) {
+      int departmentComparison = a.department.compareTo(b.department);
+      if (departmentComparison == 0) {
+        return b.firstAirDate?.compareTo(a.firstAirDate ?? "") ?? 1;
+      }
+      return departmentComparison;
+    });
   }
 
   void onMovieDetailsTab(BuildContext context, int index) {

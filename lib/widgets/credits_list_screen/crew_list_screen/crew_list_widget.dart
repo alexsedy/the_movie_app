@@ -59,63 +59,61 @@ class _BodyWidget extends StatelessWidget {
          height: 180,
          child: Padding(
            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-           child: SizedBox(
-             child: Card(
-               clipBehavior: Clip.hardEdge,
-               child: ListTile(
-                 onTap: () => model?.onPeopleTab(context, index),
-                 minVerticalPadding: 0,
-                 contentPadding: EdgeInsets.zero,
-                 title: Row(
-                   crossAxisAlignment: CrossAxisAlignment.start,
-                   mainAxisAlignment: MainAxisAlignment.start,
-                   children: [
-                     AspectRatio(
-                       aspectRatio: 500 / 750,
-                       child: profilePath != null
-                           ? Image.network(
-                               loadingBuilder: (context, child, loadingProgress) {
-                                 if (loadingProgress == null) return child;
-                                 return const Center(
-                                   child: SizedBox(
-                                     width: 60,
-                                     height: 60,
-                                     child: CircularProgressIndicator(),
-                                   ),
-                                 );
-                               },
-                              ApiClient.getImageByUrl(profilePath),)
-                           : Image.asset(AppImages.noProfile,),
-                     ),
-                     const SizedBox(width: 14,),
-                     Expanded(
-                       child: Column(
-                         crossAxisAlignment: CrossAxisAlignment.start,
-                         mainAxisAlignment: MainAxisAlignment.start,
-                         children: [
-                           const SizedBox(height: 6,),
-                           Text(name,
-                             softWrap: true,
-                             maxLines: 3,
-                             style: const TextStyle(
-                               fontSize: 22,
-                               fontWeight: FontWeight.bold,
-                             ),
+           child: Card(
+             clipBehavior: Clip.hardEdge,
+             child: ListTile(
+               onTap: () => model?.onPeopleTab(context, index),
+               minVerticalPadding: 0,
+               contentPadding: EdgeInsets.zero,
+               title: Row(
+                 crossAxisAlignment: CrossAxisAlignment.start,
+                 mainAxisAlignment: MainAxisAlignment.start,
+                 children: [
+                   AspectRatio(
+                     aspectRatio: 500 / 750,
+                     child: profilePath != null
+                         ? Image.network(
+                             loadingBuilder: (context, child, loadingProgress) {
+                               if (loadingProgress == null) return child;
+                               return const Center(
+                                 child: SizedBox(
+                                   width: 60,
+                                   height: 60,
+                                   child: CircularProgressIndicator(),
+                                 ),
+                               );
+                             },
+                            ApiClient.getImageByUrl(profilePath),)
+                         : Image.asset(AppImages.noProfile,),
+                   ),
+                   const SizedBox(width: 14,),
+                   Expanded(
+                     child: Column(
+                       crossAxisAlignment: CrossAxisAlignment.start,
+                       mainAxisAlignment: MainAxisAlignment.start,
+                       children: [
+                         const SizedBox(height: 6,),
+                         Text(name,
+                           softWrap: true,
+                           maxLines: 3,
+                           style: const TextStyle(
+                             fontSize: 22,
+                             fontWeight: FontWeight.bold,
                            ),
-                           Text(job,
-                             softWrap: true,
-                             maxLines: 3,
-                             style: const TextStyle(
-                               fontSize: 20,
-                               fontStyle: FontStyle.italic,
-                             ),
+                         ),
+                         Text(job,
+                           softWrap: true,
+                           maxLines: 3,
+                           style: const TextStyle(
+                             fontSize: 20,
+                             fontStyle: FontStyle.italic,
                            ),
-                           const SizedBox(height: 6,),
-                         ],
-                       ),
+                         ),
+                         const SizedBox(height: 6,),
+                       ],
                      ),
-                   ],
-                 ),
+                   ),
+                 ],
                ),
              ),
            ),

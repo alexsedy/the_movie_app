@@ -18,9 +18,12 @@ class AccountModel extends ChangeNotifier {
   Future<void> checkLoginStatus() async {
     final sessionId = await _sessionDataProvider.getSessionId();
     _isLoggedIn = sessionId != null;
-    notifyListeners();
 
-    print("sessionId!!!!!!!!!!!!: $sessionId");
+    if(_isLoggedIn) {
+      _getAccountState();
+    }
+
+    notifyListeners();
   }
 
   Future<void> makeLogout() async {
@@ -30,7 +33,7 @@ class AccountModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getAccountState() async {
+  Future<void> _getAccountState() async {
     _accountSate = await AccountManager.getAccountData();
     notifyListeners();
   }

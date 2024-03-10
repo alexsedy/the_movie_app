@@ -29,22 +29,8 @@ class MovieActionButtonsWidget extends StatelessWidget {
               ),
             ),
           ),
-          _FavoriteButtonWidget(),
-          InkWell(
-            borderRadius: BorderRadius.circular(24),
-            onTap: (){},
-            child: Container(
-              width: 60,
-              height: 60,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.bookmark),
-                  const Text("Watch"),
-                ],
-              ),
-            ),
-          ),
+          const _FavoriteButtonWidget(),
+          const _WatchlistButtonWidget(),
           InkWell(
             borderRadius: BorderRadius.circular(24),
             onTap: (){},
@@ -105,6 +91,53 @@ class _FavoriteButtonWidget extends StatelessWidget {
             favorite
                 ? const Icon(Icons.favorite, color: Colors.red,)
                 : const Icon(Icons.favorite_border),
+            const Text("Favorite"),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _WatchlistButtonWidget extends StatelessWidget {
+  const _WatchlistButtonWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final model = NotifierProvider.watch<MovieDetailsModel>(context);
+    final favorite = model?.isWatched;
+
+    if(favorite == null) {
+      return const SizedBox(
+        width: 60,
+        height: 60,
+        child: Opacity(
+          opacity: 0.5,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.bookmark_outline),
+              Text("Watch"),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(24),
+      onTap: () => model?.toggleWatchlist(context),
+      child: SizedBox(
+        width: 60,
+        height: 60,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            favorite
+                ? const Icon(Icons.bookmark, color: Colors.lightBlue,)
+                : const Icon(Icons.bookmark_outline),
             const Text("Favorite"),
           ],
         ),
