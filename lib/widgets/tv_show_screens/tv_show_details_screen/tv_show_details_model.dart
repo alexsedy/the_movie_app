@@ -6,6 +6,7 @@ import 'package:the_movie_app/domain/entity/account/account_state/account_state.
 import 'package:the_movie_app/domain/entity/movie_and_tv_show/credits/credits_details.dart';
 import 'package:the_movie_app/domain/entity/movie_and_tv_show/state/item_state.dart';
 import 'package:the_movie_app/domain/entity/tv_show/details/tv_show_details.dart';
+import 'package:the_movie_app/helpers/snack_bar_helper.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -38,21 +39,15 @@ class TvShowDetailsModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleFavorite() async {
-    _accountSate = await AccountManager.getAccountData();
-    final accountId = _accountSate?.id;
-    if(accountId == null) {
-      return;
-    }
-
-    _isFavorite = !_isFavorite;
-
-    await _apiClient.makeFavorite(
-      tvShowId: _seriesId,
-      isFavorite: _isFavorite,
+  Future<void> toggleFavorite(BuildContext context) async {
+    final result = await SnackBarHelper.handleError(
+      apiReq: () => _apiClient.makeFavorite(tvShowId: _seriesId, isFavorite: !_isFavorite,),
+      context: context,
     );
-
-    notifyListeners();
+    if(result) {
+      _isFavorite = !_isFavorite;
+      notifyListeners();
+    }
   }
 
   void onCastListTab(BuildContext context, List<Cast> cast) {

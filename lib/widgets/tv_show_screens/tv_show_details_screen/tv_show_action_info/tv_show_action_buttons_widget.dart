@@ -95,7 +95,7 @@ class _FavoriteButtonWidget extends StatelessWidget {
 
     return InkWell(
       borderRadius: BorderRadius.circular(24),
-      onTap: () => model?.toggleFavorite(),
+      onTap: () => model?.toggleFavorite(context),
       child: SizedBox(
         width: 60,
         height: 60,

@@ -2,40 +2,18 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:the_movie_app/domain/api_client/api_client.dart';
+import 'package:the_movie_app/domain/entity/auth/auth.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AuthApiClient extends ApiClient {
 
-  Future<String> getGuestSession() async {
-    final token = await _getMakeToken();
-
-    final url = makeUri(
-      "/authentication/guest_session/new",
-      <String, dynamic>{
-        "api_key": apiKey,
-        "request_token": token
-      },
-    );
-
-    final request = await client.postUrl(url);
-    request.headers.contentType = ContentType.json;
-    final response = await request.close();
-    final json = (await response.jsonDecode()) as Map<String, dynamic>;
-
-    validateError(response, json);
-
-    final guestSessionId = json["guest_session_id"] as String;
-    return guestSessionId;
-  }
-
   Future<void> deleteSession() async {
-    final token = await _getMakeToken();
     final sessionId = await sessionDataProvider.getSessionId();
 
     final url = makeUri(
       "/authentication/session",
       <String, dynamic>{
         "api_key": apiKey,
-        "request_token": token,
       },
     );
     final parameters = <String, dynamic>{
@@ -50,64 +28,156 @@ class AuthApiClient extends ApiClient {
     validateError(response, json);
   }
 
-  Future<String> auth({required String username, required String password}) async {
-    final token = await _getMakeToken();
-    final validToken = await _postValidateUser(username: username, password: password, requestToken: token);
-    final sessionId = await _postMakeSession(requestToken: validToken);
+  Future<String> auth() async {
+    final requestToken = await _createRequestToken();
+    await _launchAuthPage(requestToken: requestToken);
 
-    return sessionId;
+    return requestToken;
   }
 
-  Future<String> _postMakeSession({required String requestToken}) async {
-    final url = Uri.parse("$host/authentication/session/new?api_key=$apiKey");
+  Future<String> createSession(String accessToken) async {
+    final url = makeUri(
+      "/authentication/session/convert/4",
+      <String, dynamic>{
+        "api_key": apiKey,
+      },
+    );
 
     final parameters = <String, dynamic>{
-      "request_token": requestToken
+      "access_token": accessToken
     };
 
     final request = await client.postUrl(url);
     request.headers.contentType = ContentType.json;
     request.write(jsonEncode(parameters));
+
     final response = await request.close();
     final json = (await response.jsonDecode()) as Map<String, dynamic>;
-
     validateError(response, json);
 
     final sessionId = json["session_id"] as String;
     return sessionId;
   }
 
-  Future<String> _postValidateUser(
-      {required String username, required String password, required String requestToken}) async {
-    final url = Uri.parse("$host/authentication/token/validate_with_login?api_key=$apiKey");
+  Future<String> _createRequestToken() async {
+    final url = makeUriFour(
+      "/auth/request_token",
+      <String, dynamic>{
+        "api_key": apiKey,
+      },
+    );
+
     final parameters = <String, dynamic>{
-      "username": username,
-      "password": password,
-      "request_token": requestToken
+      "redirect_to": "app://the_movie_app/auth_approve"
     };
 
     final request = await client.postUrl(url);
     request.headers.contentType = ContentType.json;
+    request.headers.add("Authorization", accessToken);
     request.write(jsonEncode(parameters));
+
+    final response = await request.close();
+    final json = (await response.jsonDecode()) as Map<String, dynamic>;
+    validateError(response, json);
+
+    final requestToken = json["request_token"] as String;
+    return requestToken;
+  }
+
+  Future<void> _launchAuthPage({required String requestToken}) async {
+    final Uri url = Uri.parse('https://www.themoviedb.org/auth/access?request_token=$requestToken');
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
+  Future<AuthData> createAccessToken({required String requestToken}) async {
+    final url = makeUriFour(
+      "/auth/access_token",
+      <String, dynamic>{
+        "api_key": apiKey,
+      },
+    );
+    final parameters = <String, dynamic>{
+      "request_token": requestToken,
+    };
+
+    final request = await client.postUrl(url);
+    request.headers.contentType = ContentType.json;
+    request.headers.add("Authorization", accessToken);
+    request.write(jsonEncode(parameters));
+
     final response = await request.close();
     final json = (await response.jsonDecode()) as Map<String, dynamic>;
 
     validateError(response, json);
 
-    final token = json["request_token"] as String;
-    return token;
+    final authData = AuthData.fromJson(json);
+    return authData;
   }
 
-  Future<String> _getMakeToken() async {
-    final url = Uri.parse("$host/authentication/token/new?api_key=$apiKey");
+  // @Deprecated("Deprecated method")
+  // Future<String> authOld({required String username, required String password}) async {
+  //   final token = await _getMakeToken();
+  //   final validToken = await _postValidateUser(username: username, password: password, requestToken: token);
+  //   final sessionId = await _postMakeSession(requestToken: validToken);
+  //
+  //   return sessionId;
+  // }
 
-    final request = await client.getUrl(url);
-    final response = await request.close();
-    final json = (await response.jsonDecode()) as Map<String, dynamic>;
+  // @Deprecated("Deprecated method")
+  // Future<String> _postMakeSession({required String requestToken}) async {
+  //   final url = Uri.parse("$host/authentication/session/new?api_key=$apiKey");
+  //
+  //   final parameters = <String, dynamic>{
+  //     "request_token": requestToken
+  //   };
+  //
+  //   final request = await client.postUrl(url);
+  //   request.headers.contentType = ContentType.json;
+  //   request.write(jsonEncode(parameters));
+  //   final response = await request.close();
+  //   final json = (await response.jsonDecode()) as Map<String, dynamic>;
+  //
+  //   validateError(response, json);
+  //
+  //   final sessionId = json["session_id"] as String;
+  //   return sessionId;
+  // }
 
-    validateError(response, json);
+  // @Deprecated("Deprecated method")
+  // Future<String> _postValidateUser(
+  //     {required String username, required String password, required String requestToken}) async {
+  //   final url = Uri.parse("$host/authentication/token/validate_with_login?api_key=$apiKey");
+  //   final parameters = <String, dynamic>{
+  //     "username": username,
+  //     "password": password,
+  //     "request_token": requestToken
+  //   };
+  //
+  //   final request = await client.postUrl(url);
+  //   request.headers.contentType = ContentType.json;
+  //   request.write(jsonEncode(parameters));
+  //   final response = await request.close();
+  //   final json = (await response.jsonDecode()) as Map<String, dynamic>;
+  //
+  //   validateError(response, json);
+  //
+  //   final token = json["request_token"] as String;
+  //   return token;
+  // }
 
-    final token = json["request_token"] as String;
-    return token;
-  }
+  // @Deprecated("Deprecated method")
+  // Future<String> _getMakeToken() async {
+  //   final url = Uri.parse("$host/authentication/token/new?api_key=$apiKey");
+  //
+  //   final request = await client.getUrl(url);
+  //   final response = await request.close();
+  //   final json = (await response.jsonDecode()) as Map<String, dynamic>;
+  //
+  //   validateError(response, json);
+  //
+  //   final token = json["request_token"] as String;
+  //   return token;
+  // }
 }

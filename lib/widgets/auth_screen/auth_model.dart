@@ -35,7 +35,7 @@ class AuthModel extends ChangeNotifier {
 
     String? sessionId;
     try {
-      sessionId = await _apiClient.auth(username: username, password: password);
+      // sessionId = await _apiClient.authOld(username: username, password: password);
     } on ApiClientException catch (e) {
       switch (e.type) {
         case ApiClientExceptionType.network:

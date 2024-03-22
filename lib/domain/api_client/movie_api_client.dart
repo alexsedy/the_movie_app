@@ -168,4 +168,47 @@ class MovieApiClient extends ApiClient {
 
     validateError(response, json);
   }
+
+  Future<void> addRating({required int movieId, required double rate}) async {
+    final sessionId = await sessionDataProvider.getSessionId();
+
+    final url = makeUri(
+      "/movie/$movieId/rating",
+      <String, dynamic>{
+        "api_key": apiKey,
+        "session_id": sessionId,
+      },
+    );
+
+    final parameters = <String, dynamic>{
+      "value": rate,
+    };
+
+    final request = await client.postUrl(url);
+    request.headers.contentType = ContentType.json;
+    request.write(jsonEncode(parameters));
+    final response = await request.close();
+    final json = (await response.jsonDecode()) as Map<String, dynamic>;
+
+    validateError(response, json);
+  }
+
+  Future<void> deleteRating({required int movieId}) async {
+    final sessionId = await sessionDataProvider.getSessionId();
+
+    final url = makeUri(
+      "/movie/$movieId/rating",
+      <String, dynamic>{
+        "api_key": apiKey,
+        "session_id": sessionId,
+      },
+    );
+
+    final request = await client.deleteUrl(url);
+    request.headers.contentType = ContentType.json;
+    final response = await request.close();
+    final json = (await response.jsonDecode()) as Map<String, dynamic>;
+
+    validateError(response, json);
+  }
 }

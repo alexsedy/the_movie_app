@@ -53,6 +53,61 @@ class _MoviesButtonWidget extends StatelessWidget {
 
     if(movieCreditList == null) {
       return const SizedBox.shrink();
+    } else if (movieCreditList.isEmpty) {
+      return InkWell(
+        onTap: () {
+          showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              isDismissible: true,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+              ),
+              backgroundColor: Colors.transparent,
+              builder: (context) {
+                return DraggableScrollableSheet(
+                  initialChildSize: 0.45,
+                  minChildSize: 0.2,
+                  maxChildSize: 0.95,
+                  builder: (context, scrollController) {
+                    return Container(
+                      clipBehavior: Clip.hardEdge,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).dialogBackgroundColor,
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "No other movie projects",
+                          style: TextStyle(fontSize: 34),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }
+          );
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          width: 150,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(),
+          ),
+          child: const Padding(
+            padding: EdgeInsets.all(10),
+            child: Center(
+              child: Text(
+                "Movies",
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
     }
 
     return InkWell(
@@ -349,6 +404,61 @@ class _TvShowButtonWidget extends StatelessWidget {
 
     if(tvShowCreditList == null) {
       return const SizedBox.shrink();
+    } else if (tvShowCreditList.isEmpty) {
+      return InkWell(
+        onTap: () {
+          showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              isDismissible: true,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+              ),
+              backgroundColor: Colors.transparent,
+              builder: (context) {
+                return DraggableScrollableSheet(
+                  initialChildSize: 0.45,
+                  minChildSize: 0.2,
+                  maxChildSize: 0.95,
+                  builder: (context, scrollController) {
+                    return Container(
+                      clipBehavior: Clip.hardEdge,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).dialogBackgroundColor,
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "No other TV show projects",
+                          style: TextStyle(fontSize: 34),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }
+          );
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          width: 150,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(),
+          ),
+          child: const Padding(
+            padding: EdgeInsets.all(10),
+            child: Center(
+              child: Text(
+                "TV Shows",
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
     }
 
     return InkWell(

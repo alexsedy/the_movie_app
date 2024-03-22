@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/account_screen/account_model.dart';
-import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
+
 
 class AccountWidget extends StatefulWidget {
   const AccountWidget({super.key});
@@ -15,6 +15,11 @@ class _AccountWidgetState extends State<AccountWidget> {
   void initState() {
     super.initState();
     NotifierProvider.read<AccountModel>(context)?.checkLoginStatus();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override
@@ -59,23 +64,48 @@ class _WelcomeTextWidget extends StatelessWidget {
     final model = NotifierProvider.watch<AccountModel>(context);
     final accountSate = model?.accountSate;
     final username = accountSate?.username;
+    final isLoggedIn = model?.isLoggedIn;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-           "Hello,",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            username ?? "Guest",
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    );
+    //временное решение чтобы получить accountSate
+    if(isLoggedIn != null && isLoggedIn && accountSate == null) {
+      model?.checkLoginStatus();
+    }
+
+    if (isLoggedIn != null && isLoggedIn) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Hello,",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              username ?? "",
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Hello,",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              "Guest",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      );
+    }
   }
 }
 
@@ -91,14 +121,11 @@ class _LoginButtonWidget extends StatelessWidget {
 
     if(isLoggedIn == null) {
       return const SizedBox.shrink();
-    }
+    } 
 
     if(isLoggedIn) {
       return ElevatedButton(
-        onPressed: () {
-          model?.makeLogout();
-          Navigator.of(context).pushNamedAndRemoveUntil(MainNavigationRouteNames.mainScreen, (route) => false,);
-        },
+        onPressed: () => model?.makeLogout(context),
         style: ButtonStyle(
           backgroundColor: MaterialStatePropertyAll(Colors.redAccent.shade100),
         ),
@@ -106,7 +133,7 @@ class _LoginButtonWidget extends StatelessWidget {
       );
     } else {
       return ElevatedButton(
-        onPressed: () => Navigator.of(context).pushNamed(MainNavigationRouteNames.auth),
+        onPressed: () => model?.makeLogin(context),
         child: const Text("Login"),
       );
     }
@@ -132,6 +159,26 @@ class _AccountBodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = NotifierProvider.watch<AccountModel>(context);
+    final isLoggedIn = model?.isLoggedIn;
+    
+    if(isLoggedIn == null || isLoggedIn == false) {
+      return const Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 80,),
+            Text(
+              "Lists not available. Please login.",
+              style: TextStyle(
+                fontSize: 24
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    
     return Column(
       children: [
         Padding(

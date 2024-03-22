@@ -6,7 +6,8 @@ part 'item_state.g.dart';
 class ItemState {
   final int id;
   final bool favorite;
-  final dynamic rated;
+  @RatedConverter()
+  final Rated? rated;
   final bool watchlist;
 
   ItemState(this.id, this.favorite, this.rated, this.watchlist);
@@ -19,7 +20,7 @@ class ItemState {
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class Rated {
-  final int? value;
+  final double? value;
 
   Rated(this.value);
 
@@ -27,4 +28,22 @@ class Rated {
       _$RatedFromJson(json);
 
   Map<String, dynamic> toJson() => _$RatedToJson(this);
+}
+
+class RatedConverter implements JsonConverter<Rated?, Object?> {
+  const RatedConverter();
+
+  @override
+  Rated? fromJson(Object? json) {
+    if (json is Map<String, dynamic>) {
+      return Rated.fromJson(json);
+    } else if (json == false) {
+      return null;
+    } else {
+      throw ArgumentError('Invalid JSON value for Rated');
+    }
+  }
+
+  @override
+  Object? toJson(Rated? instance) => instance?.toJson();
 }

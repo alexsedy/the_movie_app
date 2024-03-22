@@ -19,11 +19,17 @@ class MovieDetailsModel extends ChangeNotifier {
   final _dateFormat = DateFormat.yMMMMd();
   bool _isFavorite = false;
   bool _isWatched = false;
+  bool _isRated = false;
+  double _rate = 0;
 
   MovieDetails? get movieDetails => _movieDetails;
   ItemState? get movieState => _movieState;
   bool get isFavorite => _isFavorite;
   bool get isWatched => _isWatched;
+  bool get isRated => _isRated;
+  double get rate => _rate;
+
+  set rate(value) => _rate = value;
 
   MovieDetailsModel(this._movieId);
 
@@ -34,6 +40,12 @@ class MovieDetailsModel extends ChangeNotifier {
     if(_movieState != null) {
       _isFavorite = _movieState?.favorite ?? false;
       _isWatched = _movieState?.watchlist ?? false;
+
+      final rated = _movieState?.rated;
+      if(rated != null) {
+        _rate = rated.value ?? 0;
+        _isRated = true;
+      }
     }
 
     notifyListeners();
@@ -41,7 +53,7 @@ class MovieDetailsModel extends ChangeNotifier {
 
   Future<void> toggleFavorite(BuildContext context) async {
     final result = await SnackBarHelper.handleError(
-      apiReq: () => _apiClient.addToFavorite(movieId: _movieId, isFavorite: _isFavorite,),
+      apiReq: () => _apiClient.addToFavorite(movieId: _movieId, isFavorite: !_isFavorite,),
       context: context,
     );
     if(result) {
@@ -52,12 +64,42 @@ class MovieDetailsModel extends ChangeNotifier {
 
   Future<void> toggleWatchlist(BuildContext context) async {
     final result = await SnackBarHelper.handleError(
-      apiReq: () => _apiClient.addToWatchlist(movieId: _movieId, isWatched: _isWatched,),
+      apiReq: () => _apiClient.addToWatchlist(movieId: _movieId, isWatched: !_isWatched,),
       context: context,
     );
     if(result) {
       _isWatched = !_isWatched;
       notifyListeners();
+    }
+  }
+
+  Future<void> toggleAddRating(BuildContext context, double rate) async {
+    final result = await SnackBarHelper.handleError(
+      apiReq: () => _apiClient.addRating(movieId: _movieId, rate: rate),
+      context: context,
+    );
+    if(result && _isRated == false) {
+      _isRated = !_isRated;
+      notifyListeners();
+    }
+  }
+
+  Future<void> toggleDeleteRating(BuildContext context) async {
+    if(_isRated) {
+      final result = await SnackBarHelper.handleError(
+        apiReq: () => _apiClient.deleteRating(movieId: _movieId),
+        context: context,
+      );
+      if (result) {
+        _isRated = !_isRated;
+        _rate = 0.0;
+        notifyListeners();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          duration: Duration(seconds: 3),
+          content: Text("The rating was deleted successfully.",
+            style: TextStyle(fontSize: 20),),
+        ));
+      }
     }
   }
 

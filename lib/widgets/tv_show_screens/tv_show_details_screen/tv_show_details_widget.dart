@@ -96,24 +96,9 @@ class _TopPosterWidget extends StatelessWidget {
     final backdropPath = model?.tvShowDetails?.backdropPath;
     // final posterPath = model?.movieDetails?.posterPath;
 
-    return Stack(
-      children: [
-        backdropPath != null
-            ? Image.network(ApiClient.getImageByUrl(backdropPath))
-            : Image.asset(AppImages.noBackdropPoster),
-        // Positioned(
-        //   top: 20,
-        //   left: 15,
-        //   bottom: 20,
-        //   child: SizedBox(
-        //     height: 140, width: 90,
-        //     child: posterPath != null
-        //         ? Image.network(ApiClient.imageUrl(posterPath))
-        //         : Image.asset("images/no_backdrop_poster.jpg"),
-        //   ),
-        // ),
-      ],
-    );
+    return backdropPath != null
+        ? Image.network(ApiClient.getImageByUrl(backdropPath), fit: BoxFit.fitWidth,)
+        : Image.asset(AppImages.noBackdropPoster);
   }
 }
 

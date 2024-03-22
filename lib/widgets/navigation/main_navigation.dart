@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/domain/entity/movie_and_tv_show/credits/credits_details.dart';
 import 'package:the_movie_app/provider/provider.dart';
-import 'package:the_movie_app/widgets/auth_screen/auth_model.dart';
-import 'package:the_movie_app/widgets/auth_screen/auth_widget.dart';
 import 'package:the_movie_app/widgets/credits_list_screen/cast_list_screen/cast_list_model.dart';
 import 'package:the_movie_app/widgets/credits_list_screen/cast_list_screen/cast_list_widget.dart';
 import 'package:the_movie_app/widgets/credits_list_screen/crew_list_screen/crew_list_model.dart';
@@ -16,7 +14,6 @@ import 'package:the_movie_app/widgets/tv_show_screens/tv_show_details_screen/tv_
 import 'package:the_movie_app/widgets/tv_show_screens/tv_show_details_screen/tv_show_details_widget.dart';
 
 abstract class MainNavigationRouteNames {
-  static const auth = "auth";
   static const mainScreen = "/";
   static const movieDetails = "/movie_details";
   static const tvShowDetails = "/tv_show_details";
@@ -26,14 +23,7 @@ abstract class MainNavigationRouteNames {
 }
 
 class MainNavigation {
-  String initialRouts(bool isAuth) => isAuth ? MainNavigationRouteNames.mainScreen : MainNavigationRouteNames.auth;
-
   final routes = <String, Widget Function(BuildContext)>{
-    MainNavigationRouteNames.auth : (context) => NotifierProvider(
-      create: () => AuthModel(),
-      // model: AuthModel(),
-      child: const AuthWidget(),
-    ), //AuthWidget(),
     MainNavigationRouteNames.mainScreen : (context) => const MainScreenWidget(),
   };
 

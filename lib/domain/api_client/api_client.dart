@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:the_movie_app/domain/data_providers/session_data_provider.dart';
 
 enum ApiClientExceptionType {
-  network, auth, other, incorrectRequest, sessionExpired
+  network, auth, other, incorrectRequest, sessionExpired, loginNotApproved
 }
 
 class ApiClientException implements Exception {
@@ -17,16 +17,29 @@ class ApiClient {
   final client = HttpClient();
   final sessionDataProvider = SessionDataProvider();
   static const _host = "https://api.themoviedb.org/3";
+  static const _hostFour = "https://api.themoviedb.org/4";
   static const _imageUrl = "https://image.tmdb.org/t/p/w500";
   static const _apiKey = "772a84be1e646a7870931e64417537cb";
+  static const _accessToken = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3NzJhODRiZTFlNjQ2YTc4NzA5MzFlNjQ0MTc1MzdjYiIsInN1YiI6IjY1YWQ5ODE0MTU4Yzg1MDEwYTlmOWVhMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.9ispaOKnbNvLhBOeCYXexoXY0-25gm1VJOz-wwsWAgA";
 
   String get apiKey => _apiKey;
   String get host => _host;
+  String get hostFour => _hostFour;
+  String get accessToken => _accessToken;
 
   static String getImageByUrl(String path) => _imageUrl + path;
 
   Uri makeUri(String path, [Map<String, dynamic>? parameters]) {
     final uri = Uri.parse('$_host$path');
+    if (parameters != null) {
+      return uri.replace(queryParameters: parameters);
+    } else {
+      return uri;
+    }
+  }
+
+  Uri makeUriFour(String path, [Map<String, dynamic>? parameters]) {
+    final uri = Uri.parse('$_hostFour$path');
     if (parameters != null) {
       return uri.replace(queryParameters: parameters);
     } else {
@@ -52,6 +65,8 @@ class ApiClient {
         throw ApiClientException(ApiClientExceptionType.other);
       } else if (responseCode == 3) {
         throw ApiClientException(ApiClientExceptionType.sessionExpired);
+      } else if (responseCode == 41) {
+        throw ApiClientException(ApiClientExceptionType.loginNotApproved);
       }
     } else if (response.statusCode == 404) {
       final responseCode = json["status_code"] as int;

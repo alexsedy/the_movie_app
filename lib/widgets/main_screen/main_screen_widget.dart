@@ -61,6 +61,11 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final routeArguments = ModalRoute.of(context)?.settings.arguments;
+    if(routeArguments != null) {
+      _selectedTab = routeArguments as int;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: AnimatedSwitcher(
@@ -69,7 +74,7 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
         ),
         actions: [
           if(_selectedTab == 1) const FilterMoviesButtonWidget(),
-          IconButton(
+          if (_selectedTab != 3) IconButton(
             onPressed: () {
               setState(() {
                 isSearchOpen = !isSearchOpen;

@@ -17,7 +17,7 @@ abstract class SnackBarHelper{
               children: [
                 const Text("You are not logged in.", style: TextStyle(fontSize: 20),),
                 ElevatedButton(
-                  onPressed: () => Navigator.of(context).pushNamed(MainNavigationRouteNames.auth),
+                  onPressed: () => Navigator.of(context).pushNamed(MainNavigationRouteNames.mainScreen, arguments: 3),
                   child: const Text("Login"),
                 )
               ],
