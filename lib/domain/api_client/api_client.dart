@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:the_movie_app/domain/data_providers/session_data_provider.dart';
 
 enum ApiClientExceptionType {
-  network, auth, other, incorrectRequest, sessionExpired, loginNotApproved
+  network, auth, other, incorrectRequest, sessionExpired, loginNotApproved, notFound
 }
 
 class ApiClientException implements Exception {
@@ -72,6 +72,8 @@ class ApiClient {
       final responseCode = json["status_code"] as int;
       if(responseCode == 6) {
         throw ApiClientException(ApiClientExceptionType.incorrectRequest);
+      } else if (responseCode == 34) {
+        throw  ApiClientException(ApiClientExceptionType.notFound);
       }
     } else if (response.statusCode == 400) {
       final responseCode = json["status_code"] as int;

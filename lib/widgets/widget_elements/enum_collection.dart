@@ -1,0 +1,3 @@
+enum VerticalListElementType {
+  movie, tv
+}

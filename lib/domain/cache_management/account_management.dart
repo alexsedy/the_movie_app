@@ -38,7 +38,7 @@ class AccountManager {
   static Future<void> setAccountId(String? value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (value != null) {
-      prefs.getString(value);
+      prefs.setString(_accountIdKey, value);
     }
   }
 

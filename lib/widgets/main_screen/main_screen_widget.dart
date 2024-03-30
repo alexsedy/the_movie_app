@@ -4,6 +4,8 @@ import 'package:the_movie_app/domain/data_providers/session_data_provider.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/account_screen/account_model.dart';
 import 'package:the_movie_app/widgets/account_screen/account_widget.dart';
+import 'package:the_movie_app/widgets/home_screen/home_model.dart';
+import 'package:the_movie_app/widgets/home_screen/home_widget.dart';
 import 'package:the_movie_app/widgets/main_screen/filter_widget.dart';
 import 'package:the_movie_app/widgets/movie_screens/movie_list_screen/movie_list_model.dart';
 import 'package:the_movie_app/widgets/movie_screens/movie_list_screen/movie_list_widget.dart';
@@ -20,11 +22,18 @@ class MainScreenWidget extends StatefulWidget {
 class _MainScreenWidgetState extends State<MainScreenWidget> {
   final movieListModel = MovieListModel();
   final tvShowListModel = TvShowListModel();
+  final homeModel = HomeModel();
   final accountModel = AccountModel();
   int _selectedTab = 0;
   bool isSearchOpen = false;
 
   void onSelectTab(int index) {
+
+    //todo подумать на лучшим способом проверить логин статус если ты уже залогинен
+    if (index == 3) {
+      accountModel.checkLoginStatus();
+    }
+
     if (_selectedTab == index) {
       if(index == 1) {
         movieListModel.scrollToTop();
@@ -56,7 +65,6 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     // movieListModel.setupLocale(context);
-    // movieListModel.loadMovies();
   }
 
   @override
@@ -74,7 +82,7 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
         ),
         actions: [
           if(_selectedTab == 1) const FilterMoviesButtonWidget(),
-          if (_selectedTab != 3) IconButton(
+          if (_selectedTab == 1 || _selectedTab == 2) IconButton(
             onPressed: () {
               setState(() {
                 isSearchOpen = !isSearchOpen;
@@ -102,24 +110,26 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
       body: IndexedStack(
         index: _selectedTab,
         children: [
-          Center(
-            child: IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.exit_to_app),
-            )
+          NotifierProvider(
+            create: () => homeModel,
+            isManagingModel: false,
+            child: const HomeWidget(),
           ),
           NotifierProvider(
             create: () => movieListModel,
             isManagingModel: false,
-            child: const MovieListWidget()),
+            child: const MovieListWidget(),
+          ),
           NotifierProvider(
             create: () => tvShowListModel,
             isManagingModel: false,
-              child: const TvShowListWidget()),
+              child: const TvShowListWidget(),
+          ),
           NotifierProvider(
               create: () => accountModel,
               isManagingModel: false,
-              child: const AccountWidget()),
+              child: const AccountWidget(),
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

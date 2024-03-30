@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:the_movie_app/domain/api_client/api_client.dart';
+import 'package:the_movie_app/domain/api_client/account_api_client.dart';
 import 'package:the_movie_app/domain/api_client/movie_api_client.dart';
-import 'package:the_movie_app/domain/cache_management/account_management.dart';
-import 'package:the_movie_app/domain/entity/account/account_state/account_state.dart';
+import 'package:the_movie_app/domain/entity/account/user_lists/user_lists.dart';
 import 'package:the_movie_app/domain/entity/movie_and_tv_show/credits/credits_details.dart';
 import 'package:the_movie_app/domain/entity/movie_and_tv_show/state/item_state.dart';
 import 'package:the_movie_app/helpers/snack_bar_helper.dart';
@@ -13,17 +12,23 @@ import 'package:the_movie_app/domain/entity/movie/details/movie_details.dart';
 
 class MovieDetailsModel extends ChangeNotifier {
   final _apiClient = MovieApiClient();
+  final _accountApiClient = AccountApiClient();
   MovieDetails? _movieDetails;
   ItemState? _movieState;
+  UserLists? _userLists;
+  final _lists = <Lists>[];
   final int _movieId;
   final _dateFormat = DateFormat.yMMMMd();
   bool _isFavorite = false;
   bool _isWatched = false;
   bool _isRated = false;
   double _rate = 0;
+  late int _currentPage;
+  late int _totalPage;
 
   MovieDetails? get movieDetails => _movieDetails;
   ItemState? get movieState => _movieState;
+  List<Lists> get lists => List.unmodifiable(_lists);
   bool get isFavorite => _isFavorite;
   bool get isWatched => _isWatched;
   bool get isRated => _isRated;
@@ -52,7 +57,7 @@ class MovieDetailsModel extends ChangeNotifier {
   }
 
   Future<void> toggleFavorite(BuildContext context) async {
-    final result = await SnackBarHelper.handleError(
+    final result = await SnackBarHelper.handleErrorDefaultLists(
       apiReq: () => _apiClient.addToFavorite(movieId: _movieId, isFavorite: !_isFavorite,),
       context: context,
     );
@@ -63,7 +68,7 @@ class MovieDetailsModel extends ChangeNotifier {
   }
 
   Future<void> toggleWatchlist(BuildContext context) async {
-    final result = await SnackBarHelper.handleError(
+    final result = await SnackBarHelper.handleErrorDefaultLists(
       apiReq: () => _apiClient.addToWatchlist(movieId: _movieId, isWatched: !_isWatched,),
       context: context,
     );
@@ -74,7 +79,7 @@ class MovieDetailsModel extends ChangeNotifier {
   }
 
   Future<void> toggleAddRating(BuildContext context, double rate) async {
-    final result = await SnackBarHelper.handleError(
+    final result = await SnackBarHelper.handleErrorDefaultLists(
       apiReq: () => _apiClient.addRating(movieId: _movieId, rate: rate),
       context: context,
     );
@@ -86,7 +91,7 @@ class MovieDetailsModel extends ChangeNotifier {
 
   Future<void> toggleDeleteRating(BuildContext context) async {
     if(_isRated) {
-      final result = await SnackBarHelper.handleError(
+      final result = await SnackBarHelper.handleErrorDefaultLists(
         apiReq: () => _apiClient.deleteRating(movieId: _movieId),
         context: context,
       );
@@ -102,6 +107,72 @@ class MovieDetailsModel extends ChangeNotifier {
       }
     }
   }
+
+  Future<void> getAllUserLists(BuildContext context) async {
+    if (lists.isEmpty) {
+      _currentPage = 0;
+      _totalPage = 1;
+
+      // while (_currentPage < _totalPage) {
+      // await getUserLists();
+      // }
+
+      await SnackBarHelper.handleErrorForUserLists(
+        apiReq: () => _getUserLists(),
+        context: context,
+      );
+    }
+  }
+
+  Future<void> _getUserLists() async {
+    if (_currentPage >= _totalPage) return;
+
+    final nextPage = _currentPage + 1;
+
+    final userLists = await _accountApiClient.getUserLists(nextPage);
+    _lists.addAll(userLists.results);
+    _currentPage = userLists.page;
+    _totalPage = userLists.totalPages;
+    await _getUserLists();
+  }
+
+  Future<void> createNewList({required BuildContext context, required String? description, required String name, required bool public}) async {
+    await SnackBarHelper.handleErrorWithMessage(
+      apiReq: () =>  _accountApiClient.addNewList(description: description, name: name, public: public),
+      context: context,
+      message: name,
+      messageType: MessageType.listCreated,
+    );
+
+    _lists.clear();
+    notifyListeners();
+  }
+
+  Future<void> addItemListToList({required BuildContext context, required int listId, required String name}) async {
+    //todo find best solution
+    final isSuccess = await _accountApiClient.isAddedToListToList(listId: listId, mediaType: MediaType.movie, mediaId: _movieId);
+
+    if(isSuccess) {
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        duration: const Duration(seconds: 5),
+        content: Text("This movie already exists on the \"$name\" list.", style: const TextStyle(fontSize: 20),),)
+      );
+    } else {
+      await SnackBarHelper.handleErrorWithMessage(
+        apiReq: () =>
+            _accountApiClient.addItemListToList(
+                listId: listId, mediaType: MediaType.movie, mediaId: _movieId),
+        context: context,
+        message: name,
+        messageType: MessageType.movieAddedToList,
+      );
+
+      _lists.clear();
+      notifyListeners();
+    }
+  }
+
 
   void onCastListTab(BuildContext context, List<Cast> cast) {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.castList, arguments: cast);

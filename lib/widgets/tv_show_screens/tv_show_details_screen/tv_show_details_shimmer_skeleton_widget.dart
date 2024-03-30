@@ -96,7 +96,7 @@ class TvShowShimmerBodySkeletonWidget extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.favorite),
+                            Icon(Icons.favorite_outline),
                             Text("Favorite"),
                           ],
                         ),
@@ -107,7 +107,7 @@ class TvShowShimmerBodySkeletonWidget extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.bookmark),
+                            Icon(Icons.bookmark_outline),
                             Text("Watch"),
                           ],
                         ),
@@ -118,7 +118,7 @@ class TvShowShimmerBodySkeletonWidget extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.star),
+                            Icon(Icons.star_outline),
                             Text("Rate"),
                           ],
                         ),

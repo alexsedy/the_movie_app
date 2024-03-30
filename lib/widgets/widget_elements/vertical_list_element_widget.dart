@@ -1,46 +1,63 @@
-import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/movie_screens/movie_list_screen/movie_list_model.dart';
-import 'package:the_movie_app/widgets/theme/app_colors.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
-import 'package:the_movie_app/widgets/widget_elements/vertical_list_element_widget.dart';
 
-class MovieListWidget extends StatefulWidget {
-  const MovieListWidget({super.key});
+class VerticalListElementWidget extends StatefulWidget {
+  final VerticalListElementType verticalListElementType;
+  const VerticalListElementWidget({super.key, required this.verticalListElementType,});
 
   @override
-  State<MovieListWidget> createState() => _MovieListWidgetState();
+  State<VerticalListElementWidget> createState() => _VerticalListElementWidgetState();
 }
 
-class _MovieListWidgetState extends State<MovieListWidget> {
-  late ScrollController _scrollController;
+class _VerticalListElementWidgetState extends State<VerticalListElementWidget> {
+  late final ScrollController _scrollController;
+  late final MovieListModel _model;
+  bool isNotInit = true;
 
   @override
   void initState() {
-    _scrollController = NotifierProvider.read<MovieListModel>(context)?.scrollController ?? ScrollController();
     super.initState();
+    switch(widget.verticalListElementType) {
+      case VerticalListElementType.movie:
+        _scrollController = NotifierProvider.read<MovieListModel>(context)?.scrollController ?? ScrollController();
+      case VerticalListElementType.tv:
+        // TODO: Handle this case.
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<MovieListModel>(context);
-
-    if(model == null) return const SizedBox.shrink();
+    if (isNotInit) {
+      switch (widget.verticalListElementType) {
+        case VerticalListElementType.movie:
+          _model = NotifierProvider.watch<MovieListModel>(context) ??
+              MovieListModel();
+          isNotInit = false;
+        case VerticalListElementType.tv:
+        // TODO: Handle this case.
+      }
+    }
 
     return ListView.builder(
         controller: _scrollController,
-        itemCount: model.movies.length,
+        itemCount: _model.movies.length,
         itemExtent: 163,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         itemBuilder: (BuildContext context, int index) {
-          model.preLoadMovies(index);
-          final movie = model.movies[index];
+          _model.preLoadMovies(index);
+          final movie = _model.movies[index];
           final posterPath = movie.posterPath;
 
-          if (!model.isLoadingInProgress) {
+          if (!_model.isLoadingInProgress) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: Stack(
@@ -95,7 +112,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
                                 ),
                                 const SizedBox(height: 5,),
                                 Text(
-                                  model.formatDate(movie.releaseDate),
+                                  _model.formatDate(movie.releaseDate),
                                   // movie.releaseDate,
                                   style: const TextStyle(
                                       color: Colors.grey),
@@ -122,7 +139,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
                     child: InkWell(
                       borderRadius: const BorderRadius.all(Radius.circular(
                           10)),
-                      onTap: () => model.onMovieTab(context, index),
+                      onTap: () => _model.onMovieTab(context, index),
                     ),
                   )
                 ],

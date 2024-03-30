@@ -5,6 +5,8 @@ import 'package:the_movie_app/domain/api_client/auth_api_client.dart';
 import 'package:the_movie_app/domain/cache_management/account_management.dart';
 import 'package:the_movie_app/domain/data_providers/session_data_provider.dart';
 import 'package:the_movie_app/domain/entity/account/account_state/account_state.dart';
+import 'package:the_movie_app/widgets/list_screens/default_lists_model.dart';
+import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 import 'package:uni_links/uni_links.dart';
 
 
@@ -22,15 +24,17 @@ class AccountModel extends ChangeNotifier {
     final sessionId = await _sessionDataProvider.getSessionId();
     _isLoggedIn = sessionId != null;
 
-    if(_isLoggedIn) {
+    if (_isLoggedIn && _accountSate == null) {
       _getAccountState();
     }
+
     notifyListeners();
   }
 
   Future<void> makeLogout(BuildContext context) async {
     await _apiClientAuth.deleteSession();
     await AccountManager.resetAccountData();
+    _accountSate = null;
     await AccountManager.resetAccountId();
     await _sessionDataProvider.setSessionId(null);
     await _sessionDataProvider.setAccessToken(null);
@@ -43,7 +47,7 @@ class AccountModel extends ChangeNotifier {
   Future<void> makeLogin(BuildContext context) async {
     final requestToken = await _apiClientAuth.auth();
     await _handleAuthDeepLink(requestToken, context);
-    }
+  }
 
   Future<void> _handleAuthDeepLink(String requestToken, BuildContext context) async {
     try {
@@ -65,6 +69,8 @@ class AccountModel extends ChangeNotifier {
               final sessionId = await _apiClientAuth.createSession(accessToken);
               _sessionDataProvider.setSessionId(sessionId);
 
+              await _getAccountState();
+
               _isLoggedIn = true;
 
               notifyListeners();
@@ -83,5 +89,25 @@ class AccountModel extends ChangeNotifier {
 
   Future<void> _getAccountState() async {
     _accountSate = await AccountManager.getAccountData();
+  }
+
+  void onFavoriteList(BuildContext context) {
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.defaultList, arguments: ListType.favorites);
+  }
+
+  void onWatchlistList(BuildContext context) {
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.defaultList, arguments: ListType.watchlist);
+  }
+
+  void onRatedList(BuildContext context) {
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.defaultList, arguments: ListType.rated);
+  }
+
+  void onRecommendationList(BuildContext context) {
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.defaultList, arguments: ListType.recommendations);
+  }
+
+  void onUserLists(BuildContext context) {
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.userLists);
   }
 }

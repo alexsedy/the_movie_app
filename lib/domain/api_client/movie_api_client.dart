@@ -211,4 +211,24 @@ class MovieApiClient extends ApiClient {
 
     validateError(response, json);
   }
+
+  Future<MovieResponse> getTrendingMovie({required int page, required String timeToggle}) async {
+
+    final url = makeUri(
+      "/trending/movie/$timeToggle",
+      <String, dynamic>{
+        "api_key": apiKey,
+        // "page": page.toString(),
+        "language": "en-US"
+      },
+    );
+    final request = await client.getUrl(url);
+    final response = await request.close();
+    final json = (await response.jsonDecode()) as Map<String, dynamic>;
+
+    validateError(response, json);
+
+    final movieResponse = MovieResponse.fromJson(json);
+    return movieResponse;
+  }
 }

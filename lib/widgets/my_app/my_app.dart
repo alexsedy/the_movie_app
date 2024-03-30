@@ -16,9 +16,31 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'The Movie',
       // theme: ThemeData(
-      //   appBarTheme: const AppBarTheme(backgroundColor: AppColors.mainBlue),
+      //   textTheme: TextTheme(
+      //     bodyLarge: TextStyle(
+      //       color: Colors.deepPurple,
+      //     ),
+      //     bodyMedium: TextStyle(
+      //       color: Colors.deepPurple,
+      //     ),
+      //   ),
+      //   snackBarTheme: SnackBarThemeData(
+      //     backgroundColor: Colors.lightGreen,
+      //   ),
+      //   dialogTheme: DialogTheme(
+      //     backgroundColor: Colors.blueAccent,
+      //   ),
+      //   bottomSheetTheme: BottomSheetThemeData(
+      //     backgroundColor: Colors.greenAccent,
+      //   ),
+      //   appBarTheme: const AppBarTheme(
+      //     backgroundColor: Colors.redAccent,
+      //     actionsIconTheme: IconThemeData(
+      //       color: Colors.amberAccent,
+      //     ),
+      //   ),
       //   bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      //     backgroundColor: AppColors.mainBlue,
+      //     backgroundColor: Colors.redAccent,
       //     selectedItemColor: Colors.white,
       //     unselectedItemColor: Colors.grey,
       //   ),
