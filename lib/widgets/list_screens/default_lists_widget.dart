@@ -161,7 +161,7 @@ class _MovieListWidget extends StatelessWidget {
                               children: [
                                 const SizedBox(height: 15,),
                                 Text(
-                                  movie.title,
+                                  movie.title ?? "",
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold),
                                   maxLines: 1,
@@ -296,7 +296,7 @@ class _TvShowListWidget extends StatelessWidget {
                               children: [
                                 const SizedBox(height: 15,),
                                 Text(
-                                  tvShow.originalName,
+                                  tvShow.name ?? "",
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold),
                                   maxLines: 1,

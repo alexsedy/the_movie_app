@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:the_movie_app/domain/entity/movie_and_tv_show/credits/credits_details.dart';
+import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/credits_list_screen/cast_list_screen/cast_list_model.dart';
 import 'package:the_movie_app/widgets/credits_list_screen/cast_list_screen/cast_list_widget.dart';

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
-import 'package:the_movie_app/domain/entity/person/credits_people/movie_credits_people/movie_credits_people.dart';
-import 'package:the_movie_app/domain/entity/person/credits_people/tv_show_credits_people/tv_show_credits_people.dart';
+import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/person_screen/people_details_screen/people_details_model.dart';
 
@@ -132,11 +131,11 @@ class _MoviesButtonWidget extends StatelessWidget {
                       color: Theme.of(context).dialogBackgroundColor,
                       borderRadius: BorderRadius.circular(24),
                     ),
-                    child: GroupedListView<MovieCreditList, String>(
+                    child: GroupedListView<CreditList, String>(
                       controller: scrollController,
                       useStickyGroupSeparators: true,
                       elements: movieCreditList,
-                      groupBy: (MovieCreditList c) => c.department,
+                      groupBy: (CreditList c) => c.department,
                       groupHeaderBuilder: (c) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(
@@ -483,12 +482,12 @@ class _TvShowButtonWidget extends StatelessWidget {
                       color: Theme.of(context).dialogBackgroundColor,
                       borderRadius: BorderRadius.circular(24),
                     ),
-                    child: GroupedListView<TvShowCreditList, String>(
+                    child: GroupedListView<CreditList, String>(
                       sort: true,
                       controller: scrollController,
                       useStickyGroupSeparators: true,
                       elements: tvShowCreditList,
-                      groupBy: (TvShowCreditList c) => c.department,
+                      groupBy: (CreditList c) => c.department,
                       groupHeaderBuilder: (c) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(

@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/movie_api_client.dart';
-import 'package:the_movie_app/domain/entity/movie/movie_list/movie_list.dart';
+import 'package:the_movie_app/domain/entity/media/list/list.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
 class MovieListModel extends ChangeNotifier {
   final ScrollController scrollController = ScrollController();
   final _apiClient = MovieApiClient();
-  final _movies = <Movie>[];
+  final _movies = <MediaList>[];
   late int _currentPage;
   late int _totalPage;
   late String _locale;
@@ -19,7 +19,7 @@ class MovieListModel extends ChangeNotifier {
   Timer? _searchDebounce;
 
   bool get isLoadingInProgress => _isLoadingInProgress;
-  List<Movie> get movies => List.unmodifiable(_movies);
+  List<MediaList> get movies => List.unmodifiable(_movies);
 
   Future<void> firstLoadMovies() async {
     if(_isFirstLoadMovie) {
@@ -37,7 +37,7 @@ class MovieListModel extends ChangeNotifier {
 
     try {
       final moviesResponse = await _apiClient.getDiscoverMovie(nextPage);
-      _movies.addAll(moviesResponse.movies);
+      _movies.addAll(moviesResponse.list);
       _currentPage = moviesResponse.page;
       _totalPage = moviesResponse.totalPages;
       _isLoadingInProgress = false;
@@ -61,7 +61,7 @@ class MovieListModel extends ChangeNotifier {
 
       try {
         final moviesResponse = await _apiClient.searchMovie(nextPage, text);
-        _movies.addAll(moviesResponse.movies);
+        _movies.addAll(moviesResponse.list);
         _currentPage = moviesResponse.page;
         _totalPage = moviesResponse.totalPages;
         _isLoadingInProgress = false;

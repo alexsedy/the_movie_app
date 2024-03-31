@@ -239,7 +239,7 @@ class _SummaryMovieWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<MovieDetailsModel>(context);
     final movieDetails = model?.movieDetails;
-    final releaseDates = model?.movieDetails?.releaseDates.results;
+    final releaseDates = model?.movieDetails?.releaseDates?.results;
     final releaseDate = model?.formatDate(movieDetails?.releaseDate);
     var countriesList = <String>[];
     var genresList = <String>[];
@@ -375,7 +375,7 @@ class _MovieCrewWidget extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(crew[0].name, style: styleOfName,
+                        Text(crew[0].name ?? "", style: styleOfName,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,),
                         Text(crew[0].job, style: styleOfRole,
@@ -428,7 +428,7 @@ class _MovieCrewWidget extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(crew[index * 2].name, style: styleOfName,
+                          Text(crew[index * 2].name ?? "", style: styleOfName,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -445,7 +445,7 @@ class _MovieCrewWidget extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(crew[index * 2 + 1].name, style: styleOfName,
+                          Text(crew[index * 2 + 1].name ?? "", style: styleOfName,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -462,42 +462,6 @@ class _MovieCrewWidget extends StatelessWidget {
             },
           ),
         ),
-        // const SizedBox(height: 20,),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //   children: [
-        //     SizedBox(
-        //       width: 130,
-        //       height: 50,
-        //       child: Column(
-        //         crossAxisAlignment: CrossAxisAlignment.start,
-        //         children: [
-        //           Text(crew[2].name, style: styleOfName,
-        //             maxLines: 1,
-        //             overflow: TextOverflow.ellipsis,),
-        //           Text(crew[2].job, style: styleOfRole,
-        //             maxLines: 1,
-        //             overflow: TextOverflow.ellipsis,),
-        //         ],
-        //       ),
-        //     ),
-        //     SizedBox(
-        //       width: 130,
-        //       height: 50,
-        //       child: Column(
-        //         crossAxisAlignment: CrossAxisAlignment.start,
-        //         children: [
-        //           Text(crew[3].name, style: styleOfName,
-        //             maxLines: 1,
-        //             overflow: TextOverflow.ellipsis,),
-        //           Text(crew[3].job, style: styleOfRole,
-        //             maxLines: 1,
-        //             overflow: TextOverflow.ellipsis,),
-        //         ],
-        //       ),
-        //     ),
-        //   ],
-        // ),
       ],
     );
   }
@@ -593,7 +557,7 @@ class _MovieCastWidget extends StatelessWidget {
                                   Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 4),
                                     child: Text(
-                                      name.isNotEmpty ? name : "",
+                                      name ?? "",
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(

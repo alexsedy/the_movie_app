@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'movie_release_date.dart';
+part of 'release_date.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

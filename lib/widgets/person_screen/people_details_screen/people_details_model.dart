@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/people_api_client.dart';
-import 'package:the_movie_app/domain/entity/person/credits_people/movie_credits_people/movie_credits_people.dart';
-import 'package:the_movie_app/domain/entity/person/credits_people/tv_show_credits_people/tv_show_credits_people.dart';
+import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
 import 'package:the_movie_app/domain/entity/person/details/person_details.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -12,8 +11,8 @@ class PeopleDetailsModel extends ChangeNotifier{
   final int _personId;
   PersonDetails? _personDetails;
   final _dateFormat = DateFormat.yMMMMd();
-  final List<MovieCreditList> _movieCreditList = [];
-  final List<TvShowCreditList> _tvShowCreditList = [];
+  final List<CreditList> _movieCreditList = [];
+  final List<CreditList> _tvShowCreditList = [];
   final order = {
     'Actor': 0,
     'Directing': 1,
@@ -29,8 +28,8 @@ class PeopleDetailsModel extends ChangeNotifier{
     'Lighting': 11,
   };
 
-  List<MovieCreditList> get movieCreditList => _movieCreditList;
-  List<TvShowCreditList> get tvShowCreditList => _tvShowCreditList;
+  List<CreditList> get movieCreditList => _movieCreditList;
+  List<CreditList> get tvShowCreditList => _tvShowCreditList;
   PersonDetails? get personDetails => _personDetails;
 
   PeopleDetailsModel(this._personId);
@@ -48,8 +47,8 @@ class PeopleDetailsModel extends ChangeNotifier{
     if(movieCredits == null) {
       return;
     }
-    _movieCreditList.addAll(movieCredits.cast.map((cast) => MovieCreditList.fromCast(cast)));
-    _movieCreditList.addAll(movieCredits.crew.map((crew) => MovieCreditList.fromCrew(crew)));
+    _movieCreditList.addAll(movieCredits.cast.map((cast) => CreditList.fromCast(cast)));
+    _movieCreditList.addAll(movieCredits.crew.map((crew) => CreditList.fromCrew(crew)));
 
     // _movieCreditList.sort((a, b) => (b.releaseDate ?? '') .compareTo(a.releaseDate ?? ''));
 
@@ -67,8 +66,8 @@ class PeopleDetailsModel extends ChangeNotifier{
     if(tvCredits == null) {
       return;
     }
-    _tvShowCreditList.addAll(tvCredits.cast.map((cast) => TvShowCreditList.fromCast(cast)));
-    _tvShowCreditList.addAll(tvCredits.crew.map((crew) => TvShowCreditList.fromCrew(crew)));
+    _tvShowCreditList.addAll(tvCredits.cast.map((cast) => CreditList.fromCast(cast)));
+    _tvShowCreditList.addAll(tvCredits.crew.map((crew) => CreditList.fromCrew(crew)));
 
     _tvShowCreditList.sort((a, b) {
       int departmentComparison = a.department.compareTo(b.department);

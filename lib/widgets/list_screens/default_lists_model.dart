@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/account_api_client.dart';
-import 'package:the_movie_app/domain/entity/movie/movie_list/movie_list.dart';
-import 'package:the_movie_app/domain/entity/tv_show/tv_show_list/tv_show_list.dart';
+import 'package:the_movie_app/domain/entity/media/list/list.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
 class DefaultListsModel extends ChangeNotifier {
   final ListType listType;
   final _accountApiClient = AccountApiClient();
-  final _movies = <Movie>[];
-  final _tvShows = <TvShow>[];
+  final _movies = <MediaList>[];
+  final _tvShows = <MediaList>[];
   late int _currentPage;
   late int _totalPage;
   var _isFirstLoadMovie = true;
@@ -22,8 +21,8 @@ class DefaultListsModel extends ChangeNotifier {
 
   bool get isLoadingInProgress => _isMovieLoadingInProgress;
   bool get isTvShowLoadingInProgress => _isTvShowLoadingInProgress;
-  List<Movie> get movies => List.unmodifiable(_movies);
-  List<TvShow> get tvShows => List.unmodifiable(_tvShows);
+  List<MediaList> get movies => List.unmodifiable(_movies);
+  List<MediaList> get tvShows => List.unmodifiable(_tvShows);
 
   Future<void> firstLoadMovies() async {
     if(_isFirstLoadMovie) {
@@ -42,7 +41,7 @@ class DefaultListsModel extends ChangeNotifier {
     try {
       final moviesResponse = await _accountApiClient.getDefaultMovieLists(page: nextPage, listType: listType);
 
-      _movies.addAll(moviesResponse.movies);
+      _movies.addAll(moviesResponse.list);
       _currentPage = moviesResponse.page;
       _totalPage = moviesResponse.totalPages;
       _isMovieLoadingInProgress = false;
@@ -70,7 +69,7 @@ class DefaultListsModel extends ChangeNotifier {
     try {
       final tvShowResponse = await _accountApiClient.getDefaultTvShowLists(page: nextPage, listType: listType);
 
-      _tvShows.addAll(tvShowResponse.tvShows);
+      _tvShows.addAll(tvShowResponse.list);
       _currentPage = tvShowResponse.page;
       _totalPage = tvShowResponse.totalPages;
       _isTvShowLoadingInProgress = false;

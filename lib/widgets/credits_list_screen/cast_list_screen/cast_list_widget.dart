@@ -80,7 +80,7 @@ class _BodyWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           const SizedBox(height: 6,),
-                          Text(name,
+                          Text(name ?? "",
                             softWrap: true,
                             maxLines: 3,
                             style: const TextStyle(

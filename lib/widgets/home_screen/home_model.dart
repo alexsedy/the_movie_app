@@ -5,9 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/movie_api_client.dart';
 import 'package:the_movie_app/domain/api_client/people_api_client.dart';
 import 'package:the_movie_app/domain/api_client/tv_show_api_client.dart';
-import 'package:the_movie_app/domain/entity/movie/movie_list/movie_list.dart';
+import 'package:the_movie_app/domain/entity/media/list/list.dart';
 import 'package:the_movie_app/domain/entity/person/trending_person/trending_person.dart';
-import 'package:the_movie_app/domain/entity/tv_show/tv_show_list/tv_show_list.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
 class HomeModel extends ChangeNotifier {
@@ -15,27 +14,27 @@ class HomeModel extends ChangeNotifier {
   final _tvShowApiClient = TvShowApiClient();
   final _peopleApiClient = PeopleApiClient();
   final _random = Random();
-  final _movies = <Movie>[];
-  final _tvs = <TvShow>[];
+  final _movies = <MediaList>[];
+  final _tvs = <MediaList>[];
   final _persons = <TrendingPersonList>[];
   final _dateFormat = DateFormat.y();
   String? randomPoster;
 
-  List<Movie> get movies => List.unmodifiable(_movies);
-  List<TvShow> get tvs => List.unmodifiable(_tvs);
+  List<MediaList> get movies => List.unmodifiable(_movies);
+  List<MediaList> get tvs => List.unmodifiable(_tvs);
   List<TrendingPersonList> get persons => List.unmodifiable(_persons);
 
   Future<void> loadMovies(bool isSwitch) async {
     if(isSwitch) {
       _movies.clear();
       final moviesResponse = await _movieApiClient.getTrendingMovie(page: 1, timeToggle: "day");
-      _movies.addAll(moviesResponse.movies);
+      _movies.addAll(moviesResponse.list);
 
       randomPoster ??= movies[_random.nextInt(movies.length)].backdropPath;
     } else {
       _movies.clear();
       final moviesResponse = await _movieApiClient.getTrendingMovie(page: 1, timeToggle: "week");
-      _movies.addAll(moviesResponse.movies);
+      _movies.addAll(moviesResponse.list);
     }
     notifyListeners();
   }
@@ -44,11 +43,11 @@ class HomeModel extends ChangeNotifier {
     if(isSwitch) {
       _tvs.clear();
       final tvResponse = await _tvShowApiClient.getTrendingTv(page: 1, timeToggle: "day");
-      _tvs.addAll(tvResponse.tvShows);
+      _tvs.addAll(tvResponse.list);
     } else {
       _tvs.clear();
       final tvResponse = await _tvShowApiClient.getTrendingTv(page: 1, timeToggle: "week");
-      _tvs.addAll(tvResponse.tvShows);
+      _tvs.addAll(tvResponse.list);
     }
     notifyListeners();
   }
@@ -94,8 +93,4 @@ class HomeModel extends ChangeNotifier {
 
   String formatDate(String? date) =>
       date != "" ? _dateFormat.format(DateTime.parse(date ?? "")) : "No date";
-}
-
-enum ToggleWidgetType {
-  movie, tv, person
 }

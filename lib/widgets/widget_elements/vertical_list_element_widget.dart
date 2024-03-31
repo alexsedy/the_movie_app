@@ -3,11 +3,12 @@ import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/movie_screens/movie_list_screen/movie_list_model.dart';
+import 'package:the_movie_app/widgets/tv_show_screens/tv_show_list_screen/tv_show_list_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
 
 class VerticalListElementWidget extends StatefulWidget {
   final VerticalListElementType verticalListElementType;
-  const VerticalListElementWidget({super.key, required this.verticalListElementType,});
+  const VerticalListElementWidget({super.key, required this.verticalListElementType});
 
   @override
   State<VerticalListElementWidget> createState() => _VerticalListElementWidgetState();
@@ -15,8 +16,11 @@ class VerticalListElementWidget extends StatefulWidget {
 
 class _VerticalListElementWidgetState extends State<VerticalListElementWidget> {
   late final ScrollController _scrollController;
-  late final MovieListModel _model;
+  late final MovieListModel _modelMovie;
+  late final TvShowListModel _modelTv;
   bool isNotInit = true;
+  bool _isLoadingInProgress = true;
+
 
   @override
   void initState() {
@@ -25,7 +29,7 @@ class _VerticalListElementWidgetState extends State<VerticalListElementWidget> {
       case VerticalListElementType.movie:
         _scrollController = NotifierProvider.read<MovieListModel>(context)?.scrollController ?? ScrollController();
       case VerticalListElementType.tv:
-        // TODO: Handle this case.
+        _scrollController = NotifierProvider.read<TvShowListModel>(context)?.scrollController ?? ScrollController();
     }
   }
 
@@ -36,28 +40,54 @@ class _VerticalListElementWidgetState extends State<VerticalListElementWidget> {
 
   @override
   Widget build(BuildContext context) {
+    int length = 0;
+
     if (isNotInit) {
       switch (widget.verticalListElementType) {
         case VerticalListElementType.movie:
-          _model = NotifierProvider.watch<MovieListModel>(context) ??
+          _modelMovie = NotifierProvider.watch<MovieListModel>(context) ??
               MovieListModel();
           isNotInit = false;
+          length = _modelMovie.movies.length;
         case VerticalListElementType.tv:
-        // TODO: Handle this case.
+          _modelTv = NotifierProvider.watch<TvShowListModel>(context) ??
+              TvShowListModel();
+          isNotInit = false;
+          length = _modelTv.tvShows.length;
       }
     }
 
     return ListView.builder(
         controller: _scrollController,
-        itemCount: _model.movies.length,
+        itemCount: length,
         itemExtent: 163,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         itemBuilder: (BuildContext context, int index) {
-          _model.preLoadMovies(index);
-          final movie = _model.movies[index];
-          final posterPath = movie.posterPath;
+          String title = "";
+          String overview = "";
+          String date = "";
+          String posterPath = "";
 
-          if (!_model.isLoadingInProgress) {
+        switch (widget.verticalListElementType) {
+          case VerticalListElementType.movie:
+            _modelMovie.preLoadMovies(index);
+            _isLoadingInProgress = _modelMovie.isLoadingInProgress;
+            final movie = _modelMovie.movies[index];
+            title = movie.title ?? "";
+            posterPath = movie.posterPath ?? "";
+            overview = movie.overview;
+            date = _modelMovie.formatDate(movie.releaseDate);
+          case VerticalListElementType.tv:
+            _modelTv.preLoadTvShows(index);
+            _isLoadingInProgress = _modelTv.isLoadingInProgress;
+            final tvShow = _modelTv.tvShows[index];
+            title = tvShow.name ?? "";
+            posterPath = tvShow.posterPath ?? "";
+            overview = tvShow.overview;
+            date = _modelTv.formatDate(tvShow.firstAirDate);
+        }
+
+          if (!_isLoadingInProgress) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: Stack(
@@ -80,7 +110,7 @@ class _VerticalListElementWidgetState extends State<VerticalListElementWidget> {
                       children: [
                         AspectRatio(
                           aspectRatio: 500 / 750,
-                          child: posterPath != null
+                          child: posterPath.isNotEmpty
                               ? Image.network(
                             loadingBuilder: (context, child, loadingProgress) {
                               if (loadingProgress == null) return child;
@@ -92,8 +122,8 @@ class _VerticalListElementWidgetState extends State<VerticalListElementWidget> {
                                 ),
                               );
                             },
-                            ApiClient.getImageByUrl(posterPath), width: 95,)
-                              : Image.asset(AppImages.noPoster, width: 95,),
+                            ApiClient.getImageByUrl(posterPath), width: 95, fit: BoxFit.fitHeight,)
+                              : Image.asset(AppImages.noPoster, width: 95, fit: BoxFit.fitHeight,),
                         ),
                         Expanded(
                           child: Padding(
@@ -104,7 +134,7 @@ class _VerticalListElementWidgetState extends State<VerticalListElementWidget> {
                               children: [
                                 const SizedBox(height: 15,),
                                 Text(
-                                  movie.title,
+                                  title,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold),
                                   maxLines: 1,
@@ -112,7 +142,7 @@ class _VerticalListElementWidgetState extends State<VerticalListElementWidget> {
                                 ),
                                 const SizedBox(height: 5,),
                                 Text(
-                                  _model.formatDate(movie.releaseDate),
+                                  date,
                                   // movie.releaseDate,
                                   style: const TextStyle(
                                       color: Colors.grey),
@@ -122,7 +152,7 @@ class _VerticalListElementWidgetState extends State<VerticalListElementWidget> {
                                 const SizedBox(height: 15,),
                                 Expanded(
                                   child: Text(
-                                    movie.overview,
+                                    overview,
                                     maxLines: 3,
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -139,7 +169,14 @@ class _VerticalListElementWidgetState extends State<VerticalListElementWidget> {
                     child: InkWell(
                       borderRadius: const BorderRadius.all(Radius.circular(
                           10)),
-                      onTap: () => _model.onMovieTab(context, index),
+                      onTap: () {
+                        switch(widget.verticalListElementType) {
+                          case VerticalListElementType.movie:
+                            _modelMovie.onMovieTab(context, index);
+                          case VerticalListElementType.tv:
+                            _modelTv.onTvShowTab(context, index);
+                        }
+                      },
                     ),
                   )
                 ],

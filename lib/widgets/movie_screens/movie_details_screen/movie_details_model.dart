@@ -3,17 +3,17 @@ import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/account_api_client.dart';
 import 'package:the_movie_app/domain/api_client/movie_api_client.dart';
 import 'package:the_movie_app/domain/entity/account/user_lists/user_lists.dart';
-import 'package:the_movie_app/domain/entity/movie_and_tv_show/credits/credits_details.dart';
-import 'package:the_movie_app/domain/entity/movie_and_tv_show/state/item_state.dart';
+import 'package:the_movie_app/domain/entity/media/media_details/media_details.dart';
+import 'package:the_movie_app/domain/entity/media/state/item_state.dart';
+import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
 import 'package:the_movie_app/helpers/snack_bar_helper.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:the_movie_app/domain/entity/movie/details/movie_details.dart';
 
 class MovieDetailsModel extends ChangeNotifier {
   final _apiClient = MovieApiClient();
   final _accountApiClient = AccountApiClient();
-  MovieDetails? _movieDetails;
+  MediaDetails? _movieDetails;
   ItemState? _movieState;
   UserLists? _userLists;
   final _lists = <Lists>[];
@@ -26,7 +26,7 @@ class MovieDetailsModel extends ChangeNotifier {
   late int _currentPage;
   late int _totalPage;
 
-  MovieDetails? get movieDetails => _movieDetails;
+  MediaDetails? get movieDetails => _movieDetails;
   ItemState? get movieState => _movieState;
   List<Lists> get lists => List.unmodifiable(_lists);
   bool get isFavorite => _isFavorite;

@@ -3,13 +3,13 @@ import 'dart:io';
 
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/domain/cache_management/account_management.dart';
-import 'package:the_movie_app/domain/entity/movie/details/movie_details.dart';
-import 'package:the_movie_app/domain/entity/movie/movie_list/movie_list.dart';
-import 'package:the_movie_app/domain/entity/movie_and_tv_show/credits/credits_details.dart';
-import 'package:the_movie_app/domain/entity/movie_and_tv_show/state/item_state.dart';
+import 'package:the_movie_app/domain/entity/media/list/list.dart';
+import 'package:the_movie_app/domain/entity/media/media_details/media_details.dart';
+import 'package:the_movie_app/domain/entity/media/state/item_state.dart';
+import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
 
 class MovieApiClient extends ApiClient {
-  Future<MovieResponse> getDiscoverMovie(int page) async {
+  Future<ListResponse> getDiscoverMovie(int page) async {
 
     final url = makeUri(
       "/discover/movie",
@@ -25,11 +25,11 @@ class MovieApiClient extends ApiClient {
 
     validateError(response, json);
 
-    final movieResponse = MovieResponse.fromJson(json);
+    final movieResponse = ListResponse.fromJson(json);
     return movieResponse;
   }
 
-  Future<MovieResponse> searchMovie(int page, String query) async {
+  Future<ListResponse> searchMovie(int page, String query) async {
     final url = makeUri(
       "/search/movie",
       <String, dynamic>{
@@ -45,11 +45,11 @@ class MovieApiClient extends ApiClient {
 
     validateError(response, json);
 
-    final movieResponse = MovieResponse.fromJson(json);
+    final movieResponse = ListResponse.fromJson(json);
     return movieResponse;
   }
 
-  Future<MovieDetails> getMovieById(int movieId) async {
+  Future<MediaDetails> getMovieById(int movieId) async {
     final url = makeUri(
       "/movie/$movieId",
       <String, dynamic>{
@@ -64,7 +64,7 @@ class MovieApiClient extends ApiClient {
 
     validateError(response, json);
 
-    final movieDetailsResponse = MovieDetails.fromJson(json);
+    final movieDetailsResponse = MediaDetails.fromJson(json);
     return movieDetailsResponse;
   }
 
@@ -212,7 +212,7 @@ class MovieApiClient extends ApiClient {
     validateError(response, json);
   }
 
-  Future<MovieResponse> getTrendingMovie({required int page, required String timeToggle}) async {
+  Future<ListResponse> getTrendingMovie({required int page, required String timeToggle}) async {
 
     final url = makeUri(
       "/trending/movie/$timeToggle",
@@ -228,7 +228,7 @@ class MovieApiClient extends ApiClient {
 
     validateError(response, json);
 
-    final movieResponse = MovieResponse.fromJson(json);
+    final movieResponse = ListResponse.fromJson(json);
     return movieResponse;
   }
 }

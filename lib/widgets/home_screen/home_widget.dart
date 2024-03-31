@@ -4,6 +4,7 @@ import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/home_screen/home_model.dart';
+import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
 
 class HomeWidget extends StatefulWidget {
   const HomeWidget({super.key});
@@ -22,11 +23,11 @@ class _HomeWidgetState extends State<HomeWidget> {
           children: [
             _SearchWidget(),
             SizedBox(height: 20,),
-            _TrendingToggleWidget(toggleWidgetType: ToggleWidgetType.movie),
+            _TrendingToggleWidget(horizontalListElementType: HorizontalListElementType.movie),
             SizedBox(height: 20,),
-            _TrendingToggleWidget(toggleWidgetType: ToggleWidgetType.tv,),
+            _TrendingToggleWidget(horizontalListElementType: HorizontalListElementType.tv,),
             SizedBox(height: 20,),
-            _TrendingToggleWidget(toggleWidgetType: ToggleWidgetType.person,),
+            _TrendingToggleWidget(horizontalListElementType: HorizontalListElementType.person,),
             // ToggleWidgets(),
           ],
         ),
@@ -131,8 +132,8 @@ class _BackgroundSearch extends StatelessWidget {
 }
 
 class _TrendingToggleWidget extends StatefulWidget {
-  final ToggleWidgetType toggleWidgetType;
-  const _TrendingToggleWidget({super.key, required this.toggleWidgetType});
+  final HorizontalListElementType horizontalListElementType;
+  const _TrendingToggleWidget({super.key, required this.horizontalListElementType});
 
   @override
   State<_TrendingToggleWidget> createState() => _TrendingToggleWidgetState();
@@ -150,12 +151,12 @@ class _TrendingToggleWidgetState extends State<_TrendingToggleWidget> {
   }
 
   String _getName() {
-    switch(widget.toggleWidgetType){
-      case ToggleWidgetType.movie:
+    switch(widget.horizontalListElementType){
+      case HorizontalListElementType.movie:
         return "Trending movies";
-      case ToggleWidgetType.tv:
+      case HorizontalListElementType.tv:
         return "Trending TVs";
-      case ToggleWidgetType.person:
+      case HorizontalListElementType.person:
         return "Trending persons";
     }
   }
@@ -191,12 +192,12 @@ class _TrendingToggleWidgetState extends State<_TrendingToggleWidget> {
                       for (int i = 0; i < _isSelected.length; i++) {
                         _isSelected[i] = i == index;
 
-                        switch(widget.toggleWidgetType){
-                          case ToggleWidgetType.movie:
+                        switch(widget.horizontalListElementType){
+                          case HorizontalListElementType.movie:
                             NotifierProvider.read<HomeModel>(context)?.loadMovies(_isSelected.first);
-                          case ToggleWidgetType.tv:
+                          case HorizontalListElementType.tv:
                             NotifierProvider.read<HomeModel>(context)?.loadTv(_isSelected.first);
-                          case ToggleWidgetType.person:
+                          case HorizontalListElementType.person:
                             NotifierProvider.read<HomeModel>(context)?.loadPerson(_isSelected.first);
                         }
                       }
@@ -211,10 +212,10 @@ class _TrendingToggleWidgetState extends State<_TrendingToggleWidget> {
             ],
           ),
         ),
-        switch(widget.toggleWidgetType){
-          ToggleWidgetType.movie =>  const _TrendingMovieWidget(),
-          ToggleWidgetType.tv => const _TrendingTvWidget(),
-          ToggleWidgetType.person => const _TrendingPersonWidget(),
+        switch(widget.horizontalListElementType){
+          HorizontalListElementType.movie =>  const _TrendingMovieWidget(),
+          HorizontalListElementType.tv => const _TrendingTvWidget(),
+          HorizontalListElementType.person => const _TrendingPersonWidget(),
         }
       ],
     );
@@ -301,7 +302,7 @@ class _TrendingMovieWidget extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 4, right: 2, top: 5),
                                   child: Text(
-                                    title,
+                                    title ?? "",
                                     maxLines: 3,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
@@ -428,7 +429,7 @@ class _TrendingTvWidget extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 4, right: 2, top: 5),
                                   child: Text(
-                                    title,
+                                    title ?? "",
                                     maxLines: 3,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(

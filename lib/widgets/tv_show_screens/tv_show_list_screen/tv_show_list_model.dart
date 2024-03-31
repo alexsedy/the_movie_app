@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/tv_show_api_client.dart';
-import 'package:the_movie_app/domain/entity/tv_show/tv_show_list/tv_show_list.dart';
+import 'package:the_movie_app/domain/entity/media/list/list.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
 class TvShowListModel extends ChangeNotifier {
   final ScrollController scrollController = ScrollController();
   final _apiClient = TvShowApiClient();
-  final _tvShows = <TvShow>[];
+  final _tvShows = <MediaList>[];
   late int _currentPage;
   late int _totalPage;
   late String _locale;
@@ -19,7 +19,7 @@ class TvShowListModel extends ChangeNotifier {
   Timer? _searchDebounce;
 
   bool get isLoadingInProgress => _isLoadingInProgress;
-  List<TvShow> get tvShows => List.unmodifiable(_tvShows);
+  List<MediaList> get tvShows => List.unmodifiable(_tvShows);
 
   Future<void> firstLoadTvShows() async {
     if(_isFirstLoadTvShow) {
@@ -37,7 +37,7 @@ class TvShowListModel extends ChangeNotifier {
 
     try {
       final tvShowResponse = await _apiClient.getDiscoverTvShow(nextPage);
-      _tvShows.addAll(tvShowResponse.tvShows);
+      _tvShows.addAll(tvShowResponse.list);
       _currentPage = tvShowResponse.page;
       _totalPage = tvShowResponse.totalPages;
       _isLoadingInProgress = false;
@@ -61,7 +61,7 @@ class TvShowListModel extends ChangeNotifier {
 
       try {
         final tvShowsResponse = await _apiClient.searchTvShow(nextPage, text);
-        _tvShows.addAll(tvShowsResponse.tvShows);
+        _tvShows.addAll(tvShowsResponse.list);
         _currentPage = tvShowsResponse.page;
         _totalPage = tvShowsResponse.totalPages;
         _isLoadingInProgress = false;

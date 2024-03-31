@@ -85,7 +85,7 @@ class _MovieListWidgetState extends State<TvShowListWidget> {
                               children: [
                                 const SizedBox(height: 15,),
                                 Text(
-                                  tvShow.originalName,
+                                  tvShow.name ?? "",
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold),
                                   maxLines: 1,

@@ -241,7 +241,7 @@ class _SummaryTvShowWidget extends StatelessWidget {
     final tvShowDetails = model?.tvShowDetails;
     final firstAirDate = model?.tvShowDetails?.firstAirDate;
     // final lastAirDate = model?.tvShowDetails?.lastAirDate;
-    final ratingsList = tvShowDetails?.contentRatings.ratingsList;
+    final ratingsList = tvShowDetails?.contentRatings?.ratingsList;
 
     var countriesList = <String>[];
     var genresList = <String>[];
@@ -386,7 +386,7 @@ class _TvShowCrewWidget extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(crew[0].name, style: styleOfName,
+                        Text(crew[0].name ?? "", style: styleOfName,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,),
                         Text(crew[0].job, style: styleOfRole,
@@ -439,7 +439,7 @@ class _TvShowCrewWidget extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(crew[index * 2].name, style: styleOfName,
+                          Text(crew[index * 2].name ?? "", style: styleOfName,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -456,7 +456,7 @@ class _TvShowCrewWidget extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(crew[index * 2 + 1].name, style: styleOfName,
+                          Text(crew[index * 2 + 1].name ?? "", style: styleOfName,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -568,7 +568,7 @@ class _TvShowCastWidget extends StatelessWidget {
                                   Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 4),
                                     child: Text(
-                                      name.isNotEmpty ? name : "",
+                                      name ?? "",
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(

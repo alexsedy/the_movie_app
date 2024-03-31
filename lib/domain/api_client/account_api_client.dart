@@ -6,8 +6,7 @@ import 'package:the_movie_app/domain/cache_management/account_management.dart';
 import 'package:the_movie_app/domain/entity/account/account_state/account_state.dart';
 import 'package:the_movie_app/domain/entity/account/user_list_details/user_list_details.dart';
 import 'package:the_movie_app/domain/entity/account/user_lists/user_lists.dart';
-import 'package:the_movie_app/domain/entity/movie/movie_list/movie_list.dart';
-import 'package:the_movie_app/domain/entity/tv_show/tv_show_list/tv_show_list.dart';
+import 'package:the_movie_app/domain/entity/media/list/list.dart';
 import 'package:the_movie_app/widgets/list_screens/default_lists_model.dart';
 
 class AccountApiClient extends ApiClient {
@@ -150,7 +149,7 @@ class AccountApiClient extends ApiClient {
     return success;
   }
 
-  Future<MovieResponse> getDefaultMovieLists({required int page, required ListType listType}) async {
+  Future<ListResponse> getDefaultMovieLists({required int page, required ListType listType}) async {
     final accessToken = await sessionDataProvider.getAccessToken();
     final accountObjectId = await AccountManager.getAccountId();
 
@@ -183,11 +182,11 @@ class AccountApiClient extends ApiClient {
 
     validateError(response, json);
 
-    final movieResponse = MovieResponse.fromJson(json);
+    final movieResponse = ListResponse.fromJson(json);
     return movieResponse;
   }
 
-  Future<TvShowResponse> getDefaultTvShowLists({required int page, required ListType listType}) async {
+  Future<ListResponse> getDefaultTvShowLists({required int page, required ListType listType}) async {
     final accessToken = await sessionDataProvider.getAccessToken();
     final accountObjectId = await AccountManager.getAccountId();
 
@@ -220,7 +219,7 @@ class AccountApiClient extends ApiClient {
 
     validateError(response, json);
 
-    final tvShowResponse = TvShowResponse.fromJson(json);
+    final tvShowResponse = ListResponse.fromJson(json);
     return tvShowResponse;
   }
 }

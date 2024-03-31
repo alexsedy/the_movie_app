@@ -26,9 +26,8 @@ PersonDetails _$PersonDetailsFromJson(Map<String, dynamic> json) =>
       json['images'] == null
           ? null
           : Images.fromJson(json['images'] as Map<String, dynamic>),
-      MovieCreditsPeople.fromJson(
-          json['movie_credits'] as Map<String, dynamic>),
-      TvShowCreditsPeople.fromJson(json['tv_credits'] as Map<String, dynamic>),
+      Credits.fromJson(json['movie_credits'] as Map<String, dynamic>),
+      Credits.fromJson(json['tv_credits'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PersonDetailsToJson(PersonDetails instance) =>

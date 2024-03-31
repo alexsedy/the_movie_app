@@ -4,9 +4,7 @@ import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/movie_screens/movie_list_screen/movie_list_model.dart';
-import 'package:the_movie_app/widgets/theme/app_colors.dart';
-import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
-import 'package:the_movie_app/widgets/widget_elements/vertical_list_element_widget.dart';
+
 
 class MovieListWidget extends StatefulWidget {
   const MovieListWidget({super.key});
@@ -87,7 +85,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
                               children: [
                                 const SizedBox(height: 15,),
                                 Text(
-                                  movie.title,
+                                  movie.title ?? "",
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold),
                                   maxLines: 1,

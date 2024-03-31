@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
-import 'package:the_movie_app/domain/entity/movie_and_tv_show/credits/credits_details.dart';
+import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/credits_list_screen/crew_list_screen/crew_list_model.dart';
 
@@ -93,7 +93,7 @@ class _BodyWidget extends StatelessWidget {
                        mainAxisAlignment: MainAxisAlignment.start,
                        children: [
                          const SizedBox(height: 6,),
-                         Text(name,
+                         Text(name ?? "",
                            softWrap: true,
                            maxLines: 3,
                            style: const TextStyle(

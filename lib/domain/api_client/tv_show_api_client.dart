@@ -3,12 +3,12 @@ import 'dart:io';
 
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/domain/cache_management/account_management.dart';
-import 'package:the_movie_app/domain/entity/movie_and_tv_show/state/item_state.dart';
-import 'package:the_movie_app/domain/entity/tv_show/details/tv_show_details.dart';
-import 'package:the_movie_app/domain/entity/tv_show/tv_show_list/tv_show_list.dart';
+import 'package:the_movie_app/domain/entity/media/list/list.dart';
+import 'package:the_movie_app/domain/entity/media/media_details/media_details.dart';
+import 'package:the_movie_app/domain/entity/media/state/item_state.dart';
 
 class TvShowApiClient extends ApiClient {
-  Future<TvShowResponse> getDiscoverTvShow(int page) async {
+  Future<ListResponse> getDiscoverTvShow(int page) async {
     final url = makeUri(
       "/discover/tv",
       <String, dynamic>{
@@ -23,11 +23,11 @@ class TvShowApiClient extends ApiClient {
 
     validateError(response, json);
 
-    final tvShowResponse = TvShowResponse.fromJson(json);
+    final tvShowResponse = ListResponse.fromJson(json);
     return tvShowResponse;
   }
 
-  Future<TvShowResponse> searchTvShow(int page, String query) async {
+  Future<ListResponse> searchTvShow(int page, String query) async {
     final url = makeUri(
       "/search/tv",
       <String, dynamic>{
@@ -43,11 +43,11 @@ class TvShowApiClient extends ApiClient {
 
     validateError(response, json);
 
-    final tvShowResponse = TvShowResponse.fromJson(json);
+    final tvShowResponse = ListResponse.fromJson(json);
     return tvShowResponse;
   }
 
-  Future<TvShowDetails> getTvShowById(int seriesId) async {
+  Future<MediaDetails> getTvShowById(int seriesId) async {
     final url = makeUri(
       "/tv/$seriesId",
       <String, dynamic>{
@@ -62,7 +62,7 @@ class TvShowApiClient extends ApiClient {
 
     validateError(response, json);
 
-    final tvShowDetailsResponse = TvShowDetails.fromJson(json);
+    final tvShowDetailsResponse = MediaDetails.fromJson(json);
     return tvShowDetailsResponse;
   }
 
@@ -198,7 +198,7 @@ class TvShowApiClient extends ApiClient {
     validateError(response, json);
   }
 
-  Future<TvShowResponse> getTrendingTv(
+  Future<ListResponse> getTrendingTv(
       {required int page, required String timeToggle}) async {
     final url = makeUri(
       "/trending/tv/$timeToggle",
@@ -214,7 +214,7 @@ class TvShowApiClient extends ApiClient {
 
     validateError(response, json);
 
-    final tvShowResponse = TvShowResponse.fromJson(json);
+    final tvShowResponse = ListResponse.fromJson(json);
     return tvShowResponse;
   }
 }
