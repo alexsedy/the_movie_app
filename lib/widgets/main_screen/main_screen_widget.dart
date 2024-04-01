@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:the_movie_app/domain/api_client/auth_api_client.dart';
-import 'package:the_movie_app/domain/data_providers/session_data_provider.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/account_screen/account_model.dart';
 import 'package:the_movie_app/widgets/account_screen/account_widget.dart';

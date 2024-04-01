@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/account_api_client.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
+import 'package:the_movie_app/models/media_list_model/base_media_list_model.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
-class DefaultListsModel extends ChangeNotifier {
+class DefaultListsModel extends ChangeNotifier implements BaseMediaListModel {
   final ListType listType;
+  final ScrollController _scrollController = ScrollController();
   final _accountApiClient = AccountApiClient();
   final _movies = <MediaList>[];
-  final _tvShows = <MediaList>[];
+  final _tvs = <MediaList>[];
   late int _currentPage;
   late int _totalPage;
   var _isFirstLoadMovie = true;
@@ -19,11 +21,22 @@ class DefaultListsModel extends ChangeNotifier {
 
   DefaultListsModel(this.listType);
 
-  bool get isLoadingInProgress => _isMovieLoadingInProgress;
-  bool get isTvShowLoadingInProgress => _isTvShowLoadingInProgress;
-  List<MediaList> get movies => List.unmodifiable(_movies);
-  List<MediaList> get tvShows => List.unmodifiable(_tvShows);
+  @override
+  ScrollController get scrollController => _scrollController;
 
+  @override
+  bool get isMovieLoadingInProgress => _isMovieLoadingInProgress;
+
+  @override
+  bool get isTvsLoadingInProgress => _isTvShowLoadingInProgress;
+
+  @override
+  List<MediaList> get movies => List.unmodifiable(_movies);
+
+  @override
+  List<MediaList> get tvs => List.unmodifiable(_tvs);
+
+  @override
   Future<void> firstLoadMovies() async {
     if(_isFirstLoadMovie) {
       _currentPage = 0;
@@ -33,6 +46,7 @@ class DefaultListsModel extends ChangeNotifier {
     }
   }
 
+  @override
   Future<void> loadMovies() async {
     if (_isMovieLoadingInProgress || _currentPage >= _totalPage) return;
     _isMovieLoadingInProgress = true;
@@ -52,6 +66,7 @@ class DefaultListsModel extends ChangeNotifier {
     }
   }
 
+  @override
   Future<void> firstLoadTvShows() async {
     if(_isFirstLoadTvShow) {
       _currentPage = 0;
@@ -61,6 +76,7 @@ class DefaultListsModel extends ChangeNotifier {
     }
   }
 
+  @override
   Future<void> loadTvShows() async {
     if (_isTvShowLoadingInProgress || _currentPage >= _totalPage) return;
     _isTvShowLoadingInProgress = true;
@@ -69,7 +85,7 @@ class DefaultListsModel extends ChangeNotifier {
     try {
       final tvShowResponse = await _accountApiClient.getDefaultTvShowLists(page: nextPage, listType: listType);
 
-      _tvShows.addAll(tvShowResponse.list);
+      _tvs.addAll(tvShowResponse.list);
       _currentPage = tvShowResponse.page;
       _totalPage = tvShowResponse.totalPages;
       _isTvShowLoadingInProgress = false;
@@ -80,29 +96,33 @@ class DefaultListsModel extends ChangeNotifier {
     }
   }
 
+  @override
   void preLoadMovies(int index) {
     if (index < _movies.length - 1) return;
     loadMovies();
   }
 
+  @override
   void preLoadTvShows(int index) {
-    if (index < _tvShows.length - 1) return;
+    if (index < _tvs.length - 1) return;
     loadTvShows();
   }
 
-  void onTvShowTab(BuildContext context, int index) {
-    final id = _tvShows[index].id;
+  @override
+  void onTvShowScreen(BuildContext context, int index) {
+    final id = _tvs[index].id;
     Navigator.of(context).pushNamed(MainNavigationRouteNames.tvShowDetails, arguments: id);
   }
 
-  void onMovieTab(BuildContext context, int index) {
+  @override
+  void onMovieScreen(BuildContext context, int index) {
     final id = _movies[index].id;
     Navigator.of(context).pushNamed(MainNavigationRouteNames.movieDetails, arguments: id);
   }
 
+  @override
   String formatDate(String? date) =>
       date != "" ? _dateFormat.format(DateTime.parse(date ?? "")) : "No date";
-
 }
 
 enum ListType {

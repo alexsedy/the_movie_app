@@ -256,23 +256,15 @@ class _ListBodyState extends State<_ListBody> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 143,
-                  child: ListTile(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    onLongPress: () {
-                      setState(() {
-                        if (_selectedIndexes.contains(index)) {
-                          _selectedIndexes.remove(index);
-                        } else {
-                          _selectedIndexes.add(index);
-                        }
-                      });
-                    },
-                    onTap: () {
-                      if(_selectedIndexes.isNotEmpty) {
+                Material(
+                  color: Colors.transparent,
+                  child: SizedBox(
+                    height: 143,
+                    child: ListTile(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      onLongPress: () {
                         setState(() {
                           if (_selectedIndexes.contains(index)) {
                             _selectedIndexes.remove(index);
@@ -280,10 +272,21 @@ class _ListBodyState extends State<_ListBody> {
                             _selectedIndexes.add(index);
                           }
                         });
-                      }
-                    },
-                    selectedTileColor: Colors.red.withOpacity(0.2),
-                    selected: _selectedIndexes.contains(index),
+                      },
+                      onTap: () {
+                        if(_selectedIndexes.isNotEmpty) {
+                          setState(() {
+                            if (_selectedIndexes.contains(index)) {
+                              _selectedIndexes.remove(index);
+                            } else {
+                              _selectedIndexes.add(index);
+                            }
+                          });
+                        }
+                      },
+                      selectedTileColor: Colors.red.withOpacity(0.2),
+                      selected: _selectedIndexes.contains(index),
+                    ),
                   ),
                 )
               ],

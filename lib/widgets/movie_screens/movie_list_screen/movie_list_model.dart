@@ -4,23 +4,31 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/movie_api_client.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
+import 'package:the_movie_app/models/media_list_model/base_media_list_model.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
-class MovieListModel extends ChangeNotifier {
-  final ScrollController scrollController = ScrollController();
+class MovieListModel extends ChangeNotifier implements BaseMediaListModel {
+  final ScrollController _scrollController = ScrollController();
   final _apiClient = MovieApiClient();
   final _movies = <MediaList>[];
   late int _currentPage;
   late int _totalPage;
   late String _locale;
   var _isFirstLoadMovie = true;
-  var _isLoadingInProgress = false;
+  var _isMovieLoadingInProgress = false;
   final _dateFormat = DateFormat.yMMMMd();
   Timer? _searchDebounce;
 
-  bool get isLoadingInProgress => _isLoadingInProgress;
+  @override
   List<MediaList> get movies => List.unmodifiable(_movies);
 
+  @override
+  bool get isMovieLoadingInProgress => _isMovieLoadingInProgress;
+
+  @override
+  ScrollController get scrollController => _scrollController;
+
+  @override
   Future<void> firstLoadMovies() async {
     if(_isFirstLoadMovie) {
       _currentPage = 0;
@@ -30,9 +38,10 @@ class MovieListModel extends ChangeNotifier {
     }
   }
 
+  @override
   Future<void> loadMovies() async {
-    if (_isLoadingInProgress || _currentPage >= _totalPage) return;
-    _isLoadingInProgress = true;
+    if (_isMovieLoadingInProgress || _currentPage >= _totalPage) return;
+    _isMovieLoadingInProgress = true;
     final nextPage = _currentPage + 1;
 
     try {
@@ -40,12 +49,19 @@ class MovieListModel extends ChangeNotifier {
       _movies.addAll(moviesResponse.list);
       _currentPage = moviesResponse.page;
       _totalPage = moviesResponse.totalPages;
-      _isLoadingInProgress = false;
+      _isMovieLoadingInProgress = false;
       notifyListeners();
     } catch (e) {
-      _isLoadingInProgress = false;
+      _isMovieLoadingInProgress = false;
     }
   }
+
+  @override
+  void preLoadMovies(int index) {
+    if (index < _movies.length - 1) return;
+    loadMovies();
+  }
+
 
   Future<void> searchMovies(String text) async {
     _searchDebounce?.cancel();
@@ -55,8 +71,8 @@ class MovieListModel extends ChangeNotifier {
         loadMovies();
       }
       resetList();
-      if (_isLoadingInProgress || _currentPage >= _totalPage) return;
-      _isLoadingInProgress = true;
+      if (_isMovieLoadingInProgress || _currentPage >= _totalPage) return;
+      _isMovieLoadingInProgress = true;
       final nextPage = _currentPage + 1;
 
       try {
@@ -64,10 +80,10 @@ class MovieListModel extends ChangeNotifier {
         _movies.addAll(moviesResponse.list);
         _currentPage = moviesResponse.page;
         _totalPage = moviesResponse.totalPages;
-        _isLoadingInProgress = false;
+        _isMovieLoadingInProgress = false;
         notifyListeners();
       } catch (e) {
-        _isLoadingInProgress = false;
+        _isMovieLoadingInProgress = false;
       }
     });
   }
@@ -78,28 +94,11 @@ class MovieListModel extends ChangeNotifier {
     _movies.clear();
   }
 
-  void onMovieTab(BuildContext context, int index) {
+  @override
+  void onMovieScreen(BuildContext context, int index) {
     final id = _movies[index].id;
     Navigator.of(context).pushNamed(MainNavigationRouteNames.movieDetails, arguments: id);
   }
-
-  void setupLocale(BuildContext context) {
-    final locale = Localizations.localeOf(context);
-  }
-
-  // void setupLoadMovies(BuildContext context) {
-  //   _currentPage = 0;
-  //   _totalPage = 1;
-  //   _movies.clear();
-  // }
-
-  void preLoadMovies(int index) {
-    if (index < _movies.length - 1) return;
-    loadMovies();
-  }
-
-  String formatDate(String? date) =>
-      date != "" ? _dateFormat.format(DateTime.parse(date ?? "")) : "No date";
 
   void scrollToTop() {
     scrollController.animateTo(
@@ -114,4 +113,27 @@ class MovieListModel extends ChangeNotifier {
     loadMovies();
     scrollToTop();
   }
+
+  @override
+  String formatDate(String? date) =>
+      date != "" ? _dateFormat.format(DateTime.parse(date ?? "")) : "No date";
+
+  // void setupLocale(BuildContext context) {
+  //   final locale = Localizations.localeOf(context);
+  // }
+
+  /// not used
+  @override
+  Future<void> firstLoadTvShows() async {}
+  @override
+  bool get isTvsLoadingInProgress => false;
+  @override
+  Future<void> loadTvShows() async {
+  }
+  @override
+  void onTvShowScreen(BuildContext context, int index) {}
+  @override
+  void preLoadTvShows(int index) {}
+  @override
+  List<MediaList> get tvs => <MediaList>[];
 }

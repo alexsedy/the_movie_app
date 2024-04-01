@@ -4,23 +4,31 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/tv_show_api_client.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
+import 'package:the_movie_app/models/media_list_model/base_media_list_model.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
-class TvShowListModel extends ChangeNotifier {
-  final ScrollController scrollController = ScrollController();
+class TvShowListModel extends ChangeNotifier implements BaseMediaListModel {
+  final ScrollController _scrollController = ScrollController();
   final _apiClient = TvShowApiClient();
-  final _tvShows = <MediaList>[];
+  final _tvs = <MediaList>[];
   late int _currentPage;
   late int _totalPage;
   late String _locale;
   var _isFirstLoadTvShow = true;
-  var _isLoadingInProgress = false;
+  var _isTvsLoadingInProgress = false;
   final _dateFormat = DateFormat.yMMMMd();
   Timer? _searchDebounce;
 
-  bool get isLoadingInProgress => _isLoadingInProgress;
-  List<MediaList> get tvShows => List.unmodifiable(_tvShows);
+  @override
+  ScrollController get scrollController => _scrollController;
 
+  @override
+  List<MediaList> get tvs => List.unmodifiable(_tvs);
+
+  @override
+  bool get isTvsLoadingInProgress => _isTvsLoadingInProgress;
+
+  @override
   Future<void> firstLoadTvShows() async {
     if(_isFirstLoadTvShow) {
       _currentPage = 0;
@@ -30,20 +38,25 @@ class TvShowListModel extends ChangeNotifier {
     }
   }
 
+  @override
+  String formatDate(String? date) =>
+      date != "" ? _dateFormat.format(DateTime.parse(date ?? "")) : "No date";
+
+  @override
   Future<void> loadTvShows() async {
-    if (_isLoadingInProgress || _currentPage >= _totalPage) return;
-    _isLoadingInProgress = true;
+    if (_isTvsLoadingInProgress || _currentPage >= _totalPage) return;
+    _isTvsLoadingInProgress = true;
     final nextPage = _currentPage + 1;
 
     try {
       final tvShowResponse = await _apiClient.getDiscoverTvShow(nextPage);
-      _tvShows.addAll(tvShowResponse.list);
+      _tvs.addAll(tvShowResponse.list);
       _currentPage = tvShowResponse.page;
       _totalPage = tvShowResponse.totalPages;
-      _isLoadingInProgress = false;
+      _isTvsLoadingInProgress = false;
       notifyListeners();
     } catch (e) {
-      _isLoadingInProgress = false;
+      _isTvsLoadingInProgress = false;
     }
   }
 
@@ -55,45 +68,34 @@ class TvShowListModel extends ChangeNotifier {
         loadTvShows();
       }
       resetList();
-      if (_isLoadingInProgress || _currentPage >= _totalPage) return;
-      _isLoadingInProgress = true;
+      if (_isTvsLoadingInProgress || _currentPage >= _totalPage) return;
+      _isTvsLoadingInProgress = true;
       final nextPage = _currentPage + 1;
 
       try {
         final tvShowsResponse = await _apiClient.searchTvShow(nextPage, text);
-        _tvShows.addAll(tvShowsResponse.list);
+        _tvs.addAll(tvShowsResponse.list);
         _currentPage = tvShowsResponse.page;
         _totalPage = tvShowsResponse.totalPages;
-        _isLoadingInProgress = false;
+        _isTvsLoadingInProgress = false;
         notifyListeners();
       } catch (e) {
-        _isLoadingInProgress = false;
+        _isTvsLoadingInProgress = false;
       }
     });
   }
 
-  Future<void> resetList() async {
-    _currentPage = 0;
-    _totalPage = 1;
-    _tvShows.clear();
-  }
-
-  void onTvShowTab(BuildContext context, int index) {
-    final id = _tvShows[index].id;
+  @override
+  void onTvShowScreen(BuildContext context, int index) {
+    final id = _tvs[index].id;
     Navigator.of(context).pushNamed(MainNavigationRouteNames.tvShowDetails, arguments: id);
   }
 
-  void setupLocale(BuildContext context) {
-    final locale = Localizations.localeOf(context);
-  }
-
+  @override
   void preLoadTvShows(int index) {
-    if (index < _tvShows.length - 1) return;
+    if (index < _tvs.length - 1) return;
     loadTvShows();
   }
-
-  String formatDate(String? date) =>
-      date != "" ? _dateFormat.format(DateTime.parse(date ?? "")) : "No date";
 
   void scrollToTop() {
     scrollController.animateTo(
@@ -103,9 +105,33 @@ class TvShowListModel extends ChangeNotifier {
     );
   }
 
+  Future<void> resetList() async {
+    _currentPage = 0;
+    _totalPage = 1;
+    _tvs.clear();
+  }
+
   void closeSearch() {
     resetList();
     loadTvShows();
     scrollToTop();
   }
+
+  // void setupLocale(BuildContext context) {
+  //   final locale = Localizations.localeOf(context);
+  // }
+
+  /// not used
+  @override
+  bool get isMovieLoadingInProgress => false;
+  @override
+  Future<void> loadMovies() async {}
+  @override
+  Future<void> firstLoadMovies() async {}
+  @override
+  void preLoadMovies(int index) {}
+  @override
+  List<MediaList> get movies => <MediaList>[];
+  @override
+  void onMovieScreen(BuildContext context, int index) {}
 }

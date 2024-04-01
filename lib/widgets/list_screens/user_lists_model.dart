@@ -81,7 +81,7 @@ class UserListsModel extends ChangeNotifier {
     _isListLoadingInProgress = true;
     final nextPage = _currentPage + 1;
 
-    // try {
+    try {
       final userListDetails = await _accountApiClient.getUserListDetails(listId: listId ?? 0, page: nextPage);
 
       _userListDetails = userListDetails;
@@ -92,9 +92,9 @@ class UserListsModel extends ChangeNotifier {
       _isListLoadingInProgress = false;
 
       notifyListeners();
-    // } catch (e) {
-    //   _isListLoadingInProgress = false;
-    // }
+    } catch (e) {
+      _isListLoadingInProgress = false;
+    }
   }
 
   void preLoadList(int index) {

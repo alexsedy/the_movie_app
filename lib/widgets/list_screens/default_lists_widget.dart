@@ -4,6 +4,8 @@ import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/list_screens/default_lists_model.dart';
 import 'package:the_movie_app/widgets/list_screens/lists_shimmer_skeleton_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
+import 'package:the_movie_app/widgets/widget_elements/vertical_list_element_widget.dart';
 
 class DefaultListsWidget extends StatefulWidget {
   const DefaultListsWidget({super.key});
@@ -104,107 +106,112 @@ class _MovieListWidget extends StatelessWidget {
       );
     }
 
-    return ListView.builder(
-        itemCount: model.movies.length,
-        itemExtent: 163,
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        itemBuilder: (BuildContext context, int index) {
-          model.preLoadMovies(index);
-          final movie = model.movies[index];
-          final posterPath = movie.posterPath;
-          if(!model.isLoadingInProgress) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              child: Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(
-                            color: Colors.black.withOpacity(0.2)),
-                        borderRadius: const BorderRadius.all(
-                            Radius.circular(10)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 8,
-                            offset: const Offset(1, 2),
-                          )
-                        ]
-                    ),
-                    clipBehavior: Clip.hardEdge,
-                    child: Row(
-                      children: [
-                        AspectRatio(
-                          aspectRatio: 500 / 750,
-                          child: posterPath != null
-                              ? Image.network(
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return const Center(
-                                child: SizedBox(
-                                  width: 60,
-                                  height: 60,
-                                  child: CircularProgressIndicator(),
-                                ),
-                              );
-                            },
-                            ApiClient.getImageByUrl(posterPath), width: 95,)
-                              : Image.asset(AppImages.noPoster, width: 95,),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 15, right: 10, bottom: 1),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 15,),
-                                Text(
-                                  movie.title ?? "",
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 5,),
-                                Text(
-                                  model.formatDate(movie.releaseDate),
-                                  // movie.releaseDate,
-                                  style: const TextStyle(color: Colors.grey),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 15,),
-                                Expanded(
-                                  child: Text(
-                                    movie.overview,
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      onTap: () => model.onMovieTab(context, index),
-                    ),
-                  )
-                ],
-              ),
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        }
+    return VerticalListElementWidget<DefaultListsModel>(
+      verticalListElementType: VerticalListElementType.movie,
+      model: model,
     );
+
+    // return ListView.builder(
+    //     itemCount: model.movies.length,
+    //     itemExtent: 163,
+    //     keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+    //     itemBuilder: (BuildContext context, int index) {
+    //       model.preLoadMovies(index);
+    //       final movie = model.movies[index];
+    //       final posterPath = movie.posterPath;
+    //       if(!model.isMovieLoadingInProgress) {
+    //         return Padding(
+    //           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+    //           child: Stack(
+    //             children: [
+    //               Container(
+    //                 decoration: BoxDecoration(
+    //                     color: Colors.white,
+    //                     border: Border.all(
+    //                         color: Colors.black.withOpacity(0.2)),
+    //                     borderRadius: const BorderRadius.all(
+    //                         Radius.circular(10)),
+    //                     boxShadow: [
+    //                       BoxShadow(
+    //                         color: Colors.black.withOpacity(0.1),
+    //                         blurRadius: 8,
+    //                         offset: const Offset(1, 2),
+    //                       )
+    //                     ]
+    //                 ),
+    //                 clipBehavior: Clip.hardEdge,
+    //                 child: Row(
+    //                   children: [
+    //                     AspectRatio(
+    //                       aspectRatio: 500 / 750,
+    //                       child: posterPath != null
+    //                           ? Image.network(
+    //                         loadingBuilder: (context, child, loadingProgress) {
+    //                           if (loadingProgress == null) return child;
+    //                           return const Center(
+    //                             child: SizedBox(
+    //                               width: 60,
+    //                               height: 60,
+    //                               child: CircularProgressIndicator(),
+    //                             ),
+    //                           );
+    //                         },
+    //                         ApiClient.getImageByUrl(posterPath), width: 95,)
+    //                           : Image.asset(AppImages.noPoster, width: 95,),
+    //                     ),
+    //                     Expanded(
+    //                       child: Padding(
+    //                         padding: const EdgeInsets.only(
+    //                             left: 15, right: 10, bottom: 1),
+    //                         child: Column(
+    //                           crossAxisAlignment: CrossAxisAlignment.start,
+    //                           children: [
+    //                             const SizedBox(height: 15,),
+    //                             Text(
+    //                               movie.title ?? "",
+    //                               style: const TextStyle(
+    //                                   fontWeight: FontWeight.bold),
+    //                               maxLines: 1,
+    //                               overflow: TextOverflow.ellipsis,
+    //                             ),
+    //                             const SizedBox(height: 5,),
+    //                             Text(
+    //                               model.formatDate(movie.releaseDate),
+    //                               // movie.releaseDate,
+    //                               style: const TextStyle(color: Colors.grey),
+    //                               maxLines: 1,
+    //                               overflow: TextOverflow.ellipsis,
+    //                             ),
+    //                             const SizedBox(height: 15,),
+    //                             Expanded(
+    //                               child: Text(
+    //                                 movie.overview,
+    //                                 maxLines: 3,
+    //                                 overflow: TextOverflow.ellipsis,
+    //                               ),
+    //                             ),
+    //                           ],
+    //                         ),
+    //                       ),
+    //                     ),
+    //                   ],
+    //                 ),
+    //               ),
+    //               Material(
+    //                 color: Colors.transparent,
+    //                 child: InkWell(
+    //                   borderRadius: const BorderRadius.all(Radius.circular(10)),
+    //                   onTap: () => model.onMovieTab(context, index),
+    //                 ),
+    //               )
+    //             ],
+    //           ),
+    //         );
+    //       } else {
+    //         return const Center(child: CircularProgressIndicator());
+    //       }
+    //     }
+    // );
   }
 }
 
@@ -219,7 +226,7 @@ class _TvShowListWidget extends StatelessWidget {
 
     if(model == null){
       return const SizedBox.shrink();
-    } else if (model.tvShows.isEmpty) {
+    } else if (model.tvs.isEmpty) {
       return FutureBuilder<void>(
         future: Future.delayed(const Duration(seconds: 2)),
         builder: (context, snapshot) {
@@ -239,106 +246,111 @@ class _TvShowListWidget extends StatelessWidget {
       );
     }
 
-    return ListView.builder(
-        itemCount: model.tvShows.length,
-        itemExtent: 163,
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        itemBuilder: (BuildContext context, int index) {
-          model.preLoadTvShows(index);
-          final tvShow = model.tvShows[index];
-          final posterPath = tvShow.posterPath;
-          if(!model.isLoadingInProgress) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              child: Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(
-                            color: Colors.black.withOpacity(0.2)),
-                        borderRadius: const BorderRadius.all(
-                            Radius.circular(10)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 8,
-                            offset: const Offset(1, 2),
-                          )
-                        ]
-                    ),
-                    clipBehavior: Clip.hardEdge,
-                    child: Row(
-                      children: [
-                        AspectRatio(
-                          aspectRatio: 500 / 750,
-                          child: posterPath != null
-                              ? Image.network(
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return const Center(
-                                child: SizedBox(
-                                  width: 60,
-                                  height: 60,
-                                  child: CircularProgressIndicator(),
-                                ),
-                              );
-                            },
-                            ApiClient.getImageByUrl(posterPath), width: 95,)
-                              : Image.asset(AppImages.noPoster, width: 95,),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 15, right: 10, bottom: 1),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 15,),
-                                Text(
-                                  tvShow.name ?? "",
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 5,),
-                                Text(
-                                  model.formatDate(tvShow.firstAirDate),
-                                  // movie.releaseDate,
-                                  style: const TextStyle(color: Colors.grey),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 15,),
-                                Expanded(
-                                  child: Text(
-                                    tvShow.overview,
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      onTap: () => model.onTvShowTab(context, index),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        }
+    return VerticalListElementWidget<DefaultListsModel>(
+      verticalListElementType: VerticalListElementType.tv,
+      model: model,
     );
+
+    // return ListView.builder(
+    //     itemCount: model.tvs.length,
+    //     itemExtent: 163,
+    //     keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+    //     itemBuilder: (BuildContext context, int index) {
+    //       model.preLoadTvShows(index);
+    //       final tvShow = model.tvs[index];
+    //       final posterPath = tvShow.posterPath;
+    //       if(!model.isTvShowLoadingInProgress) {
+    //         return Padding(
+    //           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+    //           child: Stack(
+    //             children: [
+    //               Container(
+    //                 decoration: BoxDecoration(
+    //                     color: Colors.white,
+    //                     border: Border.all(
+    //                         color: Colors.black.withOpacity(0.2)),
+    //                     borderRadius: const BorderRadius.all(
+    //                         Radius.circular(10)),
+    //                     boxShadow: [
+    //                       BoxShadow(
+    //                         color: Colors.black.withOpacity(0.1),
+    //                         blurRadius: 8,
+    //                         offset: const Offset(1, 2),
+    //                       )
+    //                     ]
+    //                 ),
+    //                 clipBehavior: Clip.hardEdge,
+    //                 child: Row(
+    //                   children: [
+    //                     AspectRatio(
+    //                       aspectRatio: 500 / 750,
+    //                       child: posterPath != null
+    //                           ? Image.network(
+    //                         loadingBuilder: (context, child, loadingProgress) {
+    //                           if (loadingProgress == null) return child;
+    //                           return const Center(
+    //                             child: SizedBox(
+    //                               width: 60,
+    //                               height: 60,
+    //                               child: CircularProgressIndicator(),
+    //                             ),
+    //                           );
+    //                         },
+    //                         ApiClient.getImageByUrl(posterPath), width: 95,)
+    //                           : Image.asset(AppImages.noPoster, width: 95,),
+    //                     ),
+    //                     Expanded(
+    //                       child: Padding(
+    //                         padding: const EdgeInsets.only(
+    //                             left: 15, right: 10, bottom: 1),
+    //                         child: Column(
+    //                           crossAxisAlignment: CrossAxisAlignment.start,
+    //                           children: [
+    //                             const SizedBox(height: 15,),
+    //                             Text(
+    //                               tvShow.name ?? "",
+    //                               style: const TextStyle(
+    //                                   fontWeight: FontWeight.bold),
+    //                               maxLines: 1,
+    //                               overflow: TextOverflow.ellipsis,
+    //                             ),
+    //                             const SizedBox(height: 5,),
+    //                             Text(
+    //                               model.formatDate(tvShow.firstAirDate),
+    //                               // movie.releaseDate,
+    //                               style: const TextStyle(color: Colors.grey),
+    //                               maxLines: 1,
+    //                               overflow: TextOverflow.ellipsis,
+    //                             ),
+    //                             const SizedBox(height: 15,),
+    //                             Expanded(
+    //                               child: Text(
+    //                                 tvShow.overview,
+    //                                 maxLines: 3,
+    //                                 overflow: TextOverflow.ellipsis,
+    //                               ),
+    //                             ),
+    //                           ],
+    //                         ),
+    //                       ),
+    //                     ),
+    //                   ],
+    //                 ),
+    //               ),
+    //               Material(
+    //                 color: Colors.transparent,
+    //                 child: InkWell(
+    //                   borderRadius: const BorderRadius.all(Radius.circular(10)),
+    //                   onTap: () => model.onTvShowTab(context, index),
+    //                 ),
+    //               ),
+    //             ],
+    //           ),
+    //         );
+    //       } else {
+    //         return const Center(child: CircularProgressIndicator());
+    //       }
+    //     }
+    // );
   }
 }
