@@ -5,7 +5,7 @@ import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/list_screens/default_lists_model.dart';
 import 'package:the_movie_app/widgets/list_screens/lists_shimmer_skeleton_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
-import 'package:the_movie_app/widgets/widget_elements/vertical_list_element_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/list_elements/vertical_list_element_widget.dart';
 
 class DefaultListsWidget extends StatefulWidget {
   const DefaultListsWidget({super.key});

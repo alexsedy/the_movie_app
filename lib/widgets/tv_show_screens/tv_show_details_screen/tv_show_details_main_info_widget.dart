@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/provider/provider.dart';
-import 'package:the_movie_app/widgets/elements_widget/score_radial_percent_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/media_details_elements/score_radial_percent_widget.dart';
 import 'package:the_movie_app/widgets/tv_show_screens/tv_show_details_screen/tv_show_action_info/tv_show_action_buttons_widget.dart';
 import 'package:the_movie_app/widgets/tv_show_screens/tv_show_details_screen/tv_show_details_model.dart';
 
@@ -15,14 +15,14 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _SummaryTvShowWidget(),
-        _ScoreAndTrailerWidget(),
+        _ScoreAndTrailerWidget(), //+
         TvShowActionButtonsWidget(),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           child: Text("Overview", style: TextStyle(fontSize: 21, fontWeight: FontWeight.w700),),
         ),
-        _TaglineWidget(),
-        _DescriptionWidget(),
+        _TaglineWidget(),//+
+        _DescriptionWidget(),//+
         _TvShowCrewWidget(),
         _TvShowCastWidget(),
         _SeasonsWidget(),
@@ -301,16 +301,6 @@ class _SummaryTvShowWidget extends StatelessWidget {
                     fontSize: textSize,
                   )
               ),
-              // TextSpan(
-              //   text: lastAirDateText != null ? " - " : "",
-              //   style: TextStyle(fontSize: textSize,),
-              // ),
-              // TextSpan(
-              //     text: lastAirDateText,
-              //     style: TextStyle(
-              //       fontSize: textSize,
-              //     )
-              // ),
               TextSpan(
                 text: countries.isNotEmpty ? " ● " : "",
                 style: TextStyle(fontSize: textSize,),

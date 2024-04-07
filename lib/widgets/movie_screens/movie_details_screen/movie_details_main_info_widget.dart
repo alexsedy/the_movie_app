@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/provider/provider.dart';
-import 'package:the_movie_app/widgets/elements_widget/score_radial_percent_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/media_details_elements/score_radial_percent_widget.dart';
 import 'package:the_movie_app/widgets/movie_screens/movie_details_screen/movie_details_model.dart';
 import 'package:the_movie_app/widgets/movie_screens/movie_details_screen/movie_main_info/movie_action_buttons_widget.dart';
 
@@ -15,14 +15,14 @@ class MovieDetailsMainInfoWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _SummaryMovieWidget(),
-        _ScoreAndTrailerWidget(),
+        _ScoreAndTrailerWidget(), //+
         MovieActionButtonsWidget(),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           child: Text("Overview", style: TextStyle(fontSize: 21, fontWeight: FontWeight.w700),),
         ),
-        _TaglineWidget(),
-        _DescriptionWidget(),
+        _TaglineWidget(), //+
+        _DescriptionWidget(), //+
         _MovieCrewWidget(),
         _MovieCastWidget(),
         _ProductionCompanyWidget(),
@@ -143,23 +143,6 @@ class _ScoreAndTrailerWidget extends StatelessWidget {
   }
 }
 
-// class _DescriptionWidget extends StatelessWidget {
-//   const _DescriptionWidget({
-//     super.key,
-//   });
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final movieDetails = NotifierProvider.watch<MovieDetailsModel>(context)?.movieDetails;
-//
-//     return Padding(
-//       padding: const EdgeInsets.all(10.0),
-//       child: Text(movieDetails?.overview ?? ""),
-//     );
-//   }
-// }
-
-//todo подумать над реализацией сворачивания/разворачивания овервью
 class _DescriptionWidget extends StatefulWidget {
   const _DescriptionWidget({Key? key}) : super(key: key);
 

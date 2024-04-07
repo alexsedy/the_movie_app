@@ -3,7 +3,7 @@ import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/movie_screens/movie_details_screen/movie_details_model.dart';
-import 'package:the_movie_app/widgets/movie_screens/movie_details_screen/movie_details_shimmer_skeleton_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/movie_details_shimmer_skeleton_widget.dart';
 
 import 'movie_details_main_info_widget.dart';
 

@@ -23,11 +23,11 @@ class _HomeWidgetState extends State<HomeWidget> {
           children: [
             _SearchWidget(),
             SizedBox(height: 20,),
-            _TrendingToggleWidget(horizontalListElementType: HorizontalListElementType.movie),
+            _TrendingToggleWidget(horizontalListElementType: HorizontalListElementType.homeMovie),
             SizedBox(height: 20,),
-            _TrendingToggleWidget(horizontalListElementType: HorizontalListElementType.tv,),
+            _TrendingToggleWidget(horizontalListElementType: HorizontalListElementType.homeTv,),
             SizedBox(height: 20,),
-            _TrendingToggleWidget(horizontalListElementType: HorizontalListElementType.person,),
+            _TrendingToggleWidget(horizontalListElementType: HorizontalListElementType.homePerson,),
             // ToggleWidgets(),
           ],
         ),
@@ -145,19 +145,21 @@ class _TrendingToggleWidgetState extends State<_TrendingToggleWidget> {
   @override
   void initState() {
     super.initState();
-    NotifierProvider.read<HomeModel>(context)?.loadMovies(true);
-    NotifierProvider.read<HomeModel>(context)?.loadTv(true);
-    NotifierProvider.read<HomeModel>(context)?.loadPerson(true);
+    NotifierProvider.read<HomeModel>(context)?.loadMovies();
+    NotifierProvider.read<HomeModel>(context)?.loadTvShows();
+    NotifierProvider.read<HomeModel>(context)?.loadTrendingPerson();
   }
 
   String _getName() {
     switch(widget.horizontalListElementType){
-      case HorizontalListElementType.movie:
+      case HorizontalListElementType.homeMovie:
         return "Trending movies";
-      case HorizontalListElementType.tv:
+      case HorizontalListElementType.homeTv:
         return "Trending TVs";
-      case HorizontalListElementType.person:
+      case HorizontalListElementType.homePerson:
         return "Trending persons";
+      default:
+        return "";
     }
   }
 
@@ -193,12 +195,17 @@ class _TrendingToggleWidgetState extends State<_TrendingToggleWidget> {
                         _isSelected[i] = i == index;
 
                         switch(widget.horizontalListElementType){
-                          case HorizontalListElementType.movie:
-                            NotifierProvider.read<HomeModel>(context)?.loadMovies(_isSelected.first);
-                          case HorizontalListElementType.tv:
-                            NotifierProvider.read<HomeModel>(context)?.loadTv(_isSelected.first);
-                          case HorizontalListElementType.person:
-                            NotifierProvider.read<HomeModel>(context)?.loadPerson(_isSelected.first);
+                          case HorizontalListElementType.homeMovie:
+                            model.isSwitch = _isSelected.first;
+                            NotifierProvider.read<HomeModel>(context)?.loadMovies();
+                          case HorizontalListElementType.homeTv:
+                            model.isSwitch = _isSelected.first;
+                            NotifierProvider.read<HomeModel>(context)?.loadTvShows();
+                          case HorizontalListElementType.homePerson:
+                            model.isSwitch = _isSelected.first;
+                            NotifierProvider.read<HomeModel>(context)?.loadTrendingPerson();
+                          default:
+
                         }
                       }
                     });
@@ -213,9 +220,17 @@ class _TrendingToggleWidgetState extends State<_TrendingToggleWidget> {
           ),
         ),
         switch(widget.horizontalListElementType){
-          HorizontalListElementType.movie =>  const _TrendingMovieWidget(),
-          HorizontalListElementType.tv => const _TrendingTvWidget(),
-          HorizontalListElementType.person => const _TrendingPersonWidget(),
+          HorizontalListElementType.homeMovie =>  const _TrendingMovieWidget(),
+          HorizontalListElementType.homeTv => const _TrendingTvWidget(),
+          HorizontalListElementType.homePerson => const _TrendingPersonWidget(),
+          // TODO: Handle this case.
+          HorizontalListElementType.detailsCast => throw UnimplementedError(),
+          // TODO: Handle this case.
+          HorizontalListElementType.detailsCompanies => throw UnimplementedError(),
+          // TODO: Handle this case.
+          HorizontalListElementType.detailsSeason => throw UnimplementedError(),
+          // TODO: Handle this case.
+          HorizontalListElementType.detailsNetwork => throw UnimplementedError(),
         }
       ],
     );
@@ -334,7 +349,7 @@ class _TrendingMovieWidget extends StatelessWidget {
                       child: InkWell(
                         borderRadius: const BorderRadius.all(Radius.circular(
                             10)),
-                        onTap: () => model.onMovieTab(context, index),
+                        onTap: () => model.onMovieScreen(context, index),
                       ),
                     )
                   ],
@@ -461,7 +476,7 @@ class _TrendingTvWidget extends StatelessWidget {
                       child: InkWell(
                         borderRadius: const BorderRadius.all(Radius.circular(
                             10)),
-                        onTap: () => model.onTvShowTab(context, index),
+                        onTap: () => model.onTvShowScreen(context, index),
                       ),
                     )
                   ],
@@ -496,110 +511,103 @@ class _TrendingPersonWidget extends StatelessWidget {
     return SizedBox(
       height: 280,
       child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: 12,
-          itemExtent: 125,
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          itemBuilder: (BuildContext context, int index) {
-            // model.preLoadMovies(index);
-            final person = model.persons[index];
-            final profilePath = person.profilePath;
-            final name = person.name;
-            final department = person.knownForDepartment;
+        scrollDirection: Axis.horizontal,
+        itemCount: 12,
+        itemExtent: 125,
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        itemBuilder: (BuildContext context, int index) {
 
-            if (true) {
-              // if (!model.isLoadingInProgress) {
-              return Padding(
-                padding: const EdgeInsets.all(8),
-                child: Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: Colors.black.withOpacity(0.2)),
-                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 8,
-                              offset: const Offset(1, 2),
-                            )
-                          ]
+          final person = model.persons[index];
+          final profilePath = person.profilePath;
+          final name = person.name;
+          final department = person.knownForDepartment;
+
+          return Padding(
+            padding: const EdgeInsets.all(8),
+            child: Stack(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: Colors.black.withOpacity(0.2)),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(1, 2),
+                        )
+                      ]
+                  ),
+                  clipBehavior: Clip.hardEdge,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      AspectRatio(
+                        aspectRatio: 500 / 750,
+                        child: profilePath != null
+                            ? Image.network(
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return const Center(
+                              child: SizedBox(
+                                width: 60,
+                                height: 60,
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                          },
+                          ApiClient.getImageByUrl(profilePath),)
+                            : Image.asset(AppImages.noPoster,),
                       ),
-                      clipBehavior: Clip.hardEdge,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        // mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          AspectRatio(
-                            aspectRatio: 500 / 750,
-                            child: profilePath != null
-                                ? Image.network(
-                              loadingBuilder: (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return const Center(
-                                  child: SizedBox(
-                                    width: 60,
-                                    height: 60,
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                );
-                              },
-                              ApiClient.getImageByUrl(profilePath),)
-                                : Image.asset(AppImages.noPoster,),
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 4, right: 2, top: 5),
-                                  child: Text(
-                                    name,
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w700
-                                    ),
-                                  ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 4, right: 2, top: 5),
+                              child: Text(
+                                name,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 4, right: 2, top: 5),
-                                  child: Text(
-                                    department,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        fontStyle: FontStyle.italic
-                                    ),
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.only(left: 4, right: 2, top: 5),
+                              child: Text(
+                                department,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontStyle: FontStyle.italic
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: const BorderRadius.all(Radius.circular(
-                            10)),
-                        onTap: () => model.onPeopleTab(context, index),
-                      ),
-                    )
-                  ],
+                    ],
+                  ),
                 ),
-              );
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          }
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: const BorderRadius.all(Radius.circular(
+                        10)),
+                    onTap: () => model.onPeopleScreen(context, index),
+                  ),
+                )
+              ],
+            ),
+          );
+        }
       ),
     );
   }

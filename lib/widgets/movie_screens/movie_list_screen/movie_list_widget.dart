@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/movie_screens/movie_list_screen/movie_list_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
-import 'package:the_movie_app/widgets/widget_elements/vertical_list_element_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/list_elements/vertical_list_element_widget.dart';
 
 
 class MovieListWidget extends StatefulWidget {

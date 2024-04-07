@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
 
-abstract class BaseTvListModel {
+abstract class CommonTvListModel {
   ScrollController get scrollController;
   bool get isTvsLoadingInProgress;
   List<MediaList> get tvs;

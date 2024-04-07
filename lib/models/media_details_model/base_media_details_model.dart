@@ -41,5 +41,6 @@ abstract class BaseMediaDetailsModel implements CommonUserListsModel {
   Future<void> launchYouTubeVideo(String videoKey);
 
   String formatDate(String? date);
+
   String formatDateTwo(String? date);
 }

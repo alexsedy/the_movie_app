@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/tv_show_screens/tv_show_list_screen/tv_show_list_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
-import 'package:the_movie_app/widgets/widget_elements/vertical_list_element_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/list_elements/vertical_list_element_widget.dart';
 
 class TvShowListWidget extends StatefulWidget {
   const TvShowListWidget({super.key});
