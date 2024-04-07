@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
-import 'package:the_movie_app/models/media_list_model/test/test_base.dart';
+import 'package:the_movie_app/models/media_list_model/base_media_list_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
 
-class HorizontalListElementWidget<T extends BaseList> extends StatelessWidget {
+class HorizontalListElementWidget<T extends BaseListModel> extends StatelessWidget {
   final HorizontalListElementType horizontalListElementType;
   final T model;
   const HorizontalListElementWidget({
@@ -13,36 +13,92 @@ class HorizontalListElementWidget<T extends BaseList> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int length = 0;
+    double boxHeight = 0;
+
+    switch(horizontalListElementType) {
+      case HorizontalListElementType.movie:
+        length = model.movies.length;
+        boxHeight = 280;
+      case HorizontalListElementType.tv:
+        length = model.tvs.length;
+        boxHeight = 280;
+      case HorizontalListElementType.trendingPerson:
+        length = model.persons.length;
+        boxHeight = 280;
+      case HorizontalListElementType.cast:
+        length =  model.mediaDetails?.credits.cast.length ?? 0;
+        boxHeight = 280;
+      case HorizontalListElementType.companies:
+        length = model.mediaDetails?.productionCompanies.length ?? 0;
+        boxHeight = 215;
+      case HorizontalListElementType.season:
+        length = model.mediaDetails?.seasons?.length ?? 0;
+        boxHeight = 280;
+      case HorizontalListElementType.network:
+        length = model.mediaDetails?.networks?.length ?? 0;
+        boxHeight = 215;
+    }
+
     return SizedBox(
-      height: 280,
+      height: boxHeight,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: model.persons.length,
+          itemCount: length,
           itemExtent: 125,
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           itemBuilder: (BuildContext context, int index) {
 
-            switch(horizontalListElementType) {
-              case HorizontalListElementType.homeMovie:
-                // TODO: Handle this case.
-              case HorizontalListElementType.homeTv:
-                // TODO: Handle this case.
-              case HorizontalListElementType.homePerson:
-                // TODO: Handle this case.
-              case HorizontalListElementType.detailsCast:
-                // TODO: Handle this case.
-              case HorizontalListElementType.detailsCompanies:
-                // TODO: Handle this case.
-              case HorizontalListElementType.detailsSeason:
-                // TODO: Handle this case.
-              case HorizontalListElementType.detailsNetwork:
-                // TODO: Handle this case.
-            }
+            String? posterPath;
+            String altPosterPath = "";
+            String firstLine = "";
+            String secondLine = "";
+            String thirdLine = "";
 
-            final person = model.persons[index];
-            final profilePath = person.profilePath;
-            final name = person.name;
-            final department = person.knownForDepartment;
+            switch(horizontalListElementType) {
+              case HorizontalListElementType.movie:
+                final movies = model.movies[index];
+                posterPath = movies.posterPath;
+                firstLine = movies.title ?? "";
+                secondLine = model.formatDate(movies.releaseDate);
+                altPosterPath = AppImages.noPoster;
+              case HorizontalListElementType.tv:
+                final tv = model.tvs[index];
+                posterPath = tv.posterPath;
+                firstLine = tv.name ?? "";
+                secondLine = model.formatDate(tv.firstAirDate);
+                altPosterPath = AppImages.noPoster;
+              case HorizontalListElementType.trendingPerson:
+                final person = model.persons[index];
+                posterPath = person.profilePath;
+                firstLine = person.name;
+                secondLine = person.knownForDepartment;
+                altPosterPath = AppImages.noProfile;
+              case HorizontalListElementType.cast:
+                final cast = model.mediaDetails?.credits.cast[index];
+                posterPath = cast?.profilePath;
+                firstLine = cast?.name ?? "";
+                secondLine = cast?.character ?? "";
+                altPosterPath = AppImages.noProfile;
+              case HorizontalListElementType.companies:
+                final productionCompanies = model.mediaDetails?.productionCompanies[index];
+                posterPath = productionCompanies?.logoPath;
+                firstLine = productionCompanies?.name ?? "";
+                altPosterPath = AppImages.noLogo;
+              case HorizontalListElementType.season:
+                final season =  model.mediaDetails?.seasons?[index];
+                posterPath = season?.posterPath;
+                firstLine = season?.name ?? "";
+                final episodeCount = season?.episodeCount;
+                secondLine = episodeCount != null ? "$episodeCount episodes" : "";
+                thirdLine = model.formatDate(season?.airDate);
+                altPosterPath = AppImages.noPoster;
+              case HorizontalListElementType.network:
+                final networks = model.mediaDetails?.networks?[index];
+                posterPath = networks?.logoPath;
+                firstLine = networks?.name ?? "";
+                altPosterPath = AppImages.noLogo;
+            }
 
             return Padding(
               padding: const EdgeInsets.all(8),
@@ -68,7 +124,7 @@ class HorizontalListElementWidget<T extends BaseList> extends StatelessWidget {
                       children: [
                         AspectRatio(
                           aspectRatio: 500 / 750,
-                          child: profilePath != null
+                          child: posterPath != null
                               ? Image.network(
                             loadingBuilder: (context, child, loadingProgress) {
                               if (loadingProgress == null) return child;
@@ -80,8 +136,8 @@ class HorizontalListElementWidget<T extends BaseList> extends StatelessWidget {
                                 ),
                               );
                             },
-                            ApiClient.getImageByUrl(profilePath),)
-                              : Image.asset(AppImages.noPoster,),
+                            ApiClient.getImageByUrl(posterPath),)
+                              : Image.asset(altPosterPath,),
                         ),
                         Expanded(
                           child: Column(
@@ -91,7 +147,7 @@ class HorizontalListElementWidget<T extends BaseList> extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(left: 4, right: 2, top: 5),
                                 child: Text(
-                                  name,
+                                  firstLine,
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
@@ -100,10 +156,11 @@ class HorizontalListElementWidget<T extends BaseList> extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                              if(secondLine.isNotEmpty)
                               Padding(
                                 padding: const EdgeInsets.only(left: 4, right: 2, top: 5),
                                 child: Text(
-                                  department,
+                                  secondLine,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
@@ -112,6 +169,19 @@ class HorizontalListElementWidget<T extends BaseList> extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                              if(thirdLine.isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 4, right: 2, top: 5),
+                                  child: Text(
+                                    thirdLine,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontStyle: FontStyle.italic
+                                    ),
+                                  ),
+                                ),
                             ],
                           ),
                         ),
@@ -121,9 +191,21 @@ class HorizontalListElementWidget<T extends BaseList> extends StatelessWidget {
                   Material(
                     color: Colors.transparent,
                     child: InkWell(
-                      borderRadius: const BorderRadius.all(Radius.circular(
-                          10)),
-                      onTap: () => model.onPeopleScreen(context, index),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      onTap: () {
+                        switch(horizontalListElementType) {
+                          case HorizontalListElementType.movie:
+                            model.onMovieScreen(context, index);
+                          case HorizontalListElementType.tv:
+                            model.onTvShowScreen(context, index);
+                          case HorizontalListElementType.trendingPerson:
+                            model.onPeopleScreen(context, index);
+                          case HorizontalListElementType.cast:
+                          case HorizontalListElementType.companies:
+                          case HorizontalListElementType.season:
+                          case HorizontalListElementType.network:
+                        }
+                      },
                     ),
                   )
                 ],

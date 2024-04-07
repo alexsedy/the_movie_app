@@ -7,13 +7,12 @@ import 'package:the_movie_app/domain/api_client/people_api_client.dart';
 import 'package:the_movie_app/domain/api_client/tv_show_api_client.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
 import 'package:the_movie_app/domain/entity/person/trending_person/trending_person.dart';
-import 'package:the_movie_app/models/media_list_model/base_media_list_model.dart';
-import 'package:the_movie_app/models/media_list_model/test/common_movie_list_model_mixin.dart';
-import 'package:the_movie_app/models/media_list_model/test/common_trending_person_list_model_mixin.dart';
-import 'package:the_movie_app/models/media_list_model/test/common_tv_list_model_mixin.dart';
+import 'package:the_movie_app/models/media_list_model/movie_list_model_mixin.dart';
+import 'package:the_movie_app/models/media_list_model/trending_person_list_model_mixin.dart';
+import 'package:the_movie_app/models/media_list_model/tv_list_model_mixin.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
-class HomeModel extends ChangeNotifier with CommonMovieListModelMixin, CommonTrendingPersonListModelMixin, CommonTvListModelMixin {
+class HomeModel extends ChangeNotifier with MovieListModelMixin, TrendingPersonListModelMixin, TvListModelMixin {
   final _movieApiClient = MovieApiClient();
   final _tvShowApiClient = TvShowApiClient();
   final _peopleApiClient = PeopleApiClient();
@@ -113,30 +112,33 @@ class HomeModel extends ChangeNotifier with CommonMovieListModelMixin, CommonTre
   String formatDate(String? date) =>
       date != "" ? _dateFormat.format(DateTime.parse(date ?? "")) : "No date";
 
-  @override
-  Future<void> firstLoadMovies() {
-    throw UnimplementedError();
-  }
+  // @override
+  // Future<void> firstLoadMovies() {
+  //   throw UnimplementedError();
+  // }
+  //
+  // @override
+  // Future<void> firstLoadTvShows() {
+  //   throw UnimplementedError();
+  // }
+  //
+  // @override
+  // bool get isMovieLoadingInProgress => throw UnimplementedError();
+  //
+  // @override
+  // bool get isTvsLoadingInProgress => throw UnimplementedError();
+  //
+  // @override
+  // void preLoadMovies(int index) {
+  // }
+  //
+  // @override
+  // void preLoadTvShows(int index) {
+  // }
+  //
+  // @override
+  // ScrollController get scrollController => throw UnimplementedError();
 
   @override
-  Future<void> firstLoadTvShows() {
-    throw UnimplementedError();
-  }
-
-  @override
-  bool get isMovieLoadingInProgress => throw UnimplementedError();
-
-  @override
-  bool get isTvsLoadingInProgress => throw UnimplementedError();
-
-  @override
-  void preLoadMovies(int index) {
-  }
-
-  @override
-  void preLoadTvShows(int index) {
-  }
-
-  @override
-  ScrollController get scrollController => throw UnimplementedError();
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

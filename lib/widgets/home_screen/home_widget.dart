@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/home_screen/home_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
+import 'package:the_movie_app/widgets/widget_elements/list_elements/horizontal_list_element_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/list_shimmer_skeleton_widget.dart';
 
 class HomeWidget extends StatefulWidget {
   const HomeWidget({super.key});
@@ -23,11 +24,11 @@ class _HomeWidgetState extends State<HomeWidget> {
           children: [
             _SearchWidget(),
             SizedBox(height: 20,),
-            _TrendingToggleWidget(horizontalListElementType: HorizontalListElementType.homeMovie),
+            _TrendingToggleWidget(horizontalListElementType: HorizontalListElementType.movie),
             SizedBox(height: 20,),
-            _TrendingToggleWidget(horizontalListElementType: HorizontalListElementType.homeTv,),
+            _TrendingToggleWidget(horizontalListElementType: HorizontalListElementType.tv,),
             SizedBox(height: 20,),
-            _TrendingToggleWidget(horizontalListElementType: HorizontalListElementType.homePerson,),
+            _TrendingToggleWidget(horizontalListElementType: HorizontalListElementType.trendingPerson,),
             // ToggleWidgets(),
           ],
         ),
@@ -152,11 +153,11 @@ class _TrendingToggleWidgetState extends State<_TrendingToggleWidget> {
 
   String _getName() {
     switch(widget.horizontalListElementType){
-      case HorizontalListElementType.homeMovie:
+      case HorizontalListElementType.movie:
         return "Trending movies";
-      case HorizontalListElementType.homeTv:
+      case HorizontalListElementType.tv:
         return "Trending TVs";
-      case HorizontalListElementType.homePerson:
+      case HorizontalListElementType.trendingPerson:
         return "Trending persons";
       default:
         return "";
@@ -169,7 +170,9 @@ class _TrendingToggleWidgetState extends State<_TrendingToggleWidget> {
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<HomeModel>(context);
 
-    if(model == null) return const SizedBox.shrink();
+    if(model == null) {
+      return const SizedBox.shrink();
+    }
 
     return Column(
       children: [
@@ -195,13 +198,13 @@ class _TrendingToggleWidgetState extends State<_TrendingToggleWidget> {
                         _isSelected[i] = i == index;
 
                         switch(widget.horizontalListElementType){
-                          case HorizontalListElementType.homeMovie:
+                          case HorizontalListElementType.movie:
                             model.isSwitch = _isSelected.first;
                             NotifierProvider.read<HomeModel>(context)?.loadMovies();
-                          case HorizontalListElementType.homeTv:
+                          case HorizontalListElementType.tv:
                             model.isSwitch = _isSelected.first;
                             NotifierProvider.read<HomeModel>(context)?.loadTvShows();
-                          case HorizontalListElementType.homePerson:
+                          case HorizontalListElementType.trendingPerson:
                             model.isSwitch = _isSelected.first;
                             NotifierProvider.read<HomeModel>(context)?.loadTrendingPerson();
                           default:
@@ -220,395 +223,27 @@ class _TrendingToggleWidgetState extends State<_TrendingToggleWidget> {
           ),
         ),
         switch(widget.horizontalListElementType){
-          HorizontalListElementType.homeMovie =>  const _TrendingMovieWidget(),
-          HorizontalListElementType.homeTv => const _TrendingTvWidget(),
-          HorizontalListElementType.homePerson => const _TrendingPersonWidget(),
-          // TODO: Handle this case.
-          HorizontalListElementType.detailsCast => throw UnimplementedError(),
-          // TODO: Handle this case.
-          HorizontalListElementType.detailsCompanies => throw UnimplementedError(),
-          // TODO: Handle this case.
-          HorizontalListElementType.detailsSeason => throw UnimplementedError(),
-          // TODO: Handle this case.
-          HorizontalListElementType.detailsNetwork => throw UnimplementedError(),
+          HorizontalListElementType.movie => model.movies.isNotEmpty
+            ? HorizontalListElementWidget<HomeModel>(
+                horizontalListElementType: HorizontalListElementType.movie,
+                model: model,
+              )
+            : const HorizontalListShimmerSkeletonWidget(horizontalListElementType: HorizontalListElementType.movie,),
+          HorizontalListElementType.tv => model.tvs.isNotEmpty
+              ? HorizontalListElementWidget<HomeModel>(
+                  horizontalListElementType: HorizontalListElementType.tv,
+                  model: model,
+                )
+              : const HorizontalListShimmerSkeletonWidget(horizontalListElementType: HorizontalListElementType.tv,),
+          HorizontalListElementType.trendingPerson => model.persons.isNotEmpty
+              ? HorizontalListElementWidget<HomeModel>(
+                  horizontalListElementType: HorizontalListElementType.trendingPerson,
+                  model: model,
+                )
+              : const HorizontalListShimmerSkeletonWidget(horizontalListElementType: HorizontalListElementType.trendingPerson,),
+          _ => const SizedBox.shrink(),
         }
       ],
-    );
-  }
-}
-
-
-
-class _TrendingMovieWidget extends StatelessWidget {
-  const _TrendingMovieWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<HomeModel>(context);
-
-    if(model == null) {
-      return const SizedBox.shrink();
-    } else if(model.movies.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return SizedBox(
-      height: 280,
-      child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: 12,
-          itemExtent: 125,
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          itemBuilder: (BuildContext context, int index) {
-            // model.preLoadMovies(index);
-            final movie = model.movies[index];
-            final posterPath = movie.posterPath;
-            final title = movie.title;
-            final date = model.formatDate(movie.releaseDate);
-
-            if (true) {
-              // if (!model.isLoadingInProgress) {
-              return Padding(
-                padding: const EdgeInsets.all(8),
-                child: Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: Colors.black.withOpacity(0.2)),
-                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 8,
-                              offset: const Offset(1, 2),
-                            )
-                          ]
-                      ),
-                      clipBehavior: Clip.hardEdge,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        // mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          AspectRatio(
-                            aspectRatio: 500 / 750,
-                            child: posterPath != null
-                                ? Image.network(
-                              loadingBuilder: (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return const Center(
-                                  child: SizedBox(
-                                    width: 60,
-                                    height: 60,
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                );
-                              },
-                              ApiClient.getImageByUrl(posterPath),)
-                                : Image.asset(AppImages.noPoster,),
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 4, right: 2, top: 5),
-                                  child: Text(
-                                    title ?? "",
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w700
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 4, right: 2, top: 5),
-                                  child: Text(
-                                    date,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        fontStyle: FontStyle.italic
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: const BorderRadius.all(Radius.circular(
-                            10)),
-                        onTap: () => model.onMovieScreen(context, index),
-                      ),
-                    )
-                  ],
-                ),
-              );
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          }
-      ),
-    );
-  }
-}
-
-class _TrendingTvWidget extends StatelessWidget {
-  const _TrendingTvWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<HomeModel>(context);
-
-    if(model == null) {
-      return const SizedBox.shrink();
-    } else if(model.tvs.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return SizedBox(
-      height: 280,
-      child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: 12,
-          itemExtent: 125,
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          itemBuilder: (BuildContext context, int index) {
-            // model.preLoadMovies(index);
-            final tv = model.tvs[index];
-            final posterPath = tv.posterPath;
-            final title = tv.name;
-            final date = model.formatDate(tv.firstAirDate);
-
-            if (true) {
-              // if (!model.isLoadingInProgress) {
-              return Padding(
-                padding: const EdgeInsets.all(8),
-                child: Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: Colors.black.withOpacity(0.2)),
-                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 8,
-                              offset: const Offset(1, 2),
-                            )
-                          ]
-                      ),
-                      clipBehavior: Clip.hardEdge,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        // mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          AspectRatio(
-                            aspectRatio: 500 / 750,
-                            child: posterPath != null
-                                ? Image.network(
-                              loadingBuilder: (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return const Center(
-                                  child: SizedBox(
-                                    width: 60,
-                                    height: 60,
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                );
-                              },
-                              ApiClient.getImageByUrl(posterPath),)
-                                : Image.asset(AppImages.noPoster,),
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 4, right: 2, top: 5),
-                                  child: Text(
-                                    title ?? "",
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w700
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 4, right: 2, top: 5),
-                                  child: Text(
-                                    date,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        fontStyle: FontStyle.italic
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: const BorderRadius.all(Radius.circular(
-                            10)),
-                        onTap: () => model.onTvShowScreen(context, index),
-                      ),
-                    )
-                  ],
-                ),
-              );
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          }
-      ),
-    );
-  }
-}
-
-class _TrendingPersonWidget extends StatelessWidget {
-  const _TrendingPersonWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<HomeModel>(context);
-
-    if(model == null) {
-      return const SizedBox.shrink();
-    } else if(model.persons.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return SizedBox(
-      height: 280,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: 12,
-        itemExtent: 125,
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        itemBuilder: (BuildContext context, int index) {
-
-          final person = model.persons[index];
-          final profilePath = person.profilePath;
-          final name = person.name;
-          final department = person.knownForDepartment;
-
-          return Padding(
-            padding: const EdgeInsets.all(8),
-            child: Stack(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.black.withOpacity(0.2)),
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 8,
-                          offset: const Offset(1, 2),
-                        )
-                      ]
-                  ),
-                  clipBehavior: Clip.hardEdge,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    // mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      AspectRatio(
-                        aspectRatio: 500 / 750,
-                        child: profilePath != null
-                            ? Image.network(
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return const Center(
-                              child: SizedBox(
-                                width: 60,
-                                height: 60,
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
-                          },
-                          ApiClient.getImageByUrl(profilePath),)
-                            : Image.asset(AppImages.noPoster,),
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 4, right: 2, top: 5),
-                              child: Text(
-                                name,
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w700
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 4, right: 2, top: 5),
-                              child: Text(
-                                department,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    fontSize: 14,
-                                    fontStyle: FontStyle.italic
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: const BorderRadius.all(Radius.circular(
-                        10)),
-                    onTap: () => model.onPeopleScreen(context, index),
-                  ),
-                )
-              ],
-            ),
-          );
-        }
-      ),
     );
   }
 }

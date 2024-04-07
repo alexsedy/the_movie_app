@@ -1,21 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
-import 'package:the_movie_app/models/media_list_model/common_movie_list_model.dart';
-import 'package:the_movie_app/models/media_list_model/common_tv_list_model.dart';
+import 'package:the_movie_app/domain/entity/media/media_details/media_details.dart';
+import 'package:the_movie_app/domain/entity/person/trending_person/trending_person.dart';
 
-abstract class BaseMediaListModel implements CommonMovieListModel, CommonTvListModel {}
-// abstract class BaseMediaListModel {
-//   ScrollController get scrollController;
-//   bool get isLoadingInProgress;
-//   List<MediaList> get media;
-//
-//   Future<void> firstLoadMedia();
-//
-//   Future<void> loadMedia();
-//
-//   void preLoadMedia(int index);
-//
-//   void onMediaScreen(BuildContext context, int index);
-//
-//   String formatDate(String? date);
-// }
+abstract class BaseListModel {
+  ScrollController get scrollController;
+
+  bool get isTvsLoadingInProgress;
+
+  List<MediaList> get tvs;
+
+  List<TrendingPersonList> get persons;
+
+  MediaDetails? get mediaDetails;
+
+  Future<void> firstLoadTvShows();
+
+  Future<void> loadTvShows();
+
+  void preLoadTvShows(int index);
+
+  void onTvShowScreen(BuildContext context, int index);
+
+  String formatDate(String? date);
+
+  Future<void> loadTrendingPerson();
+
+  void onPeopleScreen(BuildContext context, int index);
+
+  bool get isMovieLoadingInProgress;
+
+  List<MediaList> get movies;
+
+  Future<void> firstLoadMovies();
+
+  Future<void> loadMovies();
+
+  void preLoadMovies(int index);
+
+  void onMovieScreen(BuildContext context, int index);
+}

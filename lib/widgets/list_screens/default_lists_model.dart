@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/account_api_client.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
-import 'package:the_movie_app/models/media_list_model/base_media_list_model.dart';
+import 'package:the_movie_app/models/media_list_model/movie_list_model_mixin.dart';
+import 'package:the_movie_app/models/media_list_model/tv_list_model_mixin.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
-class DefaultListsModel extends ChangeNotifier implements BaseMediaListModel {
+class DefaultListsModel extends ChangeNotifier with MovieListModelMixin, TvListModelMixin {
   final ListType listType;
   final ScrollController _scrollController = ScrollController();
   final _accountApiClient = AccountApiClient();
@@ -123,6 +124,9 @@ class DefaultListsModel extends ChangeNotifier implements BaseMediaListModel {
   @override
   String formatDate(String? date) =>
       date != "" ? _dateFormat.format(DateTime.parse(date ?? "")) : "No date";
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 enum ListType {

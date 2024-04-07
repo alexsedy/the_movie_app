@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/provider/provider.dart';
-import 'package:the_movie_app/widgets/list_screens/lists_shimmer_skeleton_widget.dart';
 import 'package:the_movie_app/widgets/list_screens/user_lists_model.dart';
+import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/list_shimmer_skeleton_widget.dart';
 
 class UserListsWidget extends StatefulWidget {
   const UserListsWidget({super.key});

@@ -5,9 +5,10 @@ import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/tv_show_api_client.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
 import 'package:the_movie_app/models/media_list_model/base_media_list_model.dart';
+import 'package:the_movie_app/models/media_list_model/tv_list_model_mixin.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
-class TvShowListModel extends ChangeNotifier implements BaseMediaListModel {
+class TvShowListModel extends ChangeNotifier with TvListModelMixin {
   final ScrollController _scrollController = ScrollController();
   final _apiClient = TvShowApiClient();
   final _tvs = <MediaList>[];
@@ -121,19 +122,8 @@ class TvShowListModel extends ChangeNotifier implements BaseMediaListModel {
   //   final locale = Localizations.localeOf(context);
   // }
 
-  /// not used
   @override
-  bool get isMovieLoadingInProgress => false;
-  @override
-  Future<void> loadMovies() async {}
-  @override
-  Future<void> firstLoadMovies() async {}
-  @override
-  void preLoadMovies(int index) {}
-  @override
-  List<MediaList> get movies => <MediaList>[];
-  @override
-  void onMovieScreen(BuildContext context, int index) {}
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 // class TvShowListModel extends ChangeNotifier implements BaseMediaListModel {

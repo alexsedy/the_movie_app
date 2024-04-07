@@ -3,6 +3,10 @@ enum VerticalListElementType {
 }
 
 enum HorizontalListElementType {
-  homeMovie, homeTv, homePerson, detailsCast, detailsCompanies,
-  detailsSeason, detailsNetwork,
+  movie, tv, trendingPerson, cast, companies,
+  season, network,
+}
+
+enum MediaDetailsElementType {
+  movie, tv
 }

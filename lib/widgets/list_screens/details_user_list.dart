@@ -3,8 +3,8 @@ import 'package:shimmer/shimmer.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/provider/provider.dart';
-import 'package:the_movie_app/widgets/list_screens/lists_shimmer_skeleton_widget.dart';
 import 'package:the_movie_app/widgets/list_screens/user_lists_model.dart';
+import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/list_shimmer_skeleton_widget.dart';
 
 class DetailsUserList extends StatefulWidget {
   const DetailsUserList({super.key});

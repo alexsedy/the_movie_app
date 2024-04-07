@@ -23,9 +23,9 @@ class MovieDetailsMainInfoWidget extends StatelessWidget {
         ),
         _TaglineWidget(), //+
         _DescriptionWidget(), //+
-        _MovieCrewWidget(),
-        _MovieCastWidget(),
-        _ProductionCompanyWidget(),
+        _MovieCrewWidget(), //+
+        _MovieCastWidget(), //+
+        _ProductionCompanyWidget(), //+
         SizedBox(height: 20,),
       ],
     );

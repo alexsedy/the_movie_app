@@ -23,11 +23,11 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
         ),
         _TaglineWidget(),//+
         _DescriptionWidget(),//+
-        _TvShowCrewWidget(),
-        _TvShowCastWidget(),
-        _SeasonsWidget(),
-        _NetworkWidget(),
-        _ProductionCompanyWidget(),
+        _TvShowCrewWidget(), //+
+        _TvShowCastWidget(), //+
+        _SeasonsWidget(), //+
+        _NetworkWidget(), //+
+        _ProductionCompanyWidget(), //+
       ],
     );
   }

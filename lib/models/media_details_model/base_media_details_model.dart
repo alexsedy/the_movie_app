@@ -3,9 +3,11 @@ import 'package:the_movie_app/domain/entity/account/user_lists/user_lists.dart';
 import 'package:the_movie_app/domain/entity/media/media_details/media_details.dart';
 import 'package:the_movie_app/domain/entity/media/state/item_state.dart';
 import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
-import 'package:the_movie_app/models/user_lists_model/common_user_lists_model.dart';
+import 'package:the_movie_app/models/media_list_model/base_media_list_model.dart';
+import 'package:the_movie_app/models/user_lists_model/base_user_lists_model.dart';
 
-abstract class BaseMediaDetailsModel implements CommonUserListsModel {
+abstract class BaseMediaDetailsModel implements BaseUserListsModel, BaseListModel {
+  @override
   MediaDetails? get mediaDetails;
   ItemState? get mediaState;
   List<Lists> get lists;
@@ -40,6 +42,7 @@ abstract class BaseMediaDetailsModel implements CommonUserListsModel {
 
   Future<void> launchYouTubeVideo(String videoKey);
 
+  @override
   String formatDate(String? date);
 
   String formatDateTwo(String? date);

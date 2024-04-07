@@ -62,7 +62,7 @@ class ScoreAndTrailerWidget<T extends BaseMediaDetailsModel> extends StatelessWi
                             children: video.map((item) => ListTile(
                               title: Text(item.name),
                               subtitle: Text(item.isoTwo),
-                              onTap: () => model?.launchYouTubeVideo(item.key),
+                              onTap: () => model.launchYouTubeVideo(item.key),
                             ),).toList(),
                           ),
                         ),
