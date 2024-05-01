@@ -14,11 +14,15 @@ Credits _$CreditsFromJson(Map<String, dynamic> json) => Credits(
           .map((e) => Crew.fromJson(e as Map<String, dynamic>))
           .toList(),
       json['id'] as int?,
+      (json['guest_stars'] as List<dynamic>?)
+          ?.map((e) => Cast.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$CreditsToJson(Credits instance) => <String, dynamic>{
       'cast': instance.cast.map((e) => e.toJson()).toList(),
       'crew': instance.crew.map((e) => e.toJson()).toList(),
+      'guest_stars': instance.guestStars?.map((e) => e.toJson()).toList(),
       'id': instance.id,
     };
 

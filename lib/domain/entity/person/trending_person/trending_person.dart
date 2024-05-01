@@ -74,7 +74,7 @@ class TrendingPersonList {
   final String mediaType;
   final double popularity;
   final int gender;
-  final String knownForDepartment;
+  final String? knownForDepartment;
   final String? profilePath;
   // final List<KnownFor> knownFor;
 

@@ -19,8 +19,10 @@ class HorizontalListShimmerSkeletonWidget extends StatelessWidget {
         boxHeight = 280;
       case HorizontalListElementType.cast:
       case HorizontalListElementType.companies:
-      case HorizontalListElementType.season:
-      case HorizontalListElementType.network:
+      case HorizontalListElementType.seasons:
+      case HorizontalListElementType.networks:
+      case HorizontalListElementType.guestStars:
+        // TODO: Handle this case.
     }
 
     return Shimmer.fromColors(

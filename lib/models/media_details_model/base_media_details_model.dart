@@ -18,32 +18,21 @@ abstract class BaseMediaDetailsModel implements BaseUserListsModel, BaseListMode
 
   set rate(value);
 
-  Future<void> loadMediaDetails();
-
   Future<void> toggleFavorite(BuildContext context);
-
   Future<void> toggleWatchlist(BuildContext context);
-
   Future<void> toggleAddRating(BuildContext context, double rate);
-
   Future<void> toggleDeleteRating(BuildContext context);
 
-  // Future<void> getAllUserLists(BuildContext context);
-  //
-  // Future<void> createNewList({required BuildContext context, required String? description, required String name, required bool public});
-  //
-  // Future<void> addItemListToList({required BuildContext context, required int listId, required String name});
-
   void onCastListScreen(BuildContext context, List<Cast> cast);
-
   void onCrewListScreen(BuildContext context, List<Crew> crew);
-
+  void onGuestCastListScreen(BuildContext context, List<Cast> cast);
   void onPeopleDetailsScreen(BuildContext context, int index);
+  void onCompaniesListScreen(BuildContext context);
+  void onSeasonsListScreen(BuildContext context, List<Seasons> seasons);
+  void onNetworksListScreen(BuildContext context);
 
   Future<void> launchYouTubeVideo(String videoKey);
 
-  @override
   String formatDate(String? date);
-
   String formatDateTwo(String? date);
 }

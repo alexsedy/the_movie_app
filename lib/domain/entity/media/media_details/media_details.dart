@@ -8,26 +8,26 @@ part 'media_details.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class MediaDetails {
-  final bool adult;
+  final bool? adult;
   final String? backdropPath;
   final BelongsToCollection? belongsToCollection;
   final int? budget;
-  final List<Genre> genres;
+  final List<Genre>? genres;
   final String? homepage;
   final int id;
   final String? imdbId;
-  final String originalLanguage;
+  final String? originalLanguage;
   final String? originalTitle;
   final String? overview;
-  final double popularity;
+  final double? popularity;
   final String? posterPath;
-  final List<ProductionCompanie> productionCompanies;
-  final List<ProductionCountrie> productionCountries;
+  final List<ProductionCompanie>? productionCompanies;
+  final List<ProductionCountrie>? productionCountries;
   final String? releaseDate;
   final int? revenue;
   final int? runtime;
-  final List<SpokenLanguage> spokenLanguages;
-  final String status;
+  final List<SpokenLanguage>? spokenLanguages;
+  final String? status;
   final String? tagline;
   final String? title;
   final bool? video;
@@ -50,10 +50,11 @@ class MediaDetails {
   final int? numberOfSeasons;
   final List<String>? originCountry;
   final String? originalName;
-  final List<Season>? seasons;
+  final List<Seasons>? seasons;
   final String? type;
   final ContentRatings? contentRatings;
-
+  final String? airDate;
+  final String? stillPath;
 
   MediaDetails(
       this.adult,
@@ -100,7 +101,9 @@ class MediaDetails {
       this.originalName,
       this.seasons,
       this.type,
-      this.contentRatings);
+      this.contentRatings,
+      this.airDate,
+      this.stillPath);
 
   factory MediaDetails.fromJson(Map<String, dynamic> json) => _$MediaDetailsFromJson(json);
 
@@ -307,7 +310,8 @@ class ProductionCountry {
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class Season {
+class Seasons {
+  int? tvShowId;
   final String? airDate;
   final int episodeCount;
   final int id;
@@ -317,10 +321,10 @@ class Season {
   final int seasonNumber;
   final double voteAverage;
 
-  Season(this.airDate, this.episodeCount, this.id, this.name, this.overview,
-      this.posterPath, this.seasonNumber, this.voteAverage);
+  Seasons(this.airDate, this.episodeCount, this.id, this.name, this.overview,
+      this.posterPath, this.seasonNumber, this.voteAverage, this.tvShowId);
 
-  factory Season.fromJson(Map<String, dynamic> json) => _$SeasonFromJson(json);
+  factory Seasons.fromJson(Map<String, dynamic> json) => _$SeasonsFromJson(json);
 
-  Map<String, dynamic> toJson() => _$SeasonToJson(this);
+  Map<String, dynamic> toJson() => _$SeasonsToJson(this);
 }

@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/provider/provider.dart';
-import 'package:the_movie_app/widgets/credits_list_screen/cast_list_screen/cast_list_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
 import 'package:the_movie_app/widgets/widget_elements/list_elements/color_vertica_list_widget.dart';
 
-class CastListWidget extends StatelessWidget {
-  const CastListWidget({super.key});
+import 'seasons_list_model.dart';
+
+class SeasonsListWidget extends StatelessWidget {
+  const SeasonsListWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Cast"),
+        title: const Text("Seasons"),
       ),
       body: const _BodyWidget(),
     );
@@ -25,22 +26,22 @@ class _BodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<CastListModel>(context);
-    final cast = model?.cast;
+    final model = NotifierProvider.watch<SeasonsListModel>(context);
+    final seasons = model?.seasons;
 
     if(model == null) {
       return const SizedBox.shrink();
     }
 
-    if (cast == null) {
+    if (seasons == null) {
       return const SizedBox.shrink();
-    } else if (cast.isEmpty) {
+    } else if (seasons.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    return ColorVerticalList<CastListModel>(
+    return ColorVerticalList<SeasonsListModel>(
       model: model,
-      colorListType: ColorListType.cast,
+      colorListType: ColorListType.seasons,
     );
   }
 }

@@ -6,9 +6,10 @@ part 'credits.g.dart';
 class Credits {
   final List<Cast> cast;
   final List<Crew> crew;
+  final List<Cast>? guestStars;
   final int? id;
 
-  Credits(this.cast, this.crew, this.id);
+  Credits(this.cast, this.crew, this.id, this.guestStars);
 
   factory Credits.fromJson(Map<String, dynamic> json) => _$CreditsFromJson(json);
 

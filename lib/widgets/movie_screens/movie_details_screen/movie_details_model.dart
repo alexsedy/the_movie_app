@@ -7,10 +7,11 @@ import 'package:the_movie_app/domain/entity/media/media_details/media_details.da
 import 'package:the_movie_app/domain/entity/media/state/item_state.dart';
 import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
 import 'package:the_movie_app/helpers/snack_bar_helper.dart';
+import 'package:the_movie_app/models/media_details_model/media_details_mixin.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class MovieDetailsModel extends ChangeNotifier {
+class MovieDetailsModel extends ChangeNotifier with MediaDetailsMixin {
   final _apiClient = MovieApiClient();
   final _accountApiClient = AccountApiClient();
   MediaDetails? _movieDetails;
@@ -26,14 +27,26 @@ class MovieDetailsModel extends ChangeNotifier {
   late int _currentPage;
   late int _totalPage;
 
-  MediaDetails? get movieDetails => _movieDetails;
+  @override
+  MediaDetails? get mediaDetails => _movieDetails;
   ItemState? get movieState => _movieState;
+
+  @override
   List<Lists> get lists => List.unmodifiable(_lists);
+
+  @override
   bool get isFavorite => _isFavorite;
+
+  @override
   bool get isWatched => _isWatched;
+
+  @override
   bool get isRated => _isRated;
+
+  @override
   double get rate => _rate;
 
+  @override
   set rate(value) => _rate = value;
 
   MovieDetailsModel(this._movieId);
@@ -56,6 +69,7 @@ class MovieDetailsModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  @override
   Future<void> toggleFavorite(BuildContext context) async {
     final result = await SnackBarHelper.handleErrorDefaultLists(
       apiReq: () => _apiClient.addToFavorite(movieId: _movieId, isFavorite: !_isFavorite,),
@@ -67,6 +81,7 @@ class MovieDetailsModel extends ChangeNotifier {
     }
   }
 
+  @override
   Future<void> toggleWatchlist(BuildContext context) async {
     final result = await SnackBarHelper.handleErrorDefaultLists(
       apiReq: () => _apiClient.addToWatchlist(movieId: _movieId, isWatched: !_isWatched,),
@@ -78,6 +93,7 @@ class MovieDetailsModel extends ChangeNotifier {
     }
   }
 
+  @override
   Future<void> toggleAddRating(BuildContext context, double rate) async {
     final result = await SnackBarHelper.handleErrorDefaultLists(
       apiReq: () => _apiClient.addRating(movieId: _movieId, rate: rate),
@@ -89,6 +105,7 @@ class MovieDetailsModel extends ChangeNotifier {
     }
   }
 
+  @override
   Future<void> toggleDeleteRating(BuildContext context) async {
     if(_isRated) {
       final result = await SnackBarHelper.handleErrorDefaultLists(
@@ -108,6 +125,7 @@ class MovieDetailsModel extends ChangeNotifier {
     }
   }
 
+  @override
   Future<void> getAllUserLists(BuildContext context) async {
     if (lists.isEmpty) {
       _currentPage = 0;
@@ -136,6 +154,7 @@ class MovieDetailsModel extends ChangeNotifier {
     await _getUserLists();
   }
 
+  @override
   Future<void> createNewList({required BuildContext context, required String? description, required String name, required bool public}) async {
     await SnackBarHelper.handleErrorWithMessage(
       apiReq: () =>  _accountApiClient.addNewList(description: description, name: name, public: public),
@@ -148,6 +167,7 @@ class MovieDetailsModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  @override
   Future<void> addItemListToList({required BuildContext context, required int listId, required String name}) async {
     //todo find best solution
     final isSuccess = await _accountApiClient.isAddedToListToList(listId: listId, mediaType: MediaType.movie, mediaId: _movieId);
@@ -173,20 +193,23 @@ class MovieDetailsModel extends ChangeNotifier {
     }
   }
 
-
-  void onCastListTab(BuildContext context, List<Cast> cast) {
+  @override
+  void onCastListScreen(BuildContext context, List<Cast> cast) {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.castList, arguments: cast);
   }
 
-  void onCrewListTab(BuildContext context, List<Crew> crew) {
+  @override
+  void onCrewListScreen(BuildContext context, List<Crew> crew) {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.crewList, arguments: crew);
   }
 
-  void onPeopleDetailsTab(BuildContext context, int index) {
+  @override
+  void onPeopleDetailsScreen(BuildContext context, int index) {
     final id = _movieDetails?.credits.cast[index].id;
     Navigator.of(context).pushNamed(MainNavigationRouteNames.personDetails, arguments: id);
   }
 
+  @override
   Future<void> launchYouTubeVideo(String videoKey) async {
     final Uri url = Uri.parse('https://www.youtube.com/watch?v=$videoKey');
     if (!await launchUrl(url)) {
@@ -194,6 +217,10 @@ class MovieDetailsModel extends ChangeNotifier {
     }
   }
 
+  @override
   String formatDate(String? date) =>
       date != "" ? _dateFormat.format(DateTime.parse(date ?? "")) : "";
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

@@ -4,7 +4,8 @@ import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/tv_show_screens/tv_show_details_screen/tv_show_details_main_info_widget.dart';
 import 'package:the_movie_app/widgets/tv_show_screens/tv_show_details_screen/tv_show_details_model.dart';
-import 'package:the_movie_app/widgets/tv_show_screens/tv_show_details_screen/tv_show_details_shimmer_skeleton_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
+import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/media_details_shimmer_skeleton_widget.dart';
 
 class TvShowDetailsWidget extends StatefulWidget {
   const TvShowDetailsWidget({super.key});
@@ -50,10 +51,10 @@ class _HeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tvShowDetails = NotifierProvider.watch<TvShowDetailsModel>(context)?.tvShowDetails;
+    final tvShowDetails = NotifierProvider.watch<TvShowDetailsModel>(context)?.mediaDetails;
 
     if(tvShowDetails == null) {
-      return const TvShowShimmerHeaderSkeletonWidget();
+      return const MediaDetailsHeaderShimmerSkeletonWidget();
     }
 
     return const FlexibleSpaceBar(
@@ -70,10 +71,12 @@ class _BodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tvShowDetails = NotifierProvider.watch<TvShowDetailsModel>(context)?.tvShowDetails;
+    final tvShowDetails = NotifierProvider.watch<TvShowDetailsModel>(context)?.mediaDetails;
 
     if(tvShowDetails == null) {
-      return const TvShowShimmerBodySkeletonWidget();
+      return const MediaDetailsBodyShimmerSkeletonWidget(
+        mediaDetailsElementType: MediaDetailsElementType.tv,
+      );
     }
 
     return SliverList(
@@ -93,12 +96,12 @@ class _TopPosterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<TvShowDetailsModel>(context);
-    final backdropPath = model?.tvShowDetails?.backdropPath;
+    final backdropPath = model?.mediaDetails?.backdropPath;
     // final posterPath = model?.movieDetails?.posterPath;
 
     return backdropPath != null
         ? Image.network(ApiClient.getImageByUrl(backdropPath), fit: BoxFit.fitWidth,)
-        : Image.asset(AppImages.noBackdropPoster);
+        : Image.asset(AppImages.noBackdropPoster, fit: BoxFit.fitWidth,);
   }
 }
 
@@ -108,7 +111,7 @@ class _MovieNameWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<TvShowDetailsModel>(context);
-    final firstAirDate = model?.tvShowDetails?.firstAirDate;
+    final firstAirDate = model?.mediaDetails?.firstAirDate;
     final releaseText = firstAirDate != null && firstAirDate.isNotEmpty
         ? " (${firstAirDate.substring(0, 4)})" : "";
 
@@ -117,7 +120,7 @@ class _MovieNameWidget extends StatelessWidget {
       text: TextSpan(
         children: [
           TextSpan(
-            text: model?.tvShowDetails?.name,
+            text: model?.mediaDetails?.name,
             style: const TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 21,

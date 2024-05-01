@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:the_movie_app/domain/entity/media/list/list.dart';
 import 'package:the_movie_app/models/media_list_model/base_media_list_model.dart';
 
 mixin MovieListModelMixin implements BaseListModel {

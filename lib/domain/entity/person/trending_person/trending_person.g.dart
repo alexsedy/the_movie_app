@@ -79,7 +79,7 @@ TrendingPersonList _$TrendingPersonListFromJson(Map<String, dynamic> json) =>
       json['media_type'] as String,
       (json['popularity'] as num).toDouble(),
       json['gender'] as int,
-      json['known_for_department'] as String,
+      json['known_for_department'] as String?,
       json['profile_path'] as String?,
     );
 

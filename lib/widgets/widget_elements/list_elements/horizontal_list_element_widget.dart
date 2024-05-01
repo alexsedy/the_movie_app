@@ -15,6 +15,7 @@ class HorizontalListElementWidget<T extends BaseListModel> extends StatelessWidg
   Widget build(BuildContext context) {
     int length = 0;
     double boxHeight = 0;
+    double aspectRatio = 500 / 750;
 
     switch(horizontalListElementType) {
       case HorizontalListElementType.movie:
@@ -30,14 +31,17 @@ class HorizontalListElementWidget<T extends BaseListModel> extends StatelessWidg
         length =  model.mediaDetails?.credits.cast.length ?? 0;
         boxHeight = 280;
       case HorizontalListElementType.companies:
-        length = model.mediaDetails?.productionCompanies.length ?? 0;
+        length = model.mediaDetails?.productionCompanies?.length ?? 0;
         boxHeight = 215;
-      case HorizontalListElementType.season:
+      case HorizontalListElementType.seasons:
         length = model.mediaDetails?.seasons?.length ?? 0;
         boxHeight = 280;
-      case HorizontalListElementType.network:
+      case HorizontalListElementType.networks:
         length = model.mediaDetails?.networks?.length ?? 0;
         boxHeight = 215;
+      case HorizontalListElementType.guestStars:
+        length =  model.mediaDetails?.credits.guestStars?.length ?? 0;
+        boxHeight = 280;
     }
 
     return SizedBox(
@@ -72,7 +76,7 @@ class HorizontalListElementWidget<T extends BaseListModel> extends StatelessWidg
                 final person = model.persons[index];
                 posterPath = person.profilePath;
                 firstLine = person.name;
-                secondLine = person.knownForDepartment;
+                secondLine = person.knownForDepartment ?? "";
                 altPosterPath = AppImages.noProfile;
               case HorizontalListElementType.cast:
                 final cast = model.mediaDetails?.credits.cast[index];
@@ -81,11 +85,12 @@ class HorizontalListElementWidget<T extends BaseListModel> extends StatelessWidg
                 secondLine = cast?.character ?? "";
                 altPosterPath = AppImages.noProfile;
               case HorizontalListElementType.companies:
-                final productionCompanies = model.mediaDetails?.productionCompanies[index];
+                final productionCompanies = model.mediaDetails?.productionCompanies?[index];
                 posterPath = productionCompanies?.logoPath;
                 firstLine = productionCompanies?.name ?? "";
                 altPosterPath = AppImages.noLogo;
-              case HorizontalListElementType.season:
+                aspectRatio = 1 / 1;
+              case HorizontalListElementType.seasons:
                 final season =  model.mediaDetails?.seasons?[index];
                 posterPath = season?.posterPath;
                 firstLine = season?.name ?? "";
@@ -93,11 +98,17 @@ class HorizontalListElementWidget<T extends BaseListModel> extends StatelessWidg
                 secondLine = episodeCount != null ? "$episodeCount episodes" : "";
                 thirdLine = model.formatDate(season?.airDate);
                 altPosterPath = AppImages.noPoster;
-              case HorizontalListElementType.network:
+              case HorizontalListElementType.networks:
                 final networks = model.mediaDetails?.networks?[index];
                 posterPath = networks?.logoPath;
                 firstLine = networks?.name ?? "";
                 altPosterPath = AppImages.noLogo;
+              case HorizontalListElementType.guestStars:
+                final guestStars = model.mediaDetails?.credits.guestStars?[index];
+                posterPath = guestStars?.profilePath;
+                firstLine = guestStars?.name ?? "";
+                secondLine = guestStars?.character ?? "";
+                altPosterPath = AppImages.noProfile;
             }
 
             return Padding(
@@ -123,20 +134,26 @@ class HorizontalListElementWidget<T extends BaseListModel> extends StatelessWidg
                       // mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         AspectRatio(
-                          aspectRatio: 500 / 750,
+                          aspectRatio: aspectRatio,
                           child: posterPath != null
-                              ? Image.network(
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return const Center(
-                                child: SizedBox(
-                                  width: 60,
-                                  height: 60,
-                                  child: CircularProgressIndicator(),
+                              ? Padding(
+                                padding: EdgeInsets.all(
+                                    horizontalListElementType == HorizontalListElementType.companies
+                                    ||  horizontalListElementType == HorizontalListElementType.networks
+                                        ? 4.0
+                                        : 0.0
                                 ),
-                              );
-                            },
-                            ApiClient.getImageByUrl(posterPath),)
+                                child: Image.network(
+                                  loadingBuilder: (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return const Center(
+                                      child: SizedBox(
+                                      width: 60,
+                                      height: 60,
+                                        child: CircularProgressIndicator(),
+                                      ),);},
+                                  ApiClient.getImageByUrl(posterPath),),
+                              )
                               : Image.asset(altPosterPath,),
                         ),
                         Expanded(
@@ -158,7 +175,7 @@ class HorizontalListElementWidget<T extends BaseListModel> extends StatelessWidg
                               ),
                               if(secondLine.isNotEmpty)
                               Padding(
-                                padding: const EdgeInsets.only(left: 4, right: 2, top: 5),
+                                padding: const EdgeInsets.only(left: 4, right: 2, top: 5, bottom: 5),
                                 child: Text(
                                   secondLine,
                                   maxLines: 1,
@@ -171,7 +188,7 @@ class HorizontalListElementWidget<T extends BaseListModel> extends StatelessWidg
                               ),
                               if(thirdLine.isNotEmpty)
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 4, right: 2, top: 5),
+                                  padding: const EdgeInsets.only(left: 4, right: 2, top: 5, bottom: 5),
                                   child: Text(
                                     thirdLine,
                                     maxLines: 1,
@@ -199,11 +216,15 @@ class HorizontalListElementWidget<T extends BaseListModel> extends StatelessWidg
                           case HorizontalListElementType.tv:
                             model.onTvShowScreen(context, index);
                           case HorizontalListElementType.trendingPerson:
-                            model.onPeopleScreen(context, index);
+                            model.onPeopleDetailsScreen(context, index);
                           case HorizontalListElementType.cast:
+                            model.onPeopleDetailsScreen(context, index);
                           case HorizontalListElementType.companies:
-                          case HorizontalListElementType.season:
-                          case HorizontalListElementType.network:
+                          case HorizontalListElementType.seasons:
+                            model.onSeasonDetailsScreen(context, index);
+                          case HorizontalListElementType.networks:
+                          case HorizontalListElementType.guestStars:
+                            model.onGuestPeopleDetailsScreen(context, index);
                         }
                       },
                     ),

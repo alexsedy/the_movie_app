@@ -3,7 +3,8 @@ import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/movie_screens/movie_details_screen/movie_details_model.dart';
-import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/movie_details_shimmer_skeleton_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
+import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/media_details_shimmer_skeleton_widget.dart';
 
 import 'movie_details_main_info_widget.dart';
 
@@ -48,10 +49,10 @@ class _HeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final movieDetails = NotifierProvider.watch<MovieDetailsModel>(context)?.movieDetails;
+    final movieDetails = NotifierProvider.watch<MovieDetailsModel>(context)?.mediaDetails;
 
     if(movieDetails == null) {
-      return const MovieShimmerHeaderSkeletonWidget();
+      return const MediaDetailsHeaderShimmerSkeletonWidget();
     }
 
     return const FlexibleSpaceBar(
@@ -68,10 +69,12 @@ class _BodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final movieDetails = NotifierProvider.watch<MovieDetailsModel>(context)?.movieDetails;
+    final movieDetails = NotifierProvider.watch<MovieDetailsModel>(context)?.mediaDetails;
 
     if(movieDetails == null) {
-      return const ShimmerBodySkeletonWidget();
+      return const MediaDetailsBodyShimmerSkeletonWidget(
+        mediaDetailsElementType: MediaDetailsElementType.movie,
+      );
     }
 
     return SliverList(
@@ -90,11 +93,11 @@ class _TopPosterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<MovieDetailsModel>(context);
-    final backdropPath = model?.movieDetails?.backdropPath;
+    final backdropPath = model?.mediaDetails?.backdropPath;
 
     return backdropPath != null
         ? Image.network(ApiClient.getImageByUrl(backdropPath), fit: BoxFit.fitWidth,)
-        : Image.asset(AppImages.noBackdropPoster);
+        : Image.asset(AppImages.noBackdropPoster, fit: BoxFit.fitWidth,);
   }
 }
 
@@ -104,7 +107,7 @@ class _MovieNameWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<MovieDetailsModel>(context);
-    final releaseDate = model?.movieDetails?.releaseDate;
+    final releaseDate = model?.mediaDetails?.releaseDate;
     final releaseText = releaseDate != null && releaseDate.isNotEmpty
         ? " (${releaseDate.substring(0, 4)})" : "";
 
@@ -113,7 +116,7 @@ class _MovieNameWidget extends StatelessWidget {
       text: TextSpan(
         children: [
           TextSpan(
-            text: model?.movieDetails?.title,
+            text: model?.mediaDetails?.title,
             style: const TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 21,

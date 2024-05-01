@@ -17,7 +17,7 @@ PersonDetails _$PersonDetailsFromJson(Map<String, dynamic> json) =>
       json['homepage'] as String?,
       json['id'] as int,
       json['imdb_id'] as String?,
-      json['known_for_department'] as String,
+      json['known_for_department'] as String?,
       json['name'] as String,
       json['place_of_birth'] as String?,
       (json['popularity'] as num).toDouble(),

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/models/media_details_model/base_media_details_model.dart';
+import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
 
 class OverviewWidget<T extends BaseMediaDetailsModel> extends StatefulWidget {
+  final MediaDetailsElementType mediaDetailsElementType;
   final T model;
   const OverviewWidget({
-    super.key, required this.model,
+    super.key, required this.model, required this.mediaDetailsElementType,
   });
 
   @override
@@ -16,6 +18,7 @@ class _OverviewWidgetState extends State<OverviewWidget> {
 
   @override
   Widget build(BuildContext context) {
+
     final mediaDetails = widget.model.mediaDetails;
     final tagline = mediaDetails?.tagline;
     final overview = mediaDetails?.overview;
@@ -27,7 +30,7 @@ class _OverviewWidgetState extends State<OverviewWidget> {
           padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           child: Text("Overview", style: TextStyle(fontSize: 21, fontWeight: FontWeight.w700),),
         ),
-        if(tagline != "") Padding(
+        if(tagline != null && tagline != "") Padding(
           padding: const EdgeInsets.all(10),
           child: Text("\"$tagline\"",
             style: const TextStyle(fontSize: 21, fontStyle: FontStyle.italic),),

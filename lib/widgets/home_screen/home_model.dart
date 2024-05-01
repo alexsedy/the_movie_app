@@ -103,7 +103,7 @@ class HomeModel extends ChangeNotifier with MovieListModelMixin, TrendingPersonL
   }
 
   @override
-  void onPeopleScreen(BuildContext context, int index) {
+  void onPeopleDetailsScreen(BuildContext context, int index) {
     final id = _persons[index].id;
     Navigator.of(context).pushNamed(MainNavigationRouteNames.personDetails, arguments: id);
   }

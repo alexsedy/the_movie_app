@@ -4,9 +4,13 @@ enum VerticalListElementType {
 
 enum HorizontalListElementType {
   movie, tv, trendingPerson, cast, companies,
-  season, network,
+  seasons, networks, guestStars
 }
 
 enum MediaDetailsElementType {
-  movie, tv
+  movie, tv, series
+}
+
+enum ColorListType {
+  cast, companies, seasons, networks, seasonDetails
 }

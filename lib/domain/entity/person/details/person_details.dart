@@ -16,7 +16,7 @@ class PersonDetails {
   final String? homepage;
   final int id;
   final String? imdbId;
-  final String knownForDepartment;
+  final String? knownForDepartment;
   final String name;
   final String? placeOfBirth;
   final double popularity;

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
 
-class MovieShimmerHeaderSkeletonWidget extends StatelessWidget {
-  const MovieShimmerHeaderSkeletonWidget({super.key});
+class MediaDetailsHeaderShimmerSkeletonWidget extends StatelessWidget {
+  const MediaDetailsHeaderShimmerSkeletonWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +17,9 @@ class MovieShimmerHeaderSkeletonWidget extends StatelessWidget {
   }
 }
 
-class ShimmerBodySkeletonWidget extends StatelessWidget {
-  const ShimmerBodySkeletonWidget({super.key});
+class MediaDetailsBodyShimmerSkeletonWidget extends StatelessWidget {
+  final MediaDetailsElementType mediaDetailsElementType;
+  const MediaDetailsBodyShimmerSkeletonWidget({super.key, required this.mediaDetailsElementType});
 
   @override
   Widget build(BuildContext context) {
@@ -149,13 +151,14 @@ class ShimmerBodySkeletonWidget extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 7, vertical: 6),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         child: Text(
-                          "Movie Crew",
-                          style: TextStyle(
+                          mediaDetailsElementType == MediaDetailsElementType.movie
+                           ? "Movie Crew" : "TV Show Crew",
+                          style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold),
                         ),
@@ -316,16 +319,17 @@ class ShimmerBodySkeletonWidget extends StatelessWidget {
                   ],
                 ),
                 // const SizedBox(height: 20,),
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         child: Text(
-                          "Movie Cast",
-                          style: TextStyle(
+                          mediaDetailsElementType == MediaDetailsElementType.movie
+                              ? "Movie Cast" : "TV Show Cast",
+                          style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold),
                         ),

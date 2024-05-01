@@ -514,8 +514,6 @@ class _TvShowButtonWidget extends StatelessWidget {
                               ? "($episodeCount episode)"
                               : "($episodeCount episodes)";
                         }
-
-
                         return SizedBox(
                           height: 150,
                           child: Padding(

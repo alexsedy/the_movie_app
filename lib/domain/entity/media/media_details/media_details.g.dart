@@ -7,37 +7,37 @@ part of 'media_details.dart';
 // **************************************************************************
 
 MediaDetails _$MediaDetailsFromJson(Map<String, dynamic> json) => MediaDetails(
-      json['adult'] as bool,
+      json['adult'] as bool?,
       json['backdrop_path'] as String?,
       json['belongs_to_collection'] == null
           ? null
           : BelongsToCollection.fromJson(
               json['belongs_to_collection'] as Map<String, dynamic>),
       json['budget'] as int?,
-      (json['genres'] as List<dynamic>)
-          .map((e) => Genre.fromJson(e as Map<String, dynamic>))
+      (json['genres'] as List<dynamic>?)
+          ?.map((e) => Genre.fromJson(e as Map<String, dynamic>))
           .toList(),
       json['homepage'] as String?,
       json['id'] as int,
       json['imdb_id'] as String?,
-      json['original_language'] as String,
+      json['original_language'] as String?,
       json['original_title'] as String?,
       json['overview'] as String?,
-      (json['popularity'] as num).toDouble(),
+      (json['popularity'] as num?)?.toDouble(),
       json['poster_path'] as String?,
-      (json['production_companies'] as List<dynamic>)
-          .map((e) => ProductionCompanie.fromJson(e as Map<String, dynamic>))
+      (json['production_companies'] as List<dynamic>?)
+          ?.map((e) => ProductionCompanie.fromJson(e as Map<String, dynamic>))
           .toList(),
-      (json['production_countries'] as List<dynamic>)
-          .map((e) => ProductionCountrie.fromJson(e as Map<String, dynamic>))
+      (json['production_countries'] as List<dynamic>?)
+          ?.map((e) => ProductionCountrie.fromJson(e as Map<String, dynamic>))
           .toList(),
       json['release_date'] as String?,
       json['revenue'] as int?,
       json['runtime'] as int?,
-      (json['spoken_languages'] as List<dynamic>)
-          .map((e) => SpokenLanguage.fromJson(e as Map<String, dynamic>))
+      (json['spoken_languages'] as List<dynamic>?)
+          ?.map((e) => SpokenLanguage.fromJson(e as Map<String, dynamic>))
           .toList(),
-      json['status'] as String,
+      json['status'] as String?,
       json['tagline'] as String?,
       json['title'] as String?,
       json['video'] as bool?,
@@ -78,13 +78,15 @@ MediaDetails _$MediaDetailsFromJson(Map<String, dynamic> json) => MediaDetails(
           .toList(),
       json['original_name'] as String?,
       (json['seasons'] as List<dynamic>?)
-          ?.map((e) => Season.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => Seasons.fromJson(e as Map<String, dynamic>))
           .toList(),
       json['type'] as String?,
       json['content_ratings'] == null
           ? null
           : ContentRatings.fromJson(
               json['content_ratings'] as Map<String, dynamic>),
+      json['air_date'] as String?,
+      json['still_path'] as String?,
     );
 
 Map<String, dynamic> _$MediaDetailsToJson(MediaDetails instance) =>
@@ -93,7 +95,7 @@ Map<String, dynamic> _$MediaDetailsToJson(MediaDetails instance) =>
       'backdrop_path': instance.backdropPath,
       'belongs_to_collection': instance.belongsToCollection?.toJson(),
       'budget': instance.budget,
-      'genres': instance.genres.map((e) => e.toJson()).toList(),
+      'genres': instance.genres?.map((e) => e.toJson()).toList(),
       'homepage': instance.homepage,
       'id': instance.id,
       'imdb_id': instance.imdbId,
@@ -103,14 +105,14 @@ Map<String, dynamic> _$MediaDetailsToJson(MediaDetails instance) =>
       'popularity': instance.popularity,
       'poster_path': instance.posterPath,
       'production_companies':
-          instance.productionCompanies.map((e) => e.toJson()).toList(),
+          instance.productionCompanies?.map((e) => e.toJson()).toList(),
       'production_countries':
-          instance.productionCountries.map((e) => e.toJson()).toList(),
+          instance.productionCountries?.map((e) => e.toJson()).toList(),
       'release_date': instance.releaseDate,
       'revenue': instance.revenue,
       'runtime': instance.runtime,
       'spoken_languages':
-          instance.spokenLanguages.map((e) => e.toJson()).toList(),
+          instance.spokenLanguages?.map((e) => e.toJson()).toList(),
       'status': instance.status,
       'tagline': instance.tagline,
       'title': instance.title,
@@ -137,6 +139,8 @@ Map<String, dynamic> _$MediaDetailsToJson(MediaDetails instance) =>
       'seasons': instance.seasons?.map((e) => e.toJson()).toList(),
       'type': instance.type,
       'content_ratings': instance.contentRatings?.toJson(),
+      'air_date': instance.airDate,
+      'still_path': instance.stillPath,
     };
 
 BelongsToCollection _$BelongsToCollectionFromJson(Map<String, dynamic> json) =>
@@ -318,7 +322,7 @@ Map<String, dynamic> _$ProductionCountryToJson(ProductionCountry instance) =>
       'name': instance.name,
     };
 
-Season _$SeasonFromJson(Map<String, dynamic> json) => Season(
+Seasons _$SeasonsFromJson(Map<String, dynamic> json) => Seasons(
       json['air_date'] as String?,
       json['episode_count'] as int,
       json['id'] as int,
@@ -327,9 +331,11 @@ Season _$SeasonFromJson(Map<String, dynamic> json) => Season(
       json['poster_path'] as String?,
       json['season_number'] as int,
       (json['vote_average'] as num).toDouble(),
+      json['tv_show_id'] as int?,
     );
 
-Map<String, dynamic> _$SeasonToJson(Season instance) => <String, dynamic>{
+Map<String, dynamic> _$SeasonsToJson(Seasons instance) => <String, dynamic>{
+      'tv_show_id': instance.tvShowId,
       'air_date': instance.airDate,
       'episode_count': instance.episodeCount,
       'id': instance.id,

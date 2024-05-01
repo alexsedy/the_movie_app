@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/domain/entity/media/media_details/media_details.dart';
 import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/credits_list_screen/cast_list_screen/cast_list_model.dart';
@@ -15,6 +16,12 @@ import 'package:the_movie_app/widgets/movie_screens/movie_details_screen/movie_d
 import 'package:the_movie_app/widgets/movie_screens/movie_details_screen/movie_details_widget.dart';
 import 'package:the_movie_app/widgets/person_screen/people_details_screen/people_details_model.dart';
 import 'package:the_movie_app/widgets/person_screen/people_details_screen/people_details_widget.dart';
+import 'package:the_movie_app/widgets/tv_show_screens/season_details/season_details_model.dart';
+import 'package:the_movie_app/widgets/tv_show_screens/season_details/season_details_widget.dart';
+import 'package:the_movie_app/widgets/tv_show_screens/seasons/seasons_list_model.dart';
+import 'package:the_movie_app/widgets/tv_show_screens/seasons/seasons_list_widget.dart';
+import 'package:the_movie_app/widgets/tv_show_screens/series/series_details_model.dart';
+import 'package:the_movie_app/widgets/tv_show_screens/series/series_details_widget.dart';
 import 'package:the_movie_app/widgets/tv_show_screens/tv_show_details_screen/tv_show_details_model.dart';
 import 'package:the_movie_app/widgets/tv_show_screens/tv_show_details_screen/tv_show_details_widget.dart';
 
@@ -28,6 +35,9 @@ abstract class MainNavigationRouteNames {
   static const defaultList = "/default_list";
   static const userLists = "/user_lists";
   static const userListDetails = "/user_list_details";
+  static const seasonsList = "/seasons_list";
+  static const seasonDetails = "/season_details";
+  static const seriesDetails = "/series_details";
 }
 
 class MainNavigation {
@@ -52,7 +62,7 @@ class MainNavigation {
         final casts = arguments is List<Cast> ? arguments : null;
         return MaterialPageRoute(
           builder: (context) => NotifierProvider(
-              create: () => CastListModel(casts),
+              create: () => CastListModel(casts ?? []),
               child: const CastListWidget()),
         );
 
@@ -61,8 +71,17 @@ class MainNavigation {
         final crew = arguments is List<Crew> ? arguments : null;
         return MaterialPageRoute(
           builder: (context) => NotifierProvider(
-              create: () => CrewListModel(crew),
+              create: () => CrewListModel(crew ?? []),
               child: const CrewListWidget()),
+        );
+
+      case MainNavigationRouteNames.seasonsList:
+        final arguments = settings.arguments;
+        final seasons = arguments is List<Seasons> ? arguments : null;
+        return MaterialPageRoute(
+          builder: (context) => NotifierProvider(
+              create: () => SeasonsListModel(seasons ?? []),
+              child: const SeasonsListWidget()),
         );
 
       case MainNavigationRouteNames.tvShowDetails:
@@ -84,6 +103,30 @@ class MainNavigation {
               // model: MovieDetailsModel(movieId),
               child: const PeopleDetailsWidget()),
         );
+
+      case MainNavigationRouteNames.seasonDetails:
+        final arguments = settings.arguments as List;
+        final tvShowId = arguments.first;
+        final seasonNumber = arguments.last;
+
+        return MaterialPageRoute(
+          builder: (context) => NotifierProvider(
+              create: () => SeasonDetailsModel(tvShowId, seasonNumber),
+              child: const SeasonDetailsWidget()),
+        );
+
+      case MainNavigationRouteNames.seriesDetails:
+        final arguments = settings.arguments as List;
+        final tvShowId = arguments[0];
+        final seasonNumber = arguments[1];
+        final seriesNumber = arguments[2];
+
+        return MaterialPageRoute(
+          builder: (context) => NotifierProvider(
+              create: () => SeriesDetailsModel(tvShowId, seasonNumber, seriesNumber),
+              child: const SeriesDetailsWidget()),
+        );
+
 
       case MainNavigationRouteNames.defaultList:
         final arguments = settings.arguments;

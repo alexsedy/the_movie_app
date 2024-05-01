@@ -5,6 +5,7 @@ import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/domain/cache_management/account_management.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
 import 'package:the_movie_app/domain/entity/media/media_details/media_details.dart';
+import 'package:the_movie_app/domain/entity/media/season/season.dart';
 import 'package:the_movie_app/domain/entity/media/state/item_state.dart';
 
 class TvShowApiClient extends ApiClient {
@@ -216,5 +217,42 @@ class TvShowApiClient extends ApiClient {
 
     final tvShowResponse = ListResponse.fromJson(json);
     return tvShowResponse;
+  }
+
+  Future<Season> getSeason(int seriesId, int seasonNumber) async {
+    final url = makeUri(
+      "/tv/$seriesId/season/$seasonNumber",
+      <String, dynamic>{
+        "api_key": apiKey,
+        // "language": "uk-UA"
+      },
+    );
+    final request = await client.getUrl(url);
+    final response = await request.close();
+    final json = (await response.jsonDecode()) as Map<String, dynamic>;
+
+    validateError(response, json);
+
+    final season = Season.fromJson(json);
+    return season;
+  }
+
+  Future<MediaDetails> getSeriesDetails(int seriesId, int seasonNumber, int episodeNumber) async {
+    final url = makeUri(
+      "/tv/$seriesId/season/$seasonNumber/episode/$episodeNumber",
+      <String, dynamic>{
+        "api_key": apiKey,
+        "append_to_response" : "account_states,credits,videos",
+        // "language": "uk-UA"
+      },
+    );
+    final request = await client.getUrl(url);
+    final response = await request.close();
+    final json = (await response.jsonDecode()) as Map<String, dynamic>;
+
+    validateError(response, json);
+
+    final seriesDetails = MediaDetails.fromJson(json);
+    return seriesDetails;
   }
 }

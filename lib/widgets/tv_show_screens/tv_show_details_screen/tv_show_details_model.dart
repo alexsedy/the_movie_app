@@ -8,11 +8,12 @@ import 'package:the_movie_app/domain/entity/media/media_details/media_details.da
 import 'package:the_movie_app/domain/entity/media/state/item_state.dart';
 import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
 import 'package:the_movie_app/helpers/snack_bar_helper.dart';
+import 'package:the_movie_app/models/media_details_model/media_details_mixin.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
-class TvShowDetailsModel extends ChangeNotifier {
+class TvShowDetailsModel extends ChangeNotifier with MediaDetailsMixin {
   final _apiClient = TvShowApiClient();
   final _accountApiClient = AccountApiClient();
   MediaDetails? _tvShowDetails;
@@ -20,8 +21,7 @@ class TvShowDetailsModel extends ChangeNotifier {
   AccountSate? _accountSate;
   final int _seriesId;
   final _lists = <Lists>[];
-  final _dateFormat = DateFormat.yMMMMd();
-  final _dateFormatTwo = DateFormat.yMMMd();
+  final _dateFormat = DateFormat.yMMMd();
   bool _isFavorite = false;
   bool _isWatched = false;
   bool _isRated = false;
@@ -29,14 +29,26 @@ class TvShowDetailsModel extends ChangeNotifier {
   late int _currentPage;
   late int _totalPage;
 
-  MediaDetails? get tvShowDetails => _tvShowDetails;
+  @override
+  MediaDetails? get mediaDetails => _tvShowDetails;
   ItemState? get tvShowState => _tvShowState;
+
+  @override
   List<Lists> get lists => List.unmodifiable(_lists);
+
+  @override
   bool get isFavorite => _isFavorite;
+
+  @override
   bool get isWatched => _isWatched;
+
+  @override
   bool get isRated => _isRated;
+
+  @override
   double get rate => _rate;
 
+  @override
   set rate(value) => _rate = value;
 
   TvShowDetailsModel(this._seriesId);
@@ -59,6 +71,7 @@ class TvShowDetailsModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  @override
   Future<void> toggleFavorite(BuildContext context) async {
     final result = await SnackBarHelper.handleErrorDefaultLists(
       apiReq: () => _apiClient.makeFavorite(tvShowId: _seriesId, isFavorite: !_isFavorite,),
@@ -70,6 +83,7 @@ class TvShowDetailsModel extends ChangeNotifier {
     }
   }
 
+  @override
   Future<void> toggleWatchlist(BuildContext context) async {
     final result = await SnackBarHelper.handleErrorDefaultLists(
       apiReq: () => _apiClient.addToWatchlist(tvShowId: _seriesId, isWatched: !_isWatched,),
@@ -81,6 +95,7 @@ class TvShowDetailsModel extends ChangeNotifier {
     }
   }
 
+  @override
   Future<void> toggleAddRating(BuildContext context, double rate) async {
     final result = await SnackBarHelper.handleErrorDefaultLists(
       apiReq: () => _apiClient.addRating(tvShowId: _seriesId, rate: rate),
@@ -92,6 +107,7 @@ class TvShowDetailsModel extends ChangeNotifier {
     }
   }
 
+  @override
   Future<void> toggleDeleteRating(BuildContext context) async {
     if(_isRated) {
       final result = await SnackBarHelper.handleErrorDefaultLists(
@@ -111,6 +127,7 @@ class TvShowDetailsModel extends ChangeNotifier {
     }
   }
 
+  @override
   Future<void> getAllUserLists(BuildContext context) async {
     if (lists.isEmpty) {
       _currentPage = 0;
@@ -139,6 +156,7 @@ class TvShowDetailsModel extends ChangeNotifier {
     await _getUserLists();
   }
 
+  @override
   Future<void> createNewList({required BuildContext context, required String? description, required String name, required bool public}) async {
     await SnackBarHelper.handleErrorWithMessage(
       apiReq: () =>  _accountApiClient.addNewList(description: description, name: name, public: public),
@@ -151,6 +169,7 @@ class TvShowDetailsModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  @override
   Future<void> addItemListToList({required BuildContext context, required int listId, required String name}) async {
     //todo find best solution
     final isSuccess = await _accountApiClient.isAddedToListToList(listId: listId, mediaType: MediaType.tvShow, mediaId: _seriesId);
@@ -176,19 +195,37 @@ class TvShowDetailsModel extends ChangeNotifier {
     }
   }
 
-  void onCastListTab(BuildContext context, List<Cast> cast) {
+  @override
+  void onCastListScreen(BuildContext context, List<Cast> cast) {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.castList, arguments: cast);
   }
 
-  void onCrewListTab(BuildContext context, List<Crew> crew) {
+  @override
+  void onCrewListScreen(BuildContext context, List<Crew> crew) {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.crewList, arguments: crew);
   }
 
-  void onPeopleDetailsTab(BuildContext context, int index) {
+  @override
+  void onPeopleDetailsScreen(BuildContext context, int index) {
     final id = _tvShowDetails?.credits.cast[index].id;
     Navigator.of(context).pushNamed(MainNavigationRouteNames.personDetails, arguments: id);
   }
 
+  @override
+  void onSeasonsListScreen(BuildContext context, List<Seasons> seasons) {
+    seasons.forEach((element) {
+      element.tvShowId = _seriesId;
+    });
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.seasonsList, arguments: seasons);
+  }
+
+  @override
+  void onSeasonDetailsScreen(BuildContext context, int index) {
+    final seasonNumber = _tvShowDetails?.seasons?[index].seasonNumber;
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.seasonDetails, arguments: [_seriesId, seasonNumber]);
+  }
+
+  @override
   Future<void> launchYouTubeVideo(String videoKey) async {
     final Uri url = Uri.parse('https://www.youtube.com/watch?v=$videoKey');
     if (!await launchUrl(url)) {
@@ -196,10 +233,10 @@ class TvShowDetailsModel extends ChangeNotifier {
     }
   }
 
+  @override
   String formatDate(String? date) =>
-      date != "" ? _dateFormat.format(DateTime.parse(date ?? "")) : "";
+      date != "" && date != null ? _dateFormat.format(DateTime.parse(date)) : "";
 
-
-  String formatDateTwo(String? date) =>
-      date != "" ? _dateFormatTwo.format(DateTime.parse(date ?? "")) : "";
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

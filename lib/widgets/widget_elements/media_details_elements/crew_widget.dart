@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:the_movie_app/models/media_details_model/base_media_details_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
 
-class MovieCrewWidget<T extends BaseMediaDetailsModel> extends StatelessWidget {
+class MediaCrewWidget<T extends BaseMediaDetailsModel> extends StatelessWidget {
   final MediaDetailsElementType mediaDetailsElementType;
   final T model;
-  const MovieCrewWidget({super.key, required this.model, required this.mediaDetailsElementType});
+  const MediaCrewWidget({super.key, required this.model, required this.mediaDetailsElementType});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,9 @@ class MovieCrewWidget<T extends BaseMediaDetailsModel> extends StatelessWidget {
       case MediaDetailsElementType.movie:
         tabName = "Movie Crew";
       case MediaDetailsElementType.tv:
-        tabName = "";
+        tabName = "TV Show Crew";
+      case MediaDetailsElementType.series:
+        tabName = "Series Crew";
     }
 
     final crew = model.mediaDetails?.credits.crew;
