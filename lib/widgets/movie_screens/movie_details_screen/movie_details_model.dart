@@ -210,6 +210,12 @@ class MovieDetailsModel extends ChangeNotifier with MediaDetailsMixin {
   }
 
   @override
+  void onMediaDetailsScreen(BuildContext context, int index){
+    final id = _movieDetails?.recommendations?.list[index].id;
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.movieDetails, arguments: id);
+  }
+
+  @override
   Future<void> launchYouTubeVideo(String videoKey) async {
     final Uri url = Uri.parse('https://www.youtube.com/watch?v=$videoKey');
     if (!await launchUrl(url)) {

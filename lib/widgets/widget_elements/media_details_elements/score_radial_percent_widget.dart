@@ -29,7 +29,7 @@ class ScoreRadialPercentWidget extends CustomPainter{
   }
 
   Rect _calculateArcsRect(Size size) {
-    final linesMargin = 3;
+    const linesMargin = 3;
     final offset = lineWidth / 2 + linesMargin;
     final arcRect = Offset(offset, offset) &
     Size(size.width - (offset * 2), size.height - (offset * 2));
@@ -103,17 +103,15 @@ class RadiantPercentWidget extends StatelessWidget {
     }
 
 
-    return Container(
-      child: CustomPaint(
-        painter: ScoreRadialPercentWidget(
-          backgroundCircleColor: backgroundCircleColor,
-          lineWidth: lineWidth,
-          percent: percent,
-          progressFreeColor: progressFreeColor,
-          progressLineColor: progressLineColor,
-        ),
-        child: Center(child: child),
+    return CustomPaint(
+      painter: ScoreRadialPercentWidget(
+        backgroundCircleColor: backgroundCircleColor,
+        lineWidth: lineWidth,
+        percent: percent,
+        progressFreeColor: progressFreeColor,
+        progressLineColor: progressLineColor,
       ),
+      child: Center(child: child),
     );
   }
 }

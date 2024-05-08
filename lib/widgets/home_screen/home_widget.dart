@@ -15,6 +15,7 @@ class HomeWidget extends StatefulWidget {
 }
 
 class _HomeWidgetState extends State<HomeWidget> {
+
   @override
   Widget build(BuildContext context) {
     return const Padding(
@@ -114,6 +115,7 @@ class _BackgroundSearch extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<HomeModel>(context);
     final backdropPath = model?.randomPoster;
+
 
     if(backdropPath == null || backdropPath.isEmpty) {
       return Shimmer.fromColors(

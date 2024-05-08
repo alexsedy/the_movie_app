@@ -75,6 +75,16 @@ class _MovieDetailsWidget extends StatelessWidget {
           horizontalListElementType: HorizontalListElementType.companies,
           model: model,
         ),
+        MediaDetailsListWidget<MovieDetailsModel>(
+          mediaDetailsElementType: MediaDetailsElementType.movie,
+          horizontalListElementType: HorizontalListElementType.similar,
+          model: model,
+        ),
+        MediaDetailsListWidget<MovieDetailsModel>(
+          mediaDetailsElementType: MediaDetailsElementType.movie,
+          horizontalListElementType: HorizontalListElementType.recommendations,
+          model: model,
+        ),
         const SizedBox(height: 20,),
       ],
     );

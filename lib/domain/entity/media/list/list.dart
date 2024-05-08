@@ -3,22 +3,22 @@ import 'package:json_annotation/json_annotation.dart';
 part 'list.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-class ListResponse{
+class MediaListResponse{
   final int page;
   @JsonKey(name: "results")
   final List<MediaList> list;
   final int totalPages;
   final int totalResults;
 
-  ListResponse({
+  MediaListResponse({
     required this.page,
     required this.list,
     required this.totalPages,
     required this.totalResults});
 
-  factory ListResponse.fromJson(Map<String, dynamic> json) => _$ListResponseFromJson(json);
+  factory MediaListResponse.fromJson(Map<String, dynamic> json) => _$MediaListResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ListResponseToJson(this);
+  Map<String, dynamic> toJson() => _$MediaListResponseToJson(this);
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)

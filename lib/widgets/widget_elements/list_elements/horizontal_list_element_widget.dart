@@ -42,6 +42,12 @@ class HorizontalListElementWidget<T extends BaseListModel> extends StatelessWidg
       case HorizontalListElementType.guestStars:
         length =  model.mediaDetails?.credits.guestStars?.length ?? 0;
         boxHeight = 280;
+      case HorizontalListElementType.similar:
+        length =  model.mediaDetails?.similar?.list.length ?? 0;
+        boxHeight = 280;
+      case HorizontalListElementType.recommendations:
+        length =  model.mediaDetails?.recommendations?.list.length ?? 0;
+        boxHeight = 280;
     }
 
     return SizedBox(
@@ -109,6 +115,20 @@ class HorizontalListElementWidget<T extends BaseListModel> extends StatelessWidg
                 firstLine = guestStars?.name ?? "";
                 secondLine = guestStars?.character ?? "";
                 altPosterPath = AppImages.noProfile;
+              case HorizontalListElementType.similar:
+                final similar = model.mediaDetails?.similar?.list[index];
+                posterPath = similar?.posterPath;
+                firstLine = similar?.title ?? similar?.name ?? "";
+                final date = similar?.releaseDate ?? similar?.firstAirDate ?? "";
+                secondLine = model.formatDate(date);
+                altPosterPath = AppImages.noPoster;
+              case HorizontalListElementType.recommendations:
+                final recommendations = model.mediaDetails?.similar?.list[index];
+                posterPath = recommendations?.posterPath;
+                firstLine = recommendations?.title ?? recommendations?.name ?? "";;
+                final date = recommendations?.releaseDate ?? recommendations?.firstAirDate ?? "";
+                secondLine = model.formatDate(date);
+                altPosterPath = AppImages.noPoster;
             }
 
             return Padding(
@@ -225,6 +245,10 @@ class HorizontalListElementWidget<T extends BaseListModel> extends StatelessWidg
                           case HorizontalListElementType.networks:
                           case HorizontalListElementType.guestStars:
                             model.onGuestPeopleDetailsScreen(context, index);
+                          case HorizontalListElementType.similar:
+                            model.onMediaDetailsScreen(context, index);
+                          case HorizontalListElementType.recommendations:
+                            model.onMediaDetailsScreen(context, index);
                         }
                       },
                     ),

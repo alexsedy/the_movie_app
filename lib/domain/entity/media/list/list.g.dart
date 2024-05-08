@@ -6,7 +6,8 @@ part of 'list.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ListResponse _$ListResponseFromJson(Map<String, dynamic> json) => ListResponse(
+MediaListResponse _$MediaListResponseFromJson(Map<String, dynamic> json) =>
+    MediaListResponse(
       page: json['page'] as int,
       list: (json['results'] as List<dynamic>)
           .map((e) => MediaList.fromJson(e as Map<String, dynamic>))
@@ -15,7 +16,7 @@ ListResponse _$ListResponseFromJson(Map<String, dynamic> json) => ListResponse(
       totalResults: json['total_results'] as int,
     );
 
-Map<String, dynamic> _$ListResponseToJson(ListResponse instance) =>
+Map<String, dynamic> _$MediaListResponseToJson(MediaListResponse instance) =>
     <String, dynamic>{
       'page': instance.page,
       'results': instance.list.map((e) => e.toJson()).toList(),

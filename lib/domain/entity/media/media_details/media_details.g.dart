@@ -87,6 +87,13 @@ MediaDetails _$MediaDetailsFromJson(Map<String, dynamic> json) => MediaDetails(
               json['content_ratings'] as Map<String, dynamic>),
       json['air_date'] as String?,
       json['still_path'] as String?,
+      json['recommendations'] == null
+          ? null
+          : MediaListResponse.fromJson(
+              json['recommendations'] as Map<String, dynamic>),
+      json['similar'] == null
+          ? null
+          : MediaListResponse.fromJson(json['similar'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$MediaDetailsToJson(MediaDetails instance) =>
@@ -141,6 +148,8 @@ Map<String, dynamic> _$MediaDetailsToJson(MediaDetails instance) =>
       'content_ratings': instance.contentRatings?.toJson(),
       'air_date': instance.airDate,
       'still_path': instance.stillPath,
+      'recommendations': instance.recommendations?.toJson(),
+      'similar': instance.similar?.toJson(),
     };
 
 BelongsToCollection _$BelongsToCollectionFromJson(Map<String, dynamic> json) =>

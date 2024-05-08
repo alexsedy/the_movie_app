@@ -21,7 +21,7 @@ class HomeModel extends ChangeNotifier with MovieListModelMixin, TrendingPersonL
   final _tvs = <MediaList>[];
   final _persons = <TrendingPersonList>[];
   final _dateFormat = DateFormat.y();
-  String? randomPoster;
+  String? _randomPoster;
   bool _isSwitch = true;
 
   set isSwitch(value) =>_isSwitch = value;
@@ -35,6 +35,8 @@ class HomeModel extends ChangeNotifier with MovieListModelMixin, TrendingPersonL
   @override
   List<TrendingPersonList> get persons => List.unmodifiable(_persons);
 
+  String? get randomPoster => _randomPoster;
+
   @override
   Future<void> loadMovies() async {
     if(_isSwitch) {
@@ -42,7 +44,7 @@ class HomeModel extends ChangeNotifier with MovieListModelMixin, TrendingPersonL
       final moviesResponse = await _movieApiClient.getTrendingMovie(page: 1, timeToggle: "day");
       _movies.addAll(moviesResponse.list);
 
-      randomPoster ??= movies[_random.nextInt(movies.length)].backdropPath;
+      _setRandomPoster();
     } else {
       _movies.clear();
       final moviesResponse = await _movieApiClient.getTrendingMovie(page: 1, timeToggle: "week");
@@ -79,15 +81,13 @@ class HomeModel extends ChangeNotifier with MovieListModelMixin, TrendingPersonL
     notifyListeners();
   }
 
-  Future<String?> getRandomPoster() async {
-    if (_movies.isNotEmpty) {
-      var random = Random();
-      final posterPath = movies[random.nextInt(movies.length)].backdropPath;
-      notifyListeners();
+  void _setRandomPoster() {
+    if (_randomPoster == null) {
+      final randomList = _movies + _tvs;
+      _randomPoster = randomList[_random.nextInt(randomList.length)].backdropPath;
 
-      return posterPath;
+      notifyListeners();
     }
-    return null;
   }
 
   @override
@@ -111,33 +111,6 @@ class HomeModel extends ChangeNotifier with MovieListModelMixin, TrendingPersonL
   @override
   String formatDate(String? date) =>
       date != "" ? _dateFormat.format(DateTime.parse(date ?? "")) : "No date";
-
-  // @override
-  // Future<void> firstLoadMovies() {
-  //   throw UnimplementedError();
-  // }
-  //
-  // @override
-  // Future<void> firstLoadTvShows() {
-  //   throw UnimplementedError();
-  // }
-  //
-  // @override
-  // bool get isMovieLoadingInProgress => throw UnimplementedError();
-  //
-  // @override
-  // bool get isTvsLoadingInProgress => throw UnimplementedError();
-  //
-  // @override
-  // void preLoadMovies(int index) {
-  // }
-  //
-  // @override
-  // void preLoadTvShows(int index) {
-  // }
-  //
-  // @override
-  // ScrollController get scrollController => throw UnimplementedError();
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);

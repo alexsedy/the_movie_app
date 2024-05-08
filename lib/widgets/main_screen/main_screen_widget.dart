@@ -79,7 +79,12 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
           child: isSearchOpen ? const SearchFieldWidget() : const Text("The Movie"),
         ),
         actions: [
-          if(_selectedTab == 1) const FilterMoviesButtonWidget(),
+          if(_selectedTab == 1)
+            NotifierProvider(
+              create: () => movieListModel,
+              isManagingModel: false,
+              child: FilterMoviesButtonWidget(model: movieListModel,),
+            ),
           if (_selectedTab == 1 || _selectedTab == 2) IconButton(
             onPressed: () {
               setState(() {

@@ -20,9 +20,7 @@ class SeasonsListWidget extends StatelessWidget {
 }
 
 class _BodyWidget extends StatelessWidget {
-  const _BodyWidget({
-    super.key,
-  });
+  const _BodyWidget();
 
   @override
   Widget build(BuildContext context) {

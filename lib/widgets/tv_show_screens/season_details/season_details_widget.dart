@@ -32,9 +32,7 @@ class _SeasonDetailsWidgetState extends State<SeasonDetailsWidget> {
 }
 
 class _AppBarText extends StatelessWidget {
-  const _AppBarText({
-    super.key,
-  });
+  const _AppBarText();
 
   @override
   Widget build(BuildContext context) {
@@ -73,9 +71,7 @@ class _AppBarText extends StatelessWidget {
 }
 
 class _BodySeason extends StatelessWidget {
-  const _BodySeason({
-    super.key,
-  });
+  const _BodySeason();
 
   @override
   Widget build(BuildContext context) {

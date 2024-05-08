@@ -45,9 +45,7 @@ class _TvShowDetailsWidgetState extends State<TvShowDetailsWidget> {
 }
 
 class _HeaderWidget extends StatelessWidget {
-  const _HeaderWidget({
-    super.key,
-  });
+  const _HeaderWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -65,9 +63,7 @@ class _HeaderWidget extends StatelessWidget {
 }
 
 class _BodyWidget extends StatelessWidget {
-  const _BodyWidget({
-    super.key,
-  });
+  const _BodyWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +87,7 @@ class _BodyWidget extends StatelessWidget {
 }
 
 class _TopPosterWidget extends StatelessWidget {
-  const _TopPosterWidget({super.key});
+  const _TopPosterWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -100,13 +96,13 @@ class _TopPosterWidget extends StatelessWidget {
     // final posterPath = model?.movieDetails?.posterPath;
 
     return backdropPath != null
-        ? Image.network(ApiClient.getImageByUrl(backdropPath), fit: BoxFit.fitWidth,)
+        ? Image.network(ApiClient.getImageByUrl(backdropPath), fit: BoxFit.fill,)
         : Image.asset(AppImages.noBackdropPoster, fit: BoxFit.fitWidth,);
   }
 }
 
 class _MovieNameWidget extends StatelessWidget {
-  const _MovieNameWidget({super.key});
+  const _MovieNameWidget();
 
   @override
   Widget build(BuildContext context) {

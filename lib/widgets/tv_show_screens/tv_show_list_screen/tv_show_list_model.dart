@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/tv_show_api_client.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
-import 'package:the_movie_app/models/media_list_model/base_media_list_model.dart';
 import 'package:the_movie_app/models/media_list_model/tv_list_model_mixin.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 

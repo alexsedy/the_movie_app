@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:the_movie_app/constants/images_const/app_images.dart';
-import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/favorite_button_widget.dart';
@@ -11,7 +9,6 @@ import 'package:the_movie_app/widgets/widget_elements/media_details_elements/cre
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/media_details_list_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/overview_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/score_and_trailer_widget.dart';
-import 'package:the_movie_app/widgets/widget_elements/media_details_elements/score_radial_percent_widget.dart';
 import 'package:the_movie_app/widgets/tv_show_screens/tv_show_details_screen/tv_show_details_model.dart';
 
 class TvShowDetailsMainInfoWidget extends StatelessWidget {
@@ -76,6 +73,16 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
           horizontalListElementType: HorizontalListElementType.companies,
           model: model,
         ),
+        MediaDetailsListWidget<TvShowDetailsModel>(
+          mediaDetailsElementType: MediaDetailsElementType.tv,
+          horizontalListElementType: HorizontalListElementType.similar,
+          model: model,
+        ),
+        MediaDetailsListWidget<TvShowDetailsModel>(
+          mediaDetailsElementType: MediaDetailsElementType.tv,
+          horizontalListElementType: HorizontalListElementType.recommendations,
+          model: model,
+        ),
         const SizedBox(height: 20,),
       ],
     );
@@ -83,7 +90,7 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
 }
 
 class _SummaryTvShowWidget extends StatelessWidget {
-  const _SummaryTvShowWidget({super.key});
+  const _SummaryTvShowWidget();
   final double textSize = 16;
 
   @override

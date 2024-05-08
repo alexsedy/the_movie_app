@@ -1,18 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:the_movie_app/constants/images_const/app_images.dart';
-import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/tv_show_screens/series/series_details_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
-import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/favorite_button_widget.dart';
-import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/list_button_widget.dart';
-import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/rate_button_widget.dart';
-import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/watchlist_button_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/crew_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/media_details_list_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/overview_widget.dart';
-import 'package:the_movie_app/widgets/widget_elements/media_details_elements/score_and_trailer_widget.dart';
-import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/media_details_shimmer_skeleton_widget.dart';
 
 class SeriesDetailsWidget extends StatefulWidget {
   const SeriesDetailsWidget({super.key});
@@ -40,7 +32,7 @@ class _SeriesDetailsWidgetState extends State<SeriesDetailsWidget> {
 }
 
 class _SeriesNameWidget extends StatelessWidget {
-  const _SeriesNameWidget({super.key});
+  const _SeriesNameWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +50,7 @@ class _SeriesNameWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(name ?? ""),
+        Text(name),
         airDate != null
           ? Text(
               "Episode: $episodeNumber $releaseText",
@@ -74,9 +66,7 @@ class _SeriesNameWidget extends StatelessWidget {
 }
 
 class _BodyDetails extends StatelessWidget {
-  const _BodyDetails({
-    super.key,
-  });
+  const _BodyDetails();
 
   @override
   Widget build(BuildContext context) {

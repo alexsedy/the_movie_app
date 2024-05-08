@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/account_screen/account_model.dart';
-import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
 class AccountWidget extends StatefulWidget {
   const AccountWidget({super.key});
@@ -136,7 +135,6 @@ class _WelcomeTextWidget extends StatelessWidget {
     final model = NotifierProvider.watch<AccountModel>(context);
     final accountSate = model?.accountSate;
     final username = accountSate?.username;
-    final isLoggedIn = model?.isLoggedIn;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),

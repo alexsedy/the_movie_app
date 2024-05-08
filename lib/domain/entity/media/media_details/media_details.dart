@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:the_movie_app/domain/entity/media/content_ratings/content_ratings.dart';
+import 'package:the_movie_app/domain/entity/media/list/list.dart';
 import 'package:the_movie_app/domain/entity/media/release/release_date.dart';
 import 'package:the_movie_app/domain/entity/media/video/video.dart';
 import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
@@ -55,6 +56,8 @@ class MediaDetails {
   final ContentRatings? contentRatings;
   final String? airDate;
   final String? stillPath;
+  final MediaListResponse? recommendations;
+  final MediaListResponse? similar;
 
   MediaDetails(
       this.adult,
@@ -103,7 +106,9 @@ class MediaDetails {
       this.type,
       this.contentRatings,
       this.airDate,
-      this.stillPath);
+      this.stillPath,
+      this.recommendations,
+      this.similar);
 
   factory MediaDetails.fromJson(Map<String, dynamic> json) => _$MediaDetailsFromJson(json);
 

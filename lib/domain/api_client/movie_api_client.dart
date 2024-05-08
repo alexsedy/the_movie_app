@@ -9,7 +9,7 @@ import 'package:the_movie_app/domain/entity/media/state/item_state.dart';
 import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
 
 class MovieApiClient extends ApiClient {
-  Future<ListResponse> getDiscoverMovie(int page) async {
+  Future<MediaListResponse> getDiscoverMovie(int page) async {
 
     final url = makeUri(
       "/discover/movie",
@@ -25,11 +25,51 @@ class MovieApiClient extends ApiClient {
 
     validateError(response, json);
 
-    final movieResponse = ListResponse.fromJson(json);
+    final movieResponse = MediaListResponse.fromJson(json);
     return movieResponse;
   }
 
-  Future<ListResponse> searchMovie(int page, String query) async {
+  Future<MediaListResponse> getMovieWithFilter({
+    required int page,
+    String? releaseDateStart,
+    String? releaseDateEnd,
+    String? sortBy,
+    required double voteStart,
+    required double voteEnd,
+    String? genres,
+  }) async {
+
+    final url = makeUri(
+      "/discover/movie",
+      <String, dynamic>{
+        "api_key": apiKey,
+        "page": page.toString(),
+        if(releaseDateStart != null && releaseDateStart.isNotEmpty)
+          "release_date.gte": releaseDateStart,
+        if(releaseDateEnd != null && releaseDateEnd.isNotEmpty)
+          "release_date.lte": releaseDateEnd,
+        if(sortBy != null && sortBy.isNotEmpty)
+          "sort_by": sortBy,
+        // if(voteStart != null)
+          "vote_average.gte": voteStart.toString(),
+        // if(voteEnd != null)
+          "vote_average.lte": voteEnd.toString(),
+        if(genres != null && genres.isNotEmpty)
+          "with_genres": genres,
+        // "language": "uk-UA"
+      },
+    );
+    final request = await client.getUrl(url);
+    final response = await request.close();
+    final json = (await response.jsonDecode()) as Map<String, dynamic>;
+
+    validateError(response, json);
+
+    final movieResponse = MediaListResponse.fromJson(json);
+    return movieResponse;
+  }
+
+  Future<MediaListResponse> searchMovie(int page, String query) async {
     final url = makeUri(
       "/search/movie",
       <String, dynamic>{
@@ -45,7 +85,7 @@ class MovieApiClient extends ApiClient {
 
     validateError(response, json);
 
-    final movieResponse = ListResponse.fromJson(json);
+    final movieResponse = MediaListResponse.fromJson(json);
     return movieResponse;
   }
 
@@ -54,7 +94,7 @@ class MovieApiClient extends ApiClient {
       "/movie/$movieId",
       <String, dynamic>{
         "api_key": apiKey,
-        "append_to_response": "release_dates,credits,videos",
+        "append_to_response": "release_dates,credits,videos,similar,recommendations",
         // "language": "uk-UA"
       },
     );
@@ -212,7 +252,7 @@ class MovieApiClient extends ApiClient {
     validateError(response, json);
   }
 
-  Future<ListResponse> getTrendingMovie({required int page, required String timeToggle}) async {
+  Future<MediaListResponse> getTrendingMovie({required int page, required String timeToggle}) async {
 
     final url = makeUri(
       "/trending/movie/$timeToggle",
@@ -228,7 +268,7 @@ class MovieApiClient extends ApiClient {
 
     validateError(response, json);
 
-    final movieResponse = ListResponse.fromJson(json);
+    final movieResponse = MediaListResponse.fromJson(json);
     return movieResponse;
   }
 }

@@ -23,6 +23,10 @@ class HorizontalListShimmerSkeletonWidget extends StatelessWidget {
       case HorizontalListElementType.networks:
       case HorizontalListElementType.guestStars:
         // TODO: Handle this case.
+      case HorizontalListElementType.similar:
+        // TODO: Handle this case.
+      case HorizontalListElementType.recommendations:
+        // TODO: Handle this case.
     }
 
     return Shimmer.fromColors(

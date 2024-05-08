@@ -226,6 +226,12 @@ class TvShowDetailsModel extends ChangeNotifier with MediaDetailsMixin {
   }
 
   @override
+  void onMediaDetailsScreen(BuildContext context, int index){
+    final id = _tvShowDetails?.recommendations?.list[index].id;
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.tvShowDetails, arguments: id);
+  }
+
+  @override
   Future<void> launchYouTubeVideo(String videoKey) async {
     final Uri url = Uri.parse('https://www.youtube.com/watch?v=$videoKey');
     if (!await launchUrl(url)) {

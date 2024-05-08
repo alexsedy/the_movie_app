@@ -43,7 +43,7 @@ class RateButtonWidget<T extends BaseMediaDetailsModel> extends StatelessWidget 
 
 class _RateDialogWidget extends StatefulWidget {
   final BaseMediaDetailsModel model;
-  const _RateDialogWidget({super.key, required this.model});
+  const _RateDialogWidget({required this.model});
 
   @override
   State<_RateDialogWidget> createState() => _RateDialogWidgetState();

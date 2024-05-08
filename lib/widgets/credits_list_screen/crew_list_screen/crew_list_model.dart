@@ -30,7 +30,7 @@ class CrewListModel extends ChangeNotifier {
   CrewListModel(this._crew);
 
   void onPeopleTab(BuildContext context, int index) {
-    final id = _crew?[index].id;
+    final id = _crew[index].id;
     Navigator.of(context).pushNamed(MainNavigationRouteNames.personDetails, arguments: id);
   }
 }

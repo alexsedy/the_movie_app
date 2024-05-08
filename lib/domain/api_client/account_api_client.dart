@@ -149,7 +149,7 @@ class AccountApiClient extends ApiClient {
     return success;
   }
 
-  Future<ListResponse> getDefaultMovieLists({required int page, required ListType listType}) async {
+  Future<MediaListResponse> getDefaultMovieLists({required int page, required ListType listType}) async {
     final accessToken = await sessionDataProvider.getAccessToken();
     final accountObjectId = await AccountManager.getAccountId();
 
@@ -182,11 +182,11 @@ class AccountApiClient extends ApiClient {
 
     validateError(response, json);
 
-    final movieResponse = ListResponse.fromJson(json);
+    final movieResponse = MediaListResponse.fromJson(json);
     return movieResponse;
   }
 
-  Future<ListResponse> getDefaultTvShowLists({required int page, required ListType listType}) async {
+  Future<MediaListResponse> getDefaultTvShowLists({required int page, required ListType listType}) async {
     final accessToken = await sessionDataProvider.getAccessToken();
     final accountObjectId = await AccountManager.getAccountId();
 
@@ -219,7 +219,7 @@ class AccountApiClient extends ApiClient {
 
     validateError(response, json);
 
-    final tvShowResponse = ListResponse.fromJson(json);
+    final tvShowResponse = MediaListResponse.fromJson(json);
     return tvShowResponse;
   }
 }
