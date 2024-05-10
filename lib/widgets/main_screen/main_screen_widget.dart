@@ -80,16 +80,15 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
         ),
         actions: [
           if(_selectedTab == 1)
-            NotifierProvider(
-              create: () => movieListModel,
-              isManagingModel: false,
-              child: FilterMoviesButtonWidget(model: movieListModel,),
-            ),
+            FilterMoviesButtonWidget(model: movieListModel,),
+          if(_selectedTab == 2)
+            FilterMoviesButtonWidget(model: tvShowListModel,),
           if (_selectedTab == 1 || _selectedTab == 2) IconButton(
             onPressed: () {
               setState(() {
                 isSearchOpen = !isSearchOpen;
                 SearchFieldWidget.searchController.text = "";
+                movieListModel.clearFilterValue();
               });
               if(!isSearchOpen) {
                 if(_selectedTab == 1) {

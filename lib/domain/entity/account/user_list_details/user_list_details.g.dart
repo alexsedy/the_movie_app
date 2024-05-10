@@ -11,7 +11,7 @@ UserListDetails _$UserListDetailsFromJson(Map<String, dynamic> json) =>
       (json['average_rating'] as num).toDouble(),
       json['backdrop_path'] as String?,
       (json['results'] as List<dynamic>)
-          .map((e) => Result.fromJson(e as Map<String, dynamic>))
+          .map((e) => UserListResult.fromJson(e as Map<String, dynamic>))
           .toList(),
       CreatedBy.fromJson(json['created_by'] as Map<String, dynamic>),
       json['description'] as String?,
@@ -66,7 +66,8 @@ Map<String, dynamic> _$CreatedByToJson(CreatedBy instance) => <String, dynamic>{
       'username': instance.username,
     };
 
-Result _$ResultFromJson(Map<String, dynamic> json) => Result(
+UserListResult _$UserListResultFromJson(Map<String, dynamic> json) =>
+    UserListResult(
       json['adult'] as bool,
       json['backdrop_path'] as String?,
       json['id'] as int,
@@ -86,7 +87,8 @@ Result _$ResultFromJson(Map<String, dynamic> json) => Result(
       json['first_air_date'] as String?,
     );
 
-Map<String, dynamic> _$ResultToJson(Result instance) => <String, dynamic>{
+Map<String, dynamic> _$UserListResultToJson(UserListResult instance) =>
+    <String, dynamic>{
       'adult': instance.adult,
       'backdrop_path': instance.backdropPath,
       'id': instance.id,

@@ -23,8 +23,11 @@ class HomeModel extends ChangeNotifier with MovieListModelMixin, TrendingPersonL
   final _dateFormat = DateFormat.y();
   String? _randomPoster;
   bool _isSwitch = true;
+  final _searchController = TextEditingController();
 
   set isSwitch(value) =>_isSwitch = value;
+
+  TextEditingController get  searchController => _searchController;
 
   @override
   List<MediaList> get movies => List.unmodifiable(_movies);
@@ -106,6 +109,10 @@ class HomeModel extends ChangeNotifier with MovieListModelMixin, TrendingPersonL
   void onPeopleDetailsScreen(BuildContext context, int index) {
     final id = _persons[index].id;
     Navigator.of(context).pushNamed(MainNavigationRouteNames.personDetails, arguments: id);
+  }
+
+  void onHomeSearchScreen(BuildContext context) {
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.homeSearch, arguments: _searchController);
   }
 
   @override

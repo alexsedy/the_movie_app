@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:the_movie_app/models/media_details_model/media_filter_mixin.dart';
+import 'package:the_movie_app/models/media_details_model/media_filter_model.dart';
 
 class FilterMoviesButtonWidget extends StatelessWidget {
-  final MediaFilterMixin model;
+  final MediaFilter model;
   const FilterMoviesButtonWidget({
     super.key, required this.model,
   });
@@ -24,19 +24,22 @@ class FilterMoviesButtonWidget extends StatelessWidget {
               return FractionallySizedBox(
                 heightFactor: 0.75,
                 child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      _DateFilterWidget(model: model,),
-                      const SizedBox(height: 20),
-                      _GenresMoviesFilterWidget(model: model,),
-                      const SizedBox(height: 20),
-                      _UserScoreFilterWidget(model: model,),
-                      const SizedBox(height: 20),
-                      _SortByFilterWidget(model: model,),
-                      const SizedBox(height: 20),
-                      _AcceptedButtonsWidget(model: model,),
-                      const SizedBox(height: 10),
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        _DateFilterWidget(model: model,),
+                        const SizedBox(height: 20),
+                        _GenresMoviesFilterWidget(model: model,),
+                        const SizedBox(height: 20),
+                        _UserScoreFilterWidget(model: model,),
+                        const SizedBox(height: 20),
+                        _SortByFilterWidget(model: model,),
+                        const SizedBox(height: 20),
+                        _AcceptedButtonsWidget(model: model,),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -52,7 +55,7 @@ class FilterMoviesButtonWidget extends StatelessWidget {
 }
 
 class _DateFilterWidget extends StatefulWidget {
-  final MediaFilterMixin model;
+  final MediaFilter model;
   const _DateFilterWidget({
     super.key, required this.model,
   });
@@ -194,7 +197,7 @@ class _DateFilterWidgetState extends State<_DateFilterWidget> {
 }
 
 class _GenresMoviesFilterWidget extends StatefulWidget {
-  final MediaFilterMixin model;
+  final MediaFilter model;
   const _GenresMoviesFilterWidget({
     super.key, required this.model,
   });
@@ -204,76 +207,14 @@ class _GenresMoviesFilterWidget extends StatefulWidget {
 }
 
 class _GenresMoviesFilterWidgetState extends State<_GenresMoviesFilterWidget> {
-  // bool isEnabledAction = false;
-  // bool isEnabledAdventure = false;
-  // bool isEnabledAnimation = false;
-  // bool isEnabledComedy = false;
-  // bool isEnabledCrime = false;
-  // bool isEnabledDocumentary = false;
-  // bool isEnabledDrama = false;
-  // bool isEnabledFamily = false;
-  // bool isEnabledFantasy = false;
-  // bool isEnabledHistory = false;
-  // bool isEnabledHorror = false;
-  // bool isEnabledMusic = false;
-  // bool isEnabledMystery = false;
-  // bool isEnabledRomance = false;
-  // bool isEnabledScienceFiction = false;
-  // bool isEnabledTVMovie = false;
-  // bool isEnabledThriller = false;
-  // bool isEnabledWar = false;
-  // bool isEnabledWestern = false;
-  //
-  // var onPressedItems = <String, bool>{
-  //   "28": false,      //Action = 28
-  //   "12": false,      //Adventure = 12
-  //   "16": false,      //Animation = 16
-  //   "35": false,      //Comedy = 35
-  //   "80": false,      //Crime = 80
-  //   "99": false,      //Documentary = 99
-  //   "18": false,      //Drama = 18
-  //   "10751": false,   //Family = 10751
-  //   "14": false,      //Fantasy = 14
-  //   "36": false,      //History = 36
-  //   "27": false,      //Horror = 27
-  //   "10402": false,   //Music = 10402
-  //   "9648": false,    //Mystery = 9648
-  //   "10749": false,   //Romance = 10749
-  //   "878": false,     //Science Fiction = 878
-  //   "10770": false,   //TV Movie = 10770
-  //   "53": false,      //Thriller = 53
-  //   "10752": false,   //War = 10752
-  //   "37": false       //Western = 37
-  // };
-
-  final action = <String, Map<String, bool>>{
-    "28": {'Action': false},
-    "12": {'Adventure': false},
-    "16": {'Animation': false},
-    "35": {'Comedy': false},
-    "80": {'Crime': false},
-    "99": {'Documentary': false},
-    "18": {'Drama': false},
-    "10751": {'Family': false},
-    "14": {'Fantasy': false},
-    "36": {'History': false},
-    "27": {'Horror': false},
-    "10402": {'Music': false},
-    "9648": {'Mystery': false},
-    "10749": {'Romance': false},
-    "878": {'Science Fiction': false},
-    "10770": {'TV Movie': false},
-    "53": {'Thriller': false},
-    "10752": {'War': false},
-    "37": {'Western': false},
-  };
-
   @override
   Widget build(BuildContext context) {
+    final genreActions = widget.model.genreActions;
+
     return Wrap(
       spacing: 8.0,
       runSpacing: 8.0,
-      children: action.entries.map((entry) {
+      children: genreActions.entries.map((entry) {
         return ActionChip(
           label: Text(entry.value.entries.first.key),
           backgroundColor: entry.value.entries.first.value ? Colors.blueAccent : Colors.transparent,
@@ -290,7 +231,7 @@ class _GenresMoviesFilterWidgetState extends State<_GenresMoviesFilterWidget> {
 }
 
 class _UserScoreFilterWidget extends StatefulWidget {
-  final MediaFilterMixin model;
+  final MediaFilter model;
   const _UserScoreFilterWidget({super.key, required this.model});
 
   @override
@@ -332,7 +273,7 @@ class _UserScoreFilterWidgetState extends State<_UserScoreFilterWidget> {
 }
 
 class _SortByFilterWidget extends StatefulWidget {
-  final MediaFilterMixin model;
+  final MediaFilter model;
   const _SortByFilterWidget({super.key, required this.model});
 
   @override
@@ -340,7 +281,6 @@ class _SortByFilterWidget extends StatefulWidget {
 }
 
 class _SortByFilterWidgetState extends State<_SortByFilterWidget> {
-   @override
    @override
    Widget build(BuildContext context) {
      final sortingDropdownItems = widget.model.sortingDropdownItems.entries.toList();
@@ -363,7 +303,7 @@ class _SortByFilterWidgetState extends State<_SortByFilterWidget> {
 }
 
 class _AcceptedButtonsWidget extends StatelessWidget {
-  final MediaFilterMixin model;
+  final MediaFilter model;
   const _AcceptedButtonsWidget({super.key, required this.model});
 
   @override
@@ -380,13 +320,12 @@ class _AcceptedButtonsWidget extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             model.clearAllFilters();
-            Navigator.pop(context);
           },
           child: const Text("Clear all"),
         ),
         ElevatedButton(
           onPressed: () {
-            model.filterMovie();
+            model.loadFiltered();
             Navigator.pop(context);
           },
           child: const Text("Ok"),
@@ -395,4 +334,3 @@ class _AcceptedButtonsWidget extends StatelessWidget {
     );
   }
 }
-

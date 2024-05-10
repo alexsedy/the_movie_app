@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/domain/cache_management/account_management.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
+import 'package:the_movie_app/domain/entity/media/media_collections/media_collections.dart';
 import 'package:the_movie_app/domain/entity/media/media_details/media_details.dart';
 import 'package:the_movie_app/domain/entity/media/state/item_state.dart';
 import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
@@ -94,7 +95,7 @@ class MovieApiClient extends ApiClient {
       "/movie/$movieId",
       <String, dynamic>{
         "api_key": apiKey,
-        "append_to_response": "release_dates,credits,videos,similar,recommendations",
+        "append_to_response": "release_dates,credits,videos,recommendations",
         // "language": "uk-UA"
       },
     );
@@ -270,5 +271,24 @@ class MovieApiClient extends ApiClient {
 
     final movieResponse = MediaListResponse.fromJson(json);
     return movieResponse;
+  }
+
+  Future<MediaCollections> getMediaCollections(int collectionId) async {
+
+    final url = makeUri(
+      "/collection/$collectionId",
+      <String, dynamic>{
+        "api_key": apiKey,
+        // "language": "uk-UA"
+      },
+    );
+    final request = await client.getUrl(url);
+    final response = await request.close();
+    final json = (await response.jsonDecode()) as Map<String, dynamic>;
+
+    validateError(response, json);
+
+    final mediaCollections = MediaCollections.fromJson(json);
+    return mediaCollections;
   }
 }

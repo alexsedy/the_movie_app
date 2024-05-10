@@ -97,7 +97,7 @@ class _TopPosterWidget extends StatelessWidget {
 
     return backdropPath != null
         ? Image.network(ApiClient.getImageByUrl(backdropPath), fit: BoxFit.fill,)
-        : Image.asset(AppImages.noBackdropPoster, fit: BoxFit.fitWidth,);
+        : Image.asset(AppImages.noBackdropPoster, fit: BoxFit.fill,);
   }
 }
 

@@ -48,12 +48,52 @@ class TvShowApiClient extends ApiClient {
     return tvShowResponse;
   }
 
+  Future<MediaListResponse> getTvShowWithFilter({
+    required int page,
+    String? releaseDateStart,
+    String? releaseDateEnd,
+    String? sortBy,
+    required double voteStart,
+    required double voteEnd,
+    String? genres,
+  }) async {
+
+    final url = makeUri(
+      "/discover/tv",
+      <String, dynamic>{
+        "api_key": apiKey,
+        "page": page.toString(),
+        if(releaseDateStart != null && releaseDateStart.isNotEmpty)
+          "release_date.gte": releaseDateStart,
+        if(releaseDateEnd != null && releaseDateEnd.isNotEmpty)
+          "release_date.lte": releaseDateEnd,
+        if(sortBy != null && sortBy.isNotEmpty)
+          "sort_by": sortBy,
+        // if(voteStart != null)
+        "vote_average.gte": voteStart.toString(),
+        // if(voteEnd != null)
+        "vote_average.lte": voteEnd.toString(),
+        if(genres != null && genres.isNotEmpty)
+          "with_genres": genres,
+        // "language": "uk-UA"
+      },
+    );
+    final request = await client.getUrl(url);
+    final response = await request.close();
+    final json = (await response.jsonDecode()) as Map<String, dynamic>;
+
+    validateError(response, json);
+
+    final movieResponse = MediaListResponse.fromJson(json);
+    return movieResponse;
+  }
+
   Future<MediaDetails> getTvShowById(int seriesId) async {
     final url = makeUri(
       "/tv/$seriesId",
       <String, dynamic>{
         "api_key": apiKey,
-        "append_to_response": "credits,videos,content_ratings,similar,recommendations",
+        "append_to_response": "credits,videos,content_ratings,recommendations",
         // "language": "uk-UA"
       },
     );

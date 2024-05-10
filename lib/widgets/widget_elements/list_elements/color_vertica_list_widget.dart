@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
-import 'package:the_movie_app/models/color_list_model/base_list_model.dart';
+import 'package:the_movie_app/models/color_list_model/base_color_list_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
 
 class ColorVerticalList<T extends BaseColorListModel> extends StatelessWidget {
@@ -25,6 +25,8 @@ class ColorVerticalList<T extends BaseColorListModel> extends StatelessWidget {
         // TODO: Handle this case.
       case ColorListType.seasonDetails:
         itemCount = model.season?.episodes.length ?? 0;
+      case ColorListType.collection:
+        itemCount = model.mediaCollections?.parts.length ?? 0;
     }
 
     return ListView.builder(
@@ -37,6 +39,7 @@ class ColorVerticalList<T extends BaseColorListModel> extends StatelessWidget {
         String? firstLine;
         String? secondLine;
         String? thirdLine;
+        int maxLine = 3;
 
         switch(colorListType) {
           case ColorListType.cast:
@@ -63,89 +66,98 @@ class ColorVerticalList<T extends BaseColorListModel> extends StatelessWidget {
             secondLine = model.formatDate(date);
             thirdLine = model.season?.episodes[index].overview;
             altImage = AppImages.noProfile;
+            maxLine = 1;
+          case ColorListType.collection:
+            profilePath = model.mediaCollections?.parts[index].posterPath;
+            firstLine = model.mediaCollections?.parts[index].title;
+            final date = model.mediaCollections?.parts[index].releaseDate;
+            secondLine = model.formatDate(date);
+            thirdLine = model.mediaCollections?.parts[index].overview;
+            altImage = AppImages.noProfile;
+            maxLine = 2;
         }
 
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-          child: SizedBox(
-            child: Card(
-              clipBehavior: Clip.hardEdge,
-              child: ListTile(
-                onTap: () {
-                  switch(colorListType) {
-                    case ColorListType.cast:
-                      model.onPeopleScreen(context, index);
-                    case ColorListType.companies:
-                    case ColorListType.seasons:
-                    model.onSeasonDetailsScreen(context, index);
-                    case ColorListType.networks:
-                    case ColorListType.seasonDetails:
-                      model.onSeriesDetailsScreen(context, index);
-                  }
-                },
-                minVerticalPadding: 0,
-                contentPadding: EdgeInsets.zero,
-                title: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    AspectRatio(
-                      aspectRatio: 500 / 750,
-                      child: profilePath != null
-                          ? Image.network(
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return const Center(
-                            child: SizedBox(
-                              width: 60,
-                              height: 60,
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
-                        },
-                        ApiClient.getImageByUrl(profilePath), fit: BoxFit.fitHeight,)
-                          : Image.asset(altImage,),
+          child: Card(
+            clipBehavior: Clip.hardEdge,
+            child: ListTile(
+              onTap: () {
+                switch(colorListType) {
+                  case ColorListType.cast:
+                    model.onPeopleScreen(context, index);
+                  case ColorListType.companies:
+                  case ColorListType.seasons:
+                  model.onSeasonDetailsScreen(context, index);
+                  case ColorListType.networks:
+                  case ColorListType.seasonDetails:
+                    model.onSeriesDetailsScreen(context, index);
+                  case ColorListType.collection:
+                    model.onMediaDetailsScreen(context, index);
+                }
+              },
+              minVerticalPadding: 0,
+              contentPadding: EdgeInsets.zero,
+              title: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  AspectRatio(
+                    aspectRatio: 500 / 750,
+                    child: profilePath != null
+                        ? Image.network(
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return const Center(
+                          child: SizedBox(
+                            width: 60,
+                            height: 60,
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      },
+                      ApiClient.getImageByUrl(profilePath), fit: BoxFit.fitHeight,)
+                        : Image.asset(altImage,),
+                  ),
+                  const SizedBox(width: 14,),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 6,),
+                        Text(firstLine ?? "",
+                          softWrap: true,
+                          maxLines: maxLine,
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        if(secondLine != null)
+                        Text(secondLine,
+                          softWrap: true,
+                          maxLines: 3,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                        const SizedBox(height: 6,),
+                        if(thirdLine != null)
+                        Text(thirdLine,
+                          maxLines: colorListType != ColorListType.collection ? 3 : 2,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w200,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 14,),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 6,),
-                          Text(firstLine ?? "",
-                            softWrap: true,
-                            maxLines: colorListType != ColorListType.seasonDetails ? 3 : 1,
-                            style: const TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          if(secondLine != null)
-                          Text(secondLine,
-                            softWrap: true,
-                            maxLines: 3,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
-                          const SizedBox(height: 6,),
-                          if(thirdLine != null)
-                          Text(thirdLine,
-                            maxLines: 3,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w200,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

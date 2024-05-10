@@ -1,4 +1,4 @@
-mixin MediaFilterMixin{
+abstract class MediaFilter {
   DateTime? get selectedDateStart;
   DateTime? get selectedDateEnd ;
   String? get genres;
@@ -6,6 +6,7 @@ mixin MediaFilterMixin{
   double get scoreEnd;
   String? get sortingValue;
   Map<String, String> get sortingDropdownItems;
+  Map<String, Map<String, bool>> get genreActions;
 
   set selectedDateStart(value);
   set selectedDateEnd(value);
@@ -14,7 +15,7 @@ mixin MediaFilterMixin{
   set scoreEnd(value);
   set sortingValue(value);
 
-  Future<void> filterMovie();
+  Future<void> loadFiltered();
 
   bool isFiltered();
 

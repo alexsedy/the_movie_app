@@ -32,7 +32,7 @@ abstract class BaseMediaDetailsModel implements BaseUserListsModel, BaseListMode
   void onSeasonsListScreen(BuildContext context, List<Seasons> seasons);
   void onNetworksListScreen(BuildContext context);
   void onRecommendationsListScreen(BuildContext context, List<MediaList> mediaList);
-  void onSimilarListScreen(BuildContext context, List<MediaList> mediaList);
+  void onCollectionScreen(BuildContext context);
 
   Future<void> launchYouTubeVideo(String videoKey);
 

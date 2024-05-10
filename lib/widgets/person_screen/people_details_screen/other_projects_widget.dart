@@ -47,7 +47,7 @@ class _MoviesButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model =  NotifierProvider.watch<PeopleDetailsModel>(context);
+    final model = NotifierProvider.watch<PeopleDetailsModel>(context);
     final movieCreditList = model?.movieCreditList;
 
     if(movieCreditList == null) {
@@ -195,7 +195,7 @@ class _MoviesButtonWidget extends StatelessWidget {
                                             Text(releaseDate != null && releaseDate.isNotEmpty
                                                 ? releaseDate : "Unknown",
                                               style: const TextStyle(
-                                                fontSize: 20,
+                                                fontSize: 18,
                                                 fontStyle: FontStyle.italic,
                                               ),
                                             ),
@@ -203,9 +203,9 @@ class _MoviesButtonWidget extends StatelessWidget {
                                             Text(
                                               title ?? "",
                                               softWrap: true,
-                                              maxLines: 3,
+                                              maxLines: 2,
                                               style: const TextStyle(
-                                                fontSize: 18,
+                                                fontSize: 16,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
@@ -213,9 +213,9 @@ class _MoviesButtonWidget extends StatelessWidget {
                                                 ? job ?? ""
                                                 : character ?? "",
                                               softWrap: true,
-                                              maxLines: 3,
+                                              maxLines: 2,
                                               style: const TextStyle(
-                                                fontSize: 18,
+                                                fontSize: 16,
                                                 fontStyle: FontStyle.italic,
                                               ),
                                             ),
@@ -521,7 +521,7 @@ class _TvShowButtonWidget extends StatelessWidget {
                             child: Card(
                               clipBehavior: Clip.hardEdge,
                               child: ListTile(
-                                onTap: () => model?.onMovieDetailsTab(context, index),
+                                onTap: () => model?.onTvShowDetailsTab(context, index),
                                 minVerticalPadding: 0,
                                 contentPadding: EdgeInsets.zero,
                                 title: Row(
@@ -554,7 +554,7 @@ class _TvShowButtonWidget extends StatelessWidget {
                                             Text(firstAirDate != null && firstAirDate.isNotEmpty
                                                 ? firstAirDate : "Unknown",
                                               style: const TextStyle(
-                                                fontSize: 20,
+                                                fontSize: 18,
                                                 fontStyle: FontStyle.italic,
                                               ),
                                             ),
@@ -562,9 +562,9 @@ class _TvShowButtonWidget extends StatelessWidget {
                                             Text(
                                               name ?? "",
                                               softWrap: true,
-                                              maxLines: 3,
+                                              maxLines: 2,
                                               style: const TextStyle(
-                                                fontSize: 18,
+                                                fontSize: 16,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
@@ -572,9 +572,9 @@ class _TvShowButtonWidget extends StatelessWidget {
                                                 ? "${job ?? ""} $episodeCountText"
                                                 : "${character ?? ""} $episodeCountText",
                                               softWrap: true,
-                                              maxLines: 3,
+                                              maxLines: 2,
                                               style: const TextStyle(
-                                                fontSize: 18,
+                                                fontSize: 16,
                                                 fontStyle: FontStyle.italic,
                                               ),
                                             ),

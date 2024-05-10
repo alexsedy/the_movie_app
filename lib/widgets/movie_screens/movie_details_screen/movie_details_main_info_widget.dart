@@ -1,6 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:the_movie_app/constants/images_const/app_images.dart';
+import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
+import 'package:the_movie_app/widgets/widget_elements/media_details_elements/belongs_to_collection_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/favorite_button_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/list_button_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/rate_button_widget.dart';
@@ -61,6 +66,10 @@ class _MovieDetailsWidget extends StatelessWidget {
           mediaDetailsElementType: MediaDetailsElementType.movie,
           model: model,
         ),
+        if(model.mediaDetails?.belongsToCollection != null)
+          BelongsToCollectionWidget<MovieDetailsModel>(
+            model: model,
+          ),
         MediaCrewWidget<MovieDetailsModel>(
           model: model,
           mediaDetailsElementType: MediaDetailsElementType.movie,
@@ -73,11 +82,6 @@ class _MovieDetailsWidget extends StatelessWidget {
         MediaDetailsListWidget<MovieDetailsModel>(
           mediaDetailsElementType: MediaDetailsElementType.movie,
           horizontalListElementType: HorizontalListElementType.companies,
-          model: model,
-        ),
-        MediaDetailsListWidget<MovieDetailsModel>(
-          mediaDetailsElementType: MediaDetailsElementType.movie,
-          horizontalListElementType: HorizontalListElementType.similar,
           model: model,
         ),
         MediaDetailsListWidget<MovieDetailsModel>(

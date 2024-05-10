@@ -93,11 +93,10 @@ class _TopPosterWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<TvShowDetailsModel>(context);
     final backdropPath = model?.mediaDetails?.backdropPath;
-    // final posterPath = model?.movieDetails?.posterPath;
 
     return backdropPath != null
         ? Image.network(ApiClient.getImageByUrl(backdropPath), fit: BoxFit.fill,)
-        : Image.asset(AppImages.noBackdropPoster, fit: BoxFit.fitWidth,);
+        : Image.asset(AppImages.noBackdropPoster, fit: BoxFit.fill,);
   }
 }
 

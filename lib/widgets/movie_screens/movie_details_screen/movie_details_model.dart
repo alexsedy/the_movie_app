@@ -19,7 +19,7 @@ class MovieDetailsModel extends ChangeNotifier with MediaDetailsMixin {
   UserLists? _userLists;
   final _lists = <Lists>[];
   final int _movieId;
-  final _dateFormat = DateFormat.yMMMMd();
+  final _dateFormat = DateFormat.yMMMd();
   bool _isFavorite = false;
   bool _isWatched = false;
   bool _isRated = false;
@@ -213,6 +213,12 @@ class MovieDetailsModel extends ChangeNotifier with MediaDetailsMixin {
   void onMediaDetailsScreen(BuildContext context, int index){
     final id = _movieDetails?.recommendations?.list[index].id;
     Navigator.of(context).pushNamed(MainNavigationRouteNames.movieDetails, arguments: id);
+  }
+
+  @override
+  void onCollectionScreen(BuildContext context) {
+    final id = _movieDetails?.belongsToCollection?.id;
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.collection, arguments: id);
   }
 
   @override

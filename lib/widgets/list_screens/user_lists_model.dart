@@ -12,7 +12,7 @@ class UserListsModel extends ChangeNotifier {
   UserLists? _userLists;
   UserListDetails? _userListDetails;
   final _lists = <Lists>[];
-  final _listOfUserListDetails = <Result>[];
+  final _listOfUserListDetails = <UserListResult>[];
   late int _currentPage;
   late int _totalPage;
   final _dateFormat = DateFormat.yMMMMd();
@@ -23,7 +23,7 @@ class UserListsModel extends ChangeNotifier {
   UserListsModel({this.listId});
 
   List<Lists> get lists => List.unmodifiable(_lists);
-  List<Result> get listOfUserListDetails => List.unmodifiable(_listOfUserListDetails);
+  List<UserListResult> get listOfUserListDetails => List.unmodifiable(_listOfUserListDetails);
   bool get isListLoadingInProgress => _isListLoadingInProgress;
   UserListDetails? get userListDetails => _userListDetails;
 

@@ -6,7 +6,7 @@ part 'user_list_details.g.dart';
 class UserListDetails {
   final double averageRating;
   final String? backdropPath;
-  final List<Result> results;
+  final List<UserListResult> results;
   final CreatedBy createdBy;
   final String? description;
   final int id;
@@ -67,7 +67,7 @@ class CreatedBy {
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-class Result {
+class UserListResult {
   final bool adult;
   final String? backdropPath;
   final int id;
@@ -86,7 +86,7 @@ class Result {
   final double? voteAverage;
   final int? voteCount;
 
-  Result(
+  UserListResult(
       this.adult,
       this.backdropPath,
       this.id,
@@ -105,9 +105,9 @@ class Result {
       this.name,
       this.firstAirDate);
 
-  factory Result.fromJson(Map<String, dynamic> json) => _$ResultFromJson(json);
+  factory UserListResult.fromJson(Map<String, dynamic> json) => _$UserListResultFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ResultToJson(this);
+  Map<String, dynamic> toJson() => _$UserListResultToJson(this);
 }
 
 // class ObjectIds {

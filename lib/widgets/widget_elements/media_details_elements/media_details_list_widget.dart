@@ -72,14 +72,6 @@ class MediaDetailsListWidget<T extends BaseMediaDetailsModel> extends StatelessW
         // TODO: Handle this case.
       case HorizontalListElementType.trendingPerson:
         // TODO: Handle this case.
-      case HorizontalListElementType.similar:
-      final similar = model.mediaDetails?.similar?.list;
-      if(similar == null) {
-        return const SizedBox.shrink();
-      } else if (similar.isEmpty) {
-        return const SizedBox.shrink();
-      }
-      text = "Similar ${text}s";
       case HorizontalListElementType.recommendations:
         final recommendations = model.mediaDetails?.recommendations?.list;
         if(recommendations == null) {
@@ -109,8 +101,6 @@ class MediaDetailsListWidget<T extends BaseMediaDetailsModel> extends StatelessW
                   model.onNetworksListScreen(context);
                 case HorizontalListElementType.guestStars:
                   model.onGuestCastListScreen(context, model.mediaDetails?.credits.guestStars ?? []);
-                case HorizontalListElementType.similar:
-                  model.onSimilarListScreen(context, model.mediaDetails?.similar?.list ?? []);
                 case HorizontalListElementType.recommendations:
                   model.onRecommendationsListScreen(context, model.mediaDetails?.recommendations?.list ?? []);
                 default:

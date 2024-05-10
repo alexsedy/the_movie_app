@@ -13,12 +13,14 @@ abstract class BaseListModel {
   List<MediaList> get tvs;
   List<TrendingPersonList> get persons;
   MediaDetails? get mediaDetails;
+
   Future<void> firstLoadTvShows();
-  Future<void> loadTvShows();
+  Future<void> firstLoadMovies();
 
   Future<void> loadTrendingPerson();
-  Future<void> firstLoadMovies();
   Future<void> loadMovies();
+  Future<void> loadTvShows();
+
   void preLoadMovies(int index);
   void preLoadTvShows(int index);
 

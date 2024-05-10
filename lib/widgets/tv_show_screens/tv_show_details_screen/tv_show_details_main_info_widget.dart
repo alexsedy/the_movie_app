@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
+import 'package:the_movie_app/widgets/widget_elements/media_details_elements/belongs_to_collection_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/favorite_button_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/list_button_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/rate_button_widget.dart';
@@ -49,6 +50,10 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
           mediaDetailsElementType: MediaDetailsElementType.tv,
           model: model,
         ),
+        if(model.mediaDetails?.belongsToCollection != null)
+          BelongsToCollectionWidget<TvShowDetailsModel>(
+            model: model,
+          ),
         MediaCrewWidget<TvShowDetailsModel>(
           model: model,
           mediaDetailsElementType: MediaDetailsElementType.tv,
@@ -71,11 +76,6 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
         MediaDetailsListWidget<TvShowDetailsModel>(
           mediaDetailsElementType: MediaDetailsElementType.tv,
           horizontalListElementType: HorizontalListElementType.companies,
-          model: model,
-        ),
-        MediaDetailsListWidget<TvShowDetailsModel>(
-          mediaDetailsElementType: MediaDetailsElementType.tv,
-          horizontalListElementType: HorizontalListElementType.similar,
           model: model,
         ),
         MediaDetailsListWidget<TvShowDetailsModel>(

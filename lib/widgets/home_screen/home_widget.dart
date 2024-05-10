@@ -43,9 +43,14 @@ class _SearchWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const textStyle = TextStyle(
-      fontSize: 36,
-    );
+    const textStyle = TextStyle(fontSize: 36,);
+    final model = NotifierProvider.watch<HomeModel>(context);
+
+    if(model == null) {
+      return const SizedBox.shrink();
+    }
+
+    final searchController = model.searchController;
 
     return Stack(
       children: [
@@ -78,8 +83,9 @@ class _SearchWidget extends StatelessWidget {
                         border: Border.all(),
                         borderRadius: BorderRadius.circular(8.0),
                       ),
-                      child: const TextField(
-                        decoration: InputDecoration(
+                      child: TextField(
+                        controller: searchController,
+                        decoration: const InputDecoration(
                           contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
                           hintText: 'Search movie, TV, person',
                           border: InputBorder.none,
@@ -94,7 +100,11 @@ class _SearchWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        if(searchController.text.isNotEmpty) {
+                          model.onHomeSearchScreen(context);
+                        }
+                      },
                       icon: const Icon(Icons.search),
                     ),
                   ),

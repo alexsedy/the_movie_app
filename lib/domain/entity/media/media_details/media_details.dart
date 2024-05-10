@@ -57,7 +57,6 @@ class MediaDetails {
   final String? airDate;
   final String? stillPath;
   final MediaListResponse? recommendations;
-  final MediaListResponse? similar;
 
   MediaDetails(
       this.adult,
@@ -107,8 +106,7 @@ class MediaDetails {
       this.contentRatings,
       this.airDate,
       this.stillPath,
-      this.recommendations,
-      this.similar);
+      this.recommendations,);
 
   factory MediaDetails.fromJson(Map<String, dynamic> json) => _$MediaDetailsFromJson(json);
 
@@ -117,7 +115,12 @@ class MediaDetails {
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class BelongsToCollection {
-  const BelongsToCollection();
+  final int id;
+  final String? name;
+  final String? posterPath;
+  final String? backdropPath;
+
+  BelongsToCollection(this.id, this.name, this.posterPath, this.backdropPath);
 
   factory BelongsToCollection.fromJson(Map<String, dynamic> json) =>
       _$BelongsToCollectionFromJson(json);
