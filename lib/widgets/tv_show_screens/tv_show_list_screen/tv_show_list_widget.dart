@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/tv_show_screens/tv_show_list_screen/tv_show_list_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
-import 'package:the_movie_app/widgets/widget_elements/list_elements/vertical_list_element_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/list_elements/vertical_list_with_pagination_element_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/list_shimmer_skeleton_widget.dart';
 
 class TvShowListWidget extends StatefulWidget {
@@ -47,8 +47,8 @@ class _MovieListWidgetState extends State<TvShowListWidget> {
       );
     }
 
-    return VerticalListElementWidget<TvShowListModel>(
-      verticalListElementType: VerticalListElementType.tv,
+    return VerticalListWithPaginationElementWidget<TvShowListModel>(
+      verticalListWithPaginationElementType: VerticalListWithPaginationElementType.tv,
       model: model,
     );
 

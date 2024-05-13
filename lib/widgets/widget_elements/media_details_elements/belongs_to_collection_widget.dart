@@ -61,6 +61,7 @@ class BelongsToCollectionWidget<T extends BaseMediaDetailsModel> extends Statele
               title: Center(
                 child: Text(
                   name?? "",
+                  textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 20,
                   ),

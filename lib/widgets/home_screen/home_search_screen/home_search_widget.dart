@@ -1,8 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/constants/images_const/app_images.dart';
+import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/home_screen/home_search_screen/home_search_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
-import 'package:the_movie_app/widgets/widget_elements/list_elements/vertical_list_element_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/list_elements/vertical_list_with_pagination_element_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/list_shimmer_skeleton_widget.dart';
 
 class HomeSearchWidget extends StatefulWidget {
@@ -16,9 +19,8 @@ class _HomeSearchWidgetState extends State<HomeSearchWidget> {
 
   @override
   void initState() {
-    NotifierProvider.read<HomeSearchModel>(context)?.firstLoadMovies();
-    NotifierProvider.read<HomeSearchModel>(context)?.firstLoadTvShows();
     super.initState();
+    NotifierProvider.read<HomeSearchModel>(context)?.firstLoadAll();
   }
 
   @override
@@ -51,8 +53,28 @@ class _HomeSearchWidgetState extends State<HomeSearchWidget> {
   }
 }
 
-class _HeaderSearchBar extends StatelessWidget {
+class _HeaderSearchBar extends StatefulWidget {
   const _HeaderSearchBar({super.key});
+
+  @override
+  State<_HeaderSearchBar> createState() => _HeaderSearchBarState();
+}
+
+class _HeaderSearchBarState extends State<_HeaderSearchBar> {
+  late FocusNode _searchFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchFocusNode = FocusNode();
+    _searchFocusNode.requestFocus();
+  }
+
+  @override
+  void dispose() {
+    _searchFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,39 +88,28 @@ class _HeaderSearchBar extends StatelessWidget {
     final searchController = model.searchController;
 
     return Padding(
-      padding: const EdgeInsets.only(left: 60, right: 10, top: 56),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: TextField(
-                controller: searchController,
-                decoration: const InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
-                  hintText: 'Find anything',
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
+      padding: const EdgeInsets.only(left: 60, right: 16, top: 56),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(),
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: TextField(
+          controller: searchController,
+          focusNode: _searchFocusNode,
+          onChanged: (value) {
+            searchController.text = value;
+            model.loadAll();
+            if(value.isEmpty) {
+              model.backOnHomePage(context);
+            }
+          },
+          decoration: const InputDecoration(
+            contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+            hintText: 'Find anything',
+            border: InputBorder.none,
           ),
-          const SizedBox(width: 2),
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(),
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: IconButton(
-              onPressed: () {
-
-              },
-              icon: const Icon(Icons.search),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -134,8 +145,8 @@ class _MovieListWidget extends StatelessWidget {
       );
     }
 
-    return VerticalListElementWidget<HomeSearchModel>(
-      verticalListElementType: VerticalListElementType.movie,
+    return VerticalListWithPaginationElementWidget<HomeSearchModel>(
+      verticalListWithPaginationElementType: VerticalListWithPaginationElementType.movie,
       model: model,
     );
   }
@@ -170,8 +181,8 @@ class _TvShowListWidget extends StatelessWidget {
       );
     }
 
-    return VerticalListElementWidget<HomeSearchModel>(
-      verticalListElementType: VerticalListElementType.tv,
+    return VerticalListWithPaginationElementWidget<HomeSearchModel>(
+      verticalListWithPaginationElementType: VerticalListWithPaginationElementType.tv,
       model: model,
     );
   }
@@ -182,7 +193,137 @@ class _PersonListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+
+    final model = NotifierProvider.watch<HomeSearchModel>(context);
+
+    if(model == null) return const SizedBox.shrink();
+
+    if(model.persons.isEmpty) {
+      return FutureBuilder<void>(
+        future: Future.delayed(const Duration(seconds: 3)),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const DefaultListsShimmerSkeletonWidget();
+          } else {
+            return const Center(
+              child: Text(
+                "No results.",
+                style: TextStyle(
+                  fontSize: 36,
+                ),
+              ),
+            );
+          }
+        },
+      );
+    }
+
+    return ListView.builder(
+        itemCount: model.persons.length,
+        controller: model.scrollController,
+        itemExtent: 163,
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        itemBuilder: (BuildContext context, int index) {
+          model.preLoadPersons(index);
+          final persons = model.persons;
+          final firstLine = persons[index].name;
+          final secondLine = persons[index].knownForDepartment;
+          final titles = <String>[];
+          persons[index].knownFor.forEach((element) {
+            final title = element.title;
+            if (title != null) {
+              titles.add(title);
+            }
+          });
+
+          String? thirdLine;
+          if(titles.isNotEmpty) {
+            thirdLine = "Know for: ${titles.join(", ").toString()}";
+          }
+          final profilePath = persons[index].profilePath;
+
+          if (!model.isPersonLoadingInProgress) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              child: Card(
+                clipBehavior: Clip.hardEdge,
+                child: ListTile(
+                  onTap: () {
+                    model.onPeopleDetailsScreen(context, index);
+                  },
+                  minVerticalPadding: 0,
+                  contentPadding: EdgeInsets.zero,
+                  title: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      AspectRatio(
+                        aspectRatio: 500 / 750,
+                        child: profilePath != null
+                            ? Image.network(
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return const Center(
+                              child: SizedBox(
+                                width: 60,
+                                height: 60,
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                          },
+                          ApiClient.getImageByUrl(profilePath), fit: BoxFit.fitHeight,)
+                            : Image.asset(AppImages.noProfile,),
+                      ),
+                      const SizedBox(width: 14,),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 6,),
+                            Text(firstLine,
+                              softWrap: true,
+                              maxLines: 3,
+                              style: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            if(secondLine != null)
+                              Text(secondLine,
+                                softWrap: true,
+                                maxLines: 1,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            const SizedBox(height: 6,),
+                            if(thirdLine != null)
+                              Text(thirdLine,
+                                maxLines: 3,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w200,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        }
+    );
   }
 }
 
@@ -191,67 +332,110 @@ class _MediaCollectionListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final belongsToCollection = model.mediaDetails?.belongsToCollection;
-    // final posterPath = belongsToCollection?.posterPath;
-    // final backdropPath = belongsToCollection?.backdropPath;
-    // final name = belongsToCollection?.name;
+    final model = NotifierProvider.watch<HomeSearchModel>(context);
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SizedBox(
-        height: 150,
-        // child: Stack(
-        //   children: [
-        //     backdropPath != null
-        //         ? Opacity(
-        //       opacity: 0.3,
-        //       child: Container(
-        //         clipBehavior: Clip.hardEdge,
-        //         decoration: BoxDecoration(
-        //           border: Border.all(color: Colors.transparent),
-        //           borderRadius: const BorderRadius.all(Radius.circular(10)),
-        //         ),
-        //         child: Image.network(
-        //           fit: BoxFit.fill,
-        //           width: double.infinity,
-        //           loadingBuilder: (context, child, loadingProgress) {
-        //             if (loadingProgress == null) return child;
-        //             return const Center(
-        //               child: SizedBox(
-        //                 width: 60,
-        //                 height: 60,
-        //                 child: CircularProgressIndicator(),
-        //               ),
-        //             );
-        //           },
-        //           ApiClient.getImageByUrl(backdropPath),),
-        //       ),
-        //     )
-        //         : Container(
-        //       decoration: BoxDecoration(
-        //         color: Theme.of(context).primaryColor.withOpacity(0.1),
-        //         border: Border.all(color: Colors.transparent),
-        //         borderRadius: const BorderRadius.all(Radius.circular(10)),
-        //       ),
-        //     ),
-        //     ListTile(
-        //       onTap: (){
-        //         model.onCollectionScreen(context);
-        //       },
-        //       minVerticalPadding: 0,
-        //       contentPadding: EdgeInsets.zero,
-        //       title: Center(
-        //         child: Text(
-        //           name?? "",
-        //           style: const TextStyle(
-        //             fontSize: 20,
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //   ],
-        // ),
-      ),
+    if(model == null) return const SizedBox.shrink();
+
+    if(model.collections.isEmpty) {
+      return FutureBuilder<void>(
+        future: Future.delayed(const Duration(seconds: 3)),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const DefaultListsShimmerSkeletonWidget();
+          } else {
+            return const Center(
+              child: Text(
+                "No results.",
+                style: TextStyle(
+                  fontSize: 36,
+                ),
+              ),
+            );
+          }
+        },
+      );
+    }
+
+
+    return ListView.builder(
+      itemCount: model.collections.length,
+      controller: model.scrollController,
+      itemExtent: 163,
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+      itemBuilder: (BuildContext context, int index) {
+        model.preLoadCollections(index);
+        final collections = model.collections;
+        final backdropPath = collections[index].backdropPath;
+        final name = collections[index].name;
+
+        if (!model.isCollectionLoadingInProgress) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              height: 150,
+              child: Stack(
+                children: [
+                  backdropPath != null
+                      ? Opacity(
+                    opacity: 0.3,
+                    child: Container(
+                      clipBehavior: Clip.hardEdge,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.transparent),
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: Image.network(
+                        fit: BoxFit.fill,
+                        width: double.infinity,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return const Center(
+                            child: SizedBox(
+                              width: 60,
+                              height: 60,
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        },
+                        ApiClient.getImageByUrl(backdropPath),),
+                    ),
+                  )
+                      : Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor.withOpacity(0.1),
+                      border: Border.all(color: Colors.transparent),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    ),
+                  ),
+                  ListTile(
+                    onTap: (){
+                      model.onCollectionScreen(context, index);
+                    },
+                    minVerticalPadding: 0,
+                    contentPadding: EdgeInsets.zero,
+                    title: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          name,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      }
     );
   }
 }

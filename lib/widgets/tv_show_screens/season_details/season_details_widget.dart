@@ -3,7 +3,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/tv_show_screens/season_details/season_details_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
-import 'package:the_movie_app/widgets/widget_elements/list_elements/color_vertica_list_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/list_elements/vertical_list_elemet_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/color_list_shimmer_skeleton_widget.dart';
 
 class SeasonDetailsWidget extends StatefulWidget {
@@ -84,8 +84,9 @@ class _BodySeason extends StatelessWidget {
       return const ColorListShimmerSkeletonWidget();
     }
 
-    return ColorVerticalList<SeasonDetailsModel>(
+    return VerticalListElementWidget<SeasonDetailsModel>(
       model: model,
-      colorListType: ColorListType.seasonDetails,);
+      verticalListElementType: VerticalListElementType.seasonDetails,
+    );
   }
 }

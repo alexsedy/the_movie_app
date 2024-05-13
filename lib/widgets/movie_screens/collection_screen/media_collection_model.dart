@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/movie_api_client.dart';
 import 'package:the_movie_app/domain/entity/media/media_collections/media_collections.dart';
-import 'package:the_movie_app/models/color_list_model/base_color_list_model.dart';
+import 'package:the_movie_app/models/color_list_model/vertical_list_model.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
-class MediaCollectionModel extends ChangeNotifier implements BaseColorListModel {
+class MediaCollectionModel extends ChangeNotifier implements VerticalListModel {
   final _apiClient = MovieApiClient();
   final _dateFormat = DateFormat.yMMMd();
   int id;
@@ -24,7 +24,7 @@ class MediaCollectionModel extends ChangeNotifier implements BaseColorListModel 
 
   @override
   void onMediaDetailsScreen(BuildContext context, int index){
-    final id = _mediaCollections?.parts[index].id;
+    final id = _mediaCollections?.parts?[index].id;
     Navigator.of(context).pushNamed(MainNavigationRouteNames.movieDetails, arguments: id);
   }
 

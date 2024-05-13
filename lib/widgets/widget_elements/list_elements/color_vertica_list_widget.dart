@@ -23,10 +23,6 @@ class ColorVerticalList<T extends BaseColorListModel> extends StatelessWidget {
         itemCount = model.seasons.length;
       case ColorListType.networks:
         // TODO: Handle this case.
-      case ColorListType.seasonDetails:
-        itemCount = model.season?.episodes.length ?? 0;
-      case ColorListType.collection:
-        itemCount = model.mediaCollections?.parts.length ?? 0;
     }
 
     return ListView.builder(
@@ -57,24 +53,6 @@ class ColorVerticalList<T extends BaseColorListModel> extends StatelessWidget {
             altImage = AppImages.noPoster;
           case ColorListType.networks:
             // TODO: Handle this case.
-          case ColorListType.seasonDetails:
-            profilePath = model.season?.episodes[index].stillPath;
-            final name = model.season?.episodes[index].name;
-            final episodeNumber = model.season?.episodes[index].episodeNumber;
-            firstLine = "$episodeNumber. $name";
-            final date = model.season?.episodes[index].airDate;
-            secondLine = model.formatDate(date);
-            thirdLine = model.season?.episodes[index].overview;
-            altImage = AppImages.noProfile;
-            maxLine = 1;
-          case ColorListType.collection:
-            profilePath = model.mediaCollections?.parts[index].posterPath;
-            firstLine = model.mediaCollections?.parts[index].title;
-            final date = model.mediaCollections?.parts[index].releaseDate;
-            secondLine = model.formatDate(date);
-            thirdLine = model.mediaCollections?.parts[index].overview;
-            altImage = AppImages.noProfile;
-            maxLine = 2;
         }
 
         return Padding(
@@ -90,10 +68,6 @@ class ColorVerticalList<T extends BaseColorListModel> extends StatelessWidget {
                   case ColorListType.seasons:
                   model.onSeasonDetailsScreen(context, index);
                   case ColorListType.networks:
-                  case ColorListType.seasonDetails:
-                    model.onSeriesDetailsScreen(context, index);
-                  case ColorListType.collection:
-                    model.onMediaDetailsScreen(context, index);
                 }
               },
               minVerticalPadding: 0,
@@ -147,7 +121,7 @@ class ColorVerticalList<T extends BaseColorListModel> extends StatelessWidget {
                         const SizedBox(height: 6,),
                         if(thirdLine != null)
                         Text(thirdLine,
-                          maxLines: colorListType != ColorListType.collection ? 3 : 2,
+                          maxLines: 3,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w200,

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/tv_show_api_client.dart';
 import 'package:the_movie_app/domain/entity/media/season/season.dart';
-import 'package:the_movie_app/models/color_list_model/season_details_mixin.dart';
+import 'package:the_movie_app/models/color_list_model/vertical_list_model.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
-class SeasonDetailsModel extends ChangeNotifier with SeasonDetailsMixin {
+class SeasonDetailsModel extends ChangeNotifier implements VerticalListModel {
   final int tvShowId;
   final int seasonNumber;
   final _apiClient = TvShowApiClient();

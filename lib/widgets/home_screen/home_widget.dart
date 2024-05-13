@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
@@ -21,6 +22,7 @@ class _HomeWidgetState extends State<HomeWidget> {
     return const Padding(
       padding: EdgeInsets.all(10.0),
       child: SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: Column(
           children: [
             _SearchWidget(),
@@ -84,6 +86,12 @@ class _SearchWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: TextField(
+                        dragStartBehavior: DragStartBehavior.start,
+                        onChanged: (value) {
+                          if(value.isNotEmpty) {
+                            model.onHomeSearchScreen(context);
+                          }
+                        },
                         controller: searchController,
                         decoration: const InputDecoration(
                           contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
@@ -93,21 +101,21 @@ class _SearchWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 2),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        if(searchController.text.isNotEmpty) {
-                          model.onHomeSearchScreen(context);
-                        }
-                      },
-                      icon: const Icon(Icons.search),
-                    ),
-                  ),
+                  // const SizedBox(width: 2),
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     border: Border.all(),
+                  //     borderRadius: BorderRadius.circular(8.0),
+                  //   ),
+                  //   child: IconButton(
+                  //     onPressed: () {
+                  //       if(searchController.text.isNotEmpty) {
+                  //         model.onHomeSearchScreen(context);
+                  //       }
+                  //     },
+                  //     icon: const Icon(Icons.search),
+                  //   ),
+                  // ),
                 ],
               ),
             ),

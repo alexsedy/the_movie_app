@@ -1,11 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/movie_screens/collection_screen/media_collection_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
-import 'package:the_movie_app/widgets/widget_elements/list_elements/color_vertica_list_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/list_elements/vertical_list_elemet_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/color_list_shimmer_skeleton_widget.dart';
 
 class MediaCollectionWidget extends StatefulWidget {
@@ -96,9 +94,9 @@ class _BodyWidget extends StatelessWidget {
       children: [
         const _BodyOverviewWidget(),
         Expanded(
-          child: ColorVerticalList<MediaCollectionModel>(
+          child: VerticalListElementWidget<MediaCollectionModel>(
             model: model,
-            colorListType: ColorListType.collection,
+            verticalListElementType: VerticalListElementType.collection,
           ),
         )
       ],

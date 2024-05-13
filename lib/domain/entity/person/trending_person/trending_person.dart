@@ -19,25 +19,24 @@ class TrendingPerson {
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class KnownFor {
-  final bool adult;
+  final bool? adult;
   final String? backdropPath;
-  final int id;
-  final String title;
-  final String originalLanguage;
-  final String originalTitle;
-  final String overview;
-  final String posterPath;
-  final String mediaType;
-  final List<int> genreIds;
-  final double popularity;
+  final int? id;
+  final String? title;
+  final String? originalLanguage;
+  final String? originalTitle;
+  final String? overview;
+  final String? posterPath;
+  final String? mediaType;
+  final double? popularity;
   final String? releaseDate;
-  final bool video;
-  final double voteAverage;
-  final int voteCount;
-  final String name;
-  final String originalName;
-  final String firstAirDate;
-  final List<String> originCountry;
+  final bool? video;
+  final double? voteAverage;
+  final int? voteCount;
+  final String? name;
+  final String? originalName;
+  final String? firstAirDate;
+  final List<String>? originCountry;
 
   KnownFor(
       this.adult,
@@ -49,7 +48,6 @@ class KnownFor {
       this.overview,
       this.posterPath,
       this.mediaType,
-      this.genreIds,
       this.popularity,
       this.releaseDate,
       this.video,
@@ -71,12 +69,12 @@ class TrendingPersonList {
   final int id;
   final String name;
   final String originalName;
-  final String mediaType;
+  final String? mediaType;
   final double popularity;
   final int gender;
   final String? knownForDepartment;
   final String? profilePath;
-  // final List<KnownFor> knownFor;
+  final List<KnownFor> knownFor;
 
   TrendingPersonList(
       this.adult,
@@ -88,7 +86,7 @@ class TrendingPersonList {
       this.gender,
       this.knownForDepartment,
       this.profilePath,
-      // this.knownFor
+      this.knownFor
       );
 
   factory TrendingPersonList.fromJson(Map<String, dynamic> json) => _$TrendingPersonListFromJson(json);

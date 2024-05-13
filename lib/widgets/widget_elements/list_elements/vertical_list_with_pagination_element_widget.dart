@@ -4,19 +4,19 @@ import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/models/media_list_model/base_media_list_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
 
-class VerticalListElementWidget<T extends BaseListModel> extends StatelessWidget {
-  final VerticalListElementType verticalListElementType;
+class VerticalListWithPaginationElementWidget<T extends BaseListModel> extends StatelessWidget {
+  final VerticalListWithPaginationElementType verticalListWithPaginationElementType;
   final T model;
-  const VerticalListElementWidget({super.key, required this.verticalListElementType, required this.model});
+  const VerticalListWithPaginationElementWidget({super.key, required this.verticalListWithPaginationElementType, required this.model});
 
   @override
   Widget build(BuildContext context) {
     int itemCount = 0;
 
-    switch(verticalListElementType) {
-      case VerticalListElementType.movie:
+    switch(verticalListWithPaginationElementType) {
+      case VerticalListWithPaginationElementType.movie:
         itemCount = model.movies.length;
-      case VerticalListElementType.tv:
+      case VerticalListWithPaginationElementType.tv:
         itemCount = model.tvs.length;
     }
 
@@ -32,8 +32,8 @@ class VerticalListElementWidget<T extends BaseListModel> extends StatelessWidget
           String? posterPath;
           bool isLoadingInProgress = false;
 
-          switch(verticalListElementType) {
-            case VerticalListElementType.movie:
+          switch(verticalListWithPaginationElementType) {
+            case VerticalListWithPaginationElementType.movie:
               model.preLoadMovies(index);
               isLoadingInProgress = model.isMovieLoadingInProgress;
               final movie = model.movies[index];
@@ -41,7 +41,7 @@ class VerticalListElementWidget<T extends BaseListModel> extends StatelessWidget
               overview = movie.overview;
               date = model.formatDate(movie.releaseDate);
               posterPath = movie.posterPath;
-            case VerticalListElementType.tv:
+            case VerticalListWithPaginationElementType.tv:
               model.preLoadTvShows(index);
               isLoadingInProgress = model.isTvsLoadingInProgress;
               final tvs = model.tvs[index];
@@ -134,10 +134,10 @@ class VerticalListElementWidget<T extends BaseListModel> extends StatelessWidget
                       borderRadius: const BorderRadius.all(Radius.circular(
                           10)),
                       onTap: () {
-                        switch(verticalListElementType) {
-                          case VerticalListElementType.movie:
+                        switch(verticalListWithPaginationElementType) {
+                          case VerticalListWithPaginationElementType.movie:
                             model.onMovieScreen(context, index);
-                          case VerticalListElementType.tv:
+                          case VerticalListWithPaginationElementType.tv:
                             model.onTvShowScreen(context, index);
                         }
                       },

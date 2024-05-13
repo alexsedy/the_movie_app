@@ -16,7 +16,6 @@ class MovieDetailsModel extends ChangeNotifier with MediaDetailsMixin {
   final _accountApiClient = AccountApiClient();
   MediaDetails? _movieDetails;
   ItemState? _movieState;
-  UserLists? _userLists;
   final _lists = <Lists>[];
   final int _movieId;
   final _dateFormat = DateFormat.yMMMd();

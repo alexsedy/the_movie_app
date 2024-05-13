@@ -1,5 +1,9 @@
-enum VerticalListElementType {
+enum VerticalListWithPaginationElementType {
   movie, tv
+}
+
+enum VerticalListElementType {
+  seasonDetails, collection
 }
 
 enum HorizontalListElementType {
@@ -12,5 +16,5 @@ enum MediaDetailsElementType {
 }
 
 enum ColorListType {
-  cast, companies, seasons, networks, seasonDetails, collection
+  cast, companies, seasons, networks,
 }

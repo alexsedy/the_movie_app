@@ -5,7 +5,7 @@ import 'package:the_movie_app/domain/entity/person/trending_person/trending_pers
 
 class SearchApiClient extends ApiClient {
 
-  Future<MediaCollections> getSearchMediaCollections({required String query, required int page}) async {
+  Future<CollectionsList> getSearchMediaCollections({required String query, required int page}) async {
     final url = makeUri(
       "/search/collection",
       <String, dynamic>{
@@ -21,7 +21,7 @@ class SearchApiClient extends ApiClient {
 
     validateError(response, json);
 
-    final mediaCollections = MediaCollections.fromJson(json);
+    final mediaCollections = CollectionsList.fromJson(json);
     return mediaCollections;
   }
 

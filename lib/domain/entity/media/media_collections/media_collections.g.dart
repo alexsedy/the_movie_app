@@ -6,6 +6,24 @@ part of 'media_collections.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+CollectionsList _$CollectionsListFromJson(Map<String, dynamic> json) =>
+    CollectionsList(
+      json['page'] as int,
+      (json['results'] as List<dynamic>)
+          .map((e) => MediaCollections.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      json['total_pages'] as int,
+      json['total_results'] as int,
+    );
+
+Map<String, dynamic> _$CollectionsListToJson(CollectionsList instance) =>
+    <String, dynamic>{
+      'page': instance.page,
+      'results': instance.results.map((e) => e.toJson()).toList(),
+      'total_pages': instance.totalPages,
+      'total_results': instance.totalResults,
+    };
+
 MediaCollections _$MediaCollectionsFromJson(Map<String, dynamic> json) =>
     MediaCollections(
       json['id'] as int,
@@ -13,9 +31,11 @@ MediaCollections _$MediaCollectionsFromJson(Map<String, dynamic> json) =>
       json['overview'] as String?,
       json['poster_path'] as String?,
       json['backdrop_path'] as String?,
-      (json['parts'] as List<dynamic>)
-          .map((e) => UserListResult.fromJson(e as Map<String, dynamic>))
+      (json['parts'] as List<dynamic>?)
+          ?.map((e) => UserListResult.fromJson(e as Map<String, dynamic>))
           .toList(),
+      json['original_language'] as String?,
+      json['original_name'] as String?,
     );
 
 Map<String, dynamic> _$MediaCollectionsToJson(MediaCollections instance) =>
@@ -25,5 +45,7 @@ Map<String, dynamic> _$MediaCollectionsToJson(MediaCollections instance) =>
       'overview': instance.overview,
       'poster_path': instance.posterPath,
       'backdrop_path': instance.backdropPath,
-      'parts': instance.parts.map((e) => e.toJson()).toList(),
+      'original_language': instance.originalLanguage,
+      'original_name': instance.originalName,
+      'parts': instance.parts?.map((e) => e.toJson()).toList(),
     };
