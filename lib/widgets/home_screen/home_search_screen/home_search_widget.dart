@@ -31,6 +31,13 @@ class _HomeSearchWidgetState extends State<HomeSearchWidget> {
         appBar: AppBar(
           elevation: 0.9,
           flexibleSpace: const _HeaderSearchBar(),
+          leading: BackButton(
+            onPressed: () {
+              final model = NotifierProvider.read<HomeSearchModel>(context);
+              model?.searchController.clear();
+              Navigator.of(context).pop();
+            },
+          ),
           bottom: const TabBar(
             tabs: [
               Tab(text: "Movies"),
@@ -106,7 +113,7 @@ class _HeaderSearchBarState extends State<_HeaderSearchBar> {
           },
           decoration: const InputDecoration(
             contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
-            hintText: 'Find anything',
+            // hintText: 'Find anything',
             border: InputBorder.none,
           ),
         ),

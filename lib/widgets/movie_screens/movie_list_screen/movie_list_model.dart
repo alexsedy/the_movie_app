@@ -125,14 +125,15 @@ class MovieListModel extends ChangeNotifier with MovieListModelMixin, FilterMovi
     } catch (e) {
       _isMovieLoadingInProgress = false;
     }
+    scrollToTop();
   }
 
   @override
   void clearAllFilters() {
     clearFilterValue();
-    // resetList();
-    // loadMovies();
-    // scrollToTop();
+    resetList();
+    loadMovies();
+    scrollToTop();
     notifyListeners();
   }
 
