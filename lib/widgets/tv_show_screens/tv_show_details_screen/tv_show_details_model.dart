@@ -242,9 +242,4 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
   void onCollectionScreen(BuildContext context) {
     // TODO: implement onCollectionScreen
   }
-
-  @override
-  void onRecommendationsListScreen(BuildContext context, List<MediaList>? mediaList) {
-    // TODO: implement onRecommendationsListScreen
-  }
 }

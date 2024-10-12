@@ -114,7 +114,7 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
             additionalText: "Recommendation TV Shows",
             altImagePath: AppImages.noPoster,
           ),
-          secondAction: () => model.onRecommendationsListScreen(context, model.mediaDetails?.recommendations?.list),
+          secondAction: () => {},
         ),
         const SizedBox(height: 20,),
       ],

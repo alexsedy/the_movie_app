@@ -228,9 +228,4 @@ class MovieDetailsModel extends ChangeNotifier implements IBaseMediaDetailsModel
   @override
   String formatDate(String? date) =>
       date != "" ? _dateFormat.format(DateTime.parse(date ?? "")) : "";
-
-  @override
-  void onRecommendationsListScreen(BuildContext context, List<MediaList>? mediaList) {
-    // TODO: implement onRecommendationsListScreen
-  }
 }

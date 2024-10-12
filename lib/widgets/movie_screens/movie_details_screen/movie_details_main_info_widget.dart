@@ -105,7 +105,7 @@ class _MovieDetailsWidget extends StatelessWidget {
             additionalText: "Recommendation Movies",
             altImagePath: AppImages.noPoster,
           ),
-          secondAction: () => model.onRecommendationsListScreen(context, model.mediaDetails?.recommendations?.list),
+          secondAction: () {},
         ),
         const SizedBox(height: 20,),
       ],
