@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/constants/images_const/app_images.dart';
+import 'package:the_movie_app/helpers/converter_helper.dart';
 import 'package:the_movie_app/provider/provider.dart';
-import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
-import 'package:the_movie_app/widgets/widget_elements/list_elements/color_vertica_list_widget.dart';
+import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
+import 'package:the_movie_app/widgets/widget_elements/list_elements/params_vertical_list_widget.dart';
 
 import 'seasons_list_model.dart';
 
@@ -37,9 +39,12 @@ class _BodyWidget extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return ColorVerticalList<SeasonsListModel>(
-      model: model,
-      colorListType: ColorListType.seasons,
+    return ParameterizedVerticalListWidget(
+      paramModel: ParameterizedWidgetModel(
+        altImagePath: AppImages.noPoster,
+        action: model.onSeasonDetailsScreen,
+        list: ConverterHelper.convertSeason(seasons),
+      ),
     );
   }
 }

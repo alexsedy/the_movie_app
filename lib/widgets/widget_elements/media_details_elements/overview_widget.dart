@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:the_movie_app/models/media_details_model/base_media_details_model.dart';
+import 'package:the_movie_app/models/interfaces/i_base_media_details_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
 
-class OverviewWidget<T extends BaseMediaDetailsModel> extends StatefulWidget {
+class OverviewWidget<T extends IBaseMediaDetailsModel> extends StatefulWidget {
   final MediaDetailsElementType mediaDetailsElementType;
   final T model;
   const OverviewWidget({

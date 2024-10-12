@@ -1,11 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
+import 'package:the_movie_app/helpers/converter_helper.dart';
+import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/home_screen/home_search_screen/home_search_model.dart';
-import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
-import 'package:the_movie_app/widgets/widget_elements/list_elements/vertical_list_with_pagination_element_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/list_elements/params_pagination_vertical_list_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/list_shimmer_skeleton_widget.dart';
 
 class HomeSearchWidget extends StatefulWidget {
@@ -152,8 +152,14 @@ class _MovieListWidget extends StatelessWidget {
       );
     }
 
-    return VerticalListWithPaginationElementWidget<HomeSearchModel>(
-      verticalListWithPaginationElementType: VerticalListWithPaginationElementType.movie,
+    return ParameterizedPaginationVerticalListWidget(
+      paramModel: ParameterizedWidgetModel(
+        action: model.onMovieScreen,
+        altImagePath: AppImages.noPoster,
+        preLoad: model.preLoadMovies,
+        scrollController: model.scrollController,
+        list: ConverterHelper.convertMoviesForVerticalWidget(model.movies),
+      ),
       model: model,
     );
   }
@@ -168,7 +174,7 @@ class _TvShowListWidget extends StatelessWidget {
 
     if(model == null) return const SizedBox.shrink();
 
-    if(model.movies.isEmpty) {
+    if(model.tvs.isEmpty) {
       return FutureBuilder<void>(
         future: Future.delayed(const Duration(seconds: 3)),
         builder: (context, snapshot) {
@@ -188,8 +194,14 @@ class _TvShowListWidget extends StatelessWidget {
       );
     }
 
-    return VerticalListWithPaginationElementWidget<HomeSearchModel>(
-      verticalListWithPaginationElementType: VerticalListWithPaginationElementType.tv,
+    return ParameterizedPaginationVerticalListWidget(
+      paramModel: ParameterizedWidgetModel(
+        action: model.onTvShowScreen,
+        altImagePath: AppImages.noPoster,
+        preLoad: model.preLoadTvShows,
+        scrollController: model.scrollController,
+        list: ConverterHelper.convertTVShowsForVerticalWidget(model.tvs),
+      ),
       model: model,
     );
   }
@@ -225,111 +237,15 @@ class _PersonListWidget extends StatelessWidget {
       );
     }
 
-    return ListView.builder(
-        itemCount: model.persons.length,
-        controller: model.scrollController,
-        itemExtent: 163,
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        itemBuilder: (BuildContext context, int index) {
-          model.preLoadPersons(index);
-          final persons = model.persons;
-          final firstLine = persons[index].name;
-          final secondLine = persons[index].knownForDepartment;
-          final titles = <String>[];
-          persons[index].knownFor.forEach((element) {
-            final title = element.title;
-            if (title != null) {
-              titles.add(title);
-            }
-          });
-
-          String? thirdLine;
-          if(titles.isNotEmpty) {
-            thirdLine = "Know for: ${titles.join(", ").toString()}";
-          }
-          final profilePath = persons[index].profilePath;
-
-          if (!model.isPersonLoadingInProgress) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-              child: Card(
-                clipBehavior: Clip.hardEdge,
-                child: ListTile(
-                  onTap: () {
-                    model.onPeopleDetailsScreen(context, index);
-                  },
-                  minVerticalPadding: 0,
-                  contentPadding: EdgeInsets.zero,
-                  title: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      AspectRatio(
-                        aspectRatio: 500 / 750,
-                        child: profilePath != null
-                            ? Image.network(
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return const Center(
-                              child: SizedBox(
-                                width: 60,
-                                height: 60,
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
-                          },
-                          ApiClient.getImageByUrl(profilePath), fit: BoxFit.fitHeight,)
-                            : Image.asset(AppImages.noProfile,),
-                      ),
-                      const SizedBox(width: 14,),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 6,),
-                            Text(firstLine,
-                              softWrap: true,
-                              maxLines: 3,
-                              style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            if(secondLine != null)
-                              Text(secondLine,
-                                softWrap: true,
-                                maxLines: 1,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                            const SizedBox(height: 6,),
-                            if(thirdLine != null)
-                              Text(thirdLine,
-                                maxLines: 3,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w200,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        }
+    return ParameterizedPaginationVerticalListWidget(
+      paramModel: ParameterizedWidgetModel(
+        action: model.onPeopleDetailsScreen,
+        altImagePath: AppImages.noProfile,
+        preLoad: model.preLoadPersons,
+        scrollController: model.scrollController,
+        list: ConverterHelper.convertTrendingPeopleForHorizontalWidget(model.persons),
+      ),
+      model: model,
     );
   }
 }
@@ -362,7 +278,6 @@ class _MediaCollectionListWidget extends StatelessWidget {
         },
       );
     }
-
 
     return ListView.builder(
       itemCount: model.collections.length,

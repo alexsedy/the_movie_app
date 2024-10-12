@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:the_movie_app/models/media_details_model/base_media_details_model.dart';
+import 'package:the_movie_app/models/interfaces/i_base_media_details_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/score_radial_percent_widget.dart';
 
-class ScoreAndTrailerWidget<T extends BaseMediaDetailsModel> extends StatelessWidget {
+class ScoreAndTrailerWidget<T extends IBaseMediaDetailsModel> extends StatelessWidget {
   final T model;
   const ScoreAndTrailerWidget({super.key, required this.model});
 

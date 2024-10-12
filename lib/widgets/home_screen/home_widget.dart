@@ -1,11 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
+import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/home_screen/home_model.dart';
+import 'package:the_movie_app/helpers/converter_helper.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
-import 'package:the_movie_app/widgets/widget_elements/list_elements/horizontal_list_element_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/list_elements/params_horizontal_list_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/list_shimmer_skeleton_widget.dart';
 
 class HomeWidget extends StatefulWidget {
@@ -244,22 +247,34 @@ class _TrendingToggleWidgetState extends State<_TrendingToggleWidget> {
         ),
         switch(widget.horizontalListElementType){
           HorizontalListElementType.movie => model.movies.isNotEmpty
-            ? HorizontalListElementWidget<HomeModel>(
-                horizontalListElementType: HorizontalListElementType.movie,
-                model: model,
-              )
+            ? ParameterizedHorizontalListWidget(
+              paramModel: ParameterizedWidgetModel(
+                  // boxHeight: 280,
+                  // aspectRatio: 500 / 750,
+                  // paddingEdgeInsets: 0.0,
+                  altImagePath: AppImages.noPoster,
+                  action: model.onMovieScreen,
+                  list: ConverterHelper.convertMovieForHorizontalWidget(model.movies)))
             : const HorizontalListShimmerSkeletonWidget(horizontalListElementType: HorizontalListElementType.movie,),
           HorizontalListElementType.tv => model.tvs.isNotEmpty
-              ? HorizontalListElementWidget<HomeModel>(
-                  horizontalListElementType: HorizontalListElementType.tv,
-                  model: model,
-                )
+              ? ParameterizedHorizontalListWidget(
+              paramModel: ParameterizedWidgetModel(
+                // boxHeight: 280,
+                // aspectRatio: 500 / 750,
+                // paddingEdgeInsets: 0.0,
+                  altImagePath: AppImages.noPoster,
+                  action: model.onTvShowScreen,
+                  list: ConverterHelper.convertTVShowForHorizontalWidget(model.tvs)))
               : const HorizontalListShimmerSkeletonWidget(horizontalListElementType: HorizontalListElementType.tv,),
           HorizontalListElementType.trendingPerson => model.persons.isNotEmpty
-              ? HorizontalListElementWidget<HomeModel>(
-                  horizontalListElementType: HorizontalListElementType.trendingPerson,
-                  model: model,
-                )
+              ? ParameterizedHorizontalListWidget(
+              paramModel: ParameterizedWidgetModel(
+                // boxHeight: 280,
+                // aspectRatio: 500 / 750,
+                // paddingEdgeInsets: 0.0,
+                  altImagePath: AppImages.noProfile,
+                  action: model.onPeopleDetailsScreen,
+                  list: ConverterHelper.convertTrendingPeopleForHorizontalWidget(model.persons)))
               : const HorizontalListShimmerSkeletonWidget(horizontalListElementType: HorizontalListElementType.trendingPerson,),
           _ => const SizedBox.shrink(),
         }

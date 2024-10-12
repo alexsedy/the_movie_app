@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-abstract class BaseUserListsModel{
+abstract class IBaseUserListsModel{
   Future<void> getAllUserLists(BuildContext context);
 
   Future<void> createNewList({required BuildContext context, required String? description, required String name, required bool public});

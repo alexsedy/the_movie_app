@@ -37,192 +37,183 @@ class _BodyWidget extends StatelessWidget {
     }
 
    return GroupedListView<Crew, String>(
-     elements: crews,
-     sort: false,
-     groupBy: (Crew crew) => crew.department,
-     useStickyGroupSeparators: true,
-     groupHeaderBuilder: (c) {
-       return Padding(
-         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-         child: Text(
-           c.department,
-           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-         ),
-       );
-     },
-     indexedItemBuilder: (context, crew, index) {
-     final profilePath = crews[index].profilePath;
-     final job = crews[index].job;
-     final name = crews[index].name;
+       elements: crews,
+       sort: false,
+       groupBy: (Crew crew) => crew.department,
+       useStickyGroupSeparators: true,
+       groupHeaderBuilder: (c) {
+         return Padding(
+           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+           child: Text(
+             c.department,
+             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+           ),
+         );},
+       indexedItemBuilder: (context, crew, index) {
+         final profilePath = crews[index].profilePath;
+         final job = crews[index].job;
+         final name = crews[index].name;
 
-       return SizedBox(
-         height: 180,
-         child: Padding(
-           padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-           child: Card(
-             clipBehavior: Clip.hardEdge,
-             child: ListTile(
-               onTap: () => model?.onPeopleTab(context, index),
-               minVerticalPadding: 0,
-               contentPadding: EdgeInsets.zero,
-               title: Row(
-                 crossAxisAlignment: CrossAxisAlignment.start,
-                 mainAxisAlignment: MainAxisAlignment.start,
-                 children: [
-                   AspectRatio(
-                     aspectRatio: 500 / 750,
-                     child: profilePath != null
-                         ? Image.network(
-                             loadingBuilder: (context, child, loadingProgress) {
-                               if (loadingProgress == null) return child;
-                               return const Center(
-                                 child: SizedBox(
-                                   width: 60,
-                                   height: 60,
-                                   child: CircularProgressIndicator(),
-                                 ),
-                               );
-                             },
-                            ApiClient.getImageByUrl(profilePath),)
-                         : Image.asset(AppImages.noProfile,),
-                   ),
-                   const SizedBox(width: 14,),
-                   Expanded(
-                     child: Column(
-                       crossAxisAlignment: CrossAxisAlignment.start,
-                       mainAxisAlignment: MainAxisAlignment.start,
-                       children: [
-                         const SizedBox(height: 6,),
-                         Text(name ?? "",
-                           softWrap: true,
-                           maxLines: 3,
-                           style: const TextStyle(
-                             fontSize: 22,
-                             fontWeight: FontWeight.bold,
-                           ),
-                         ),
-                         Text(job,
-                           softWrap: true,
-                           maxLines: 3,
-                           style: const TextStyle(
-                             fontSize: 20,
-                             fontStyle: FontStyle.italic,
-                           ),
-                         ),
-                         const SizedBox(height: 6,),
+         return SizedBox(
+           height: 163,
+           child: Padding(
+             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+             child: Stack(
+               children: [
+                 Container(
+                   decoration: BoxDecoration(
+                       color: Colors.white,
+                       border: Border.all(color: Colors.black.withOpacity(0.2)),
+                       borderRadius: const BorderRadius.all(Radius.circular(10)),
+                       boxShadow: [
+                         BoxShadow(
+                           color: Colors.black.withOpacity(0.1),
+                           blurRadius: 8,
+                           offset: const Offset(1, 2),
+                         )
                        ],
-                     ),
                    ),
-                 ],
-               ),
+                   clipBehavior: Clip.hardEdge,
+                   child: Row(
+                     children: [
+                       AspectRatio(
+                         aspectRatio: 500 / 750,
+                         child: profilePath != null
+                             ? Image.network(
+                                loadingBuilder: (context, child, loadingProgress) {
+                             if (loadingProgress == null) return child;
+                             return const Center(
+                               child: SizedBox(
+                                 width: 60,
+                                 height: 60,
+                                 child: CircularProgressIndicator(),
+                               ),
+                             );
+                           },
+                           ApiClient.getImageByUrl(profilePath), width: 95, fit: BoxFit.fitHeight,)
+                             : Image.asset(AppImages.noProfile, width: 95, fit: BoxFit.fill,),
+                       ),
+                       Expanded(
+                         child: Padding(
+                           padding: const EdgeInsets.only(
+                               left: 15, right: 10, bottom: 1),
+                           child: Column(
+                             crossAxisAlignment: CrossAxisAlignment.start,
+                             children: [
+                               const SizedBox(height: 15,),
+                                 Text(
+                                   name ?? "",
+                                   style: const TextStyle(
+                                       fontWeight: FontWeight.bold),
+                                   maxLines: 1,
+                                   overflow: TextOverflow.ellipsis,
+                                 ),
+                               // if(paramModel.list[index].secondLine != null)
+                               //   const SizedBox(height: 5,),
+                               // if(paramModel.list[index].secondLine != null)
+                               //   Text(
+                               //     paramModel.list[index].secondLine ?? "",
+                               //     style: const TextStyle(
+                               //         color: Colors.grey),
+                               //     maxLines: 1,
+                               //     overflow: TextOverflow.ellipsis,
+                               //   ),
+                               // if(paramModel.list[index].thirdLine != null)
+                               // // const SizedBox(height: 15,),
+                                 const SizedBox(height: 15,),
+                                 Expanded(
+                                   child: Text(
+                                     job,
+                                     maxLines: 3,
+                                     overflow: TextOverflow.ellipsis,
+                                   ),
+                                 ),
+                             ],
+                           ),
+                         ),
+                       ),
+                     ],
+                   ),
+                 ),
+                 Material(
+                   color: Colors.transparent,
+                   child: InkWell(
+                     borderRadius: const BorderRadius.all(Radius.circular(10)),
+                     onTap: () {
+                       model?.onPeopleTab(context, index);
+                     },
+                   ),
+                 )
+               ],
              ),
            ),
-         ),
-       );
+         );
+
+       // return SizedBox(
+       //   height: 180,
+       //   child: Padding(
+       //     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+       //     child: Card(
+       //       clipBehavior: Clip.hardEdge,
+       //       child: ListTile(
+       //         onTap: () => model?.onPeopleTab(context, index),
+       //         minVerticalPadding: 0,
+       //         contentPadding: EdgeInsets.zero,
+       //         title: Row(
+       //           crossAxisAlignment: CrossAxisAlignment.start,
+       //           mainAxisAlignment: MainAxisAlignment.start,
+       //           children: [
+       //             AspectRatio(
+       //               aspectRatio: 500 / 750,
+       //               child: profilePath != null
+       //                   ? Image.network(
+       //                       loadingBuilder: (context, child, loadingProgress) {
+       //                         if (loadingProgress == null) return child;
+       //                         return const Center(
+       //                           child: SizedBox(
+       //                             width: 60,
+       //                             height: 60,
+       //                             child: CircularProgressIndicator(),
+       //                           ),
+       //                         );
+       //                       },
+       //                      ApiClient.getImageByUrl(profilePath),)
+       //                   : Image.asset(AppImages.noProfile,),
+       //             ),
+       //             const SizedBox(width: 14,),
+       //             Expanded(
+       //               child: Column(
+       //                 crossAxisAlignment: CrossAxisAlignment.start,
+       //                 mainAxisAlignment: MainAxisAlignment.start,
+       //                 children: [
+       //                   const SizedBox(height: 6,),
+       //                   Text(name ?? "",
+       //                     softWrap: true,
+       //                     maxLines: 3,
+       //                     style: const TextStyle(
+       //                       fontSize: 22,
+       //                       fontWeight: FontWeight.bold,
+       //                     ),
+       //                   ),
+       //                   Text(job,
+       //                     softWrap: true,
+       //                     maxLines: 3,
+       //                     style: const TextStyle(
+       //                       fontSize: 20,
+       //                       fontStyle: FontStyle.italic,
+       //                     ),
+       //                   ),
+       //                   const SizedBox(height: 6,),
+       //                 ],
+       //               ),
+       //             ),
+       //           ],
+       //         ),
+       //       ),
+       //     ),
+       //   ),
+       // );
      }
    );
   }
 }
-
-
-
-// class _WorkBodyWidget extends StatelessWidget {
-//   const _WorkBodyWidget({Key? key}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final model = NotifierProvider.watch<CrewListModel>(context);
-//     final crews = model?.crew;
-//
-//     if (crews == null) {
-//       return SizedBox.shrink();
-//     }
-//
-//     // сначала, необходимо сгруппировать список по полю department
-//     Map<String, List<Crew>> groupedCrews = {};
-//     crews.forEach((crew) {
-//       if (!groupedCrews.containsKey(crew.department)) {
-//         groupedCrews[crew.department] = [];
-//       }
-//       groupedCrews[crew.department]?.add(crew);
-//     });
-//
-//     return ListView.builder(
-//       itemCount: groupedCrews.length,
-//       itemBuilder: (context, groupIndex) {
-//         String department = groupedCrews.keys.elementAt(groupIndex);
-//         List<Crew> departmentCrews = groupedCrews[department]!;
-//
-//         return Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Padding(
-//               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-//               child: Text(
-//                 department,
-//                 style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-//               ),
-//             ),
-//             ListView.builder(
-//               shrinkWrap: true,
-//               physics: NeverScrollableScrollPhysics(),
-//               itemCount: departmentCrews.length,
-//               itemBuilder: (context, index) {
-//                 Crew crew = departmentCrews[index];
-//                 return SizedBox(
-//                   height: 180,
-//                   child: Padding(
-//                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-//                     child: Card(
-//                       clipBehavior: Clip.hardEdge,
-//                       child: ListTile(
-//                         minVerticalPadding: 0,
-//                         contentPadding: EdgeInsets.zero,
-//                         title: Row(
-//                           crossAxisAlignment: CrossAxisAlignment.start,
-//                           mainAxisAlignment: MainAxisAlignment.start,
-//                           children: [
-//                             crew.profilePath != null
-//                                 ? Image.network(ApiClient.getImageByUrl(crew.profilePath!))
-//                                 : Image.asset(AppImages.noProfile),
-//                             const SizedBox(width: 14,),
-//                             Expanded(
-//                               child: Column(
-//                                 crossAxisAlignment: CrossAxisAlignment.start,
-//                                 mainAxisAlignment: MainAxisAlignment.start,
-//                                 children: [
-//                                   const SizedBox(height: 6,),
-//                                   Text(crew.name ?? "",
-//                                     softWrap: true,
-//                                     maxLines: 3,
-//                                     style: const TextStyle(
-//                                       fontSize: 22,
-//                                       fontWeight: FontWeight.bold,
-//                                     ),
-//                                   ),
-//                                   Text(crew.job,
-//                                     softWrap: true,
-//                                     maxLines: 3,
-//                                     style: const TextStyle(
-//                                       fontSize: 20,
-//                                       fontStyle: FontStyle.italic,
-//                                     ),
-//                                   ),
-//                                   const SizedBox(height: 6,),
-//                                 ],
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-//                 );
-//               },
-//             ),
-//           ],
-//         );
-//       },
-//     );
-//   }
-// }

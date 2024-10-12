@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/constants/images_const/app_images.dart';
+import 'package:the_movie_app/helpers/converter_helper.dart';
+import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/credits_list_screen/cast_list_screen/cast_list_model.dart';
-import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
-import 'package:the_movie_app/widgets/widget_elements/list_elements/color_vertica_list_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/list_elements/params_vertical_list_widget.dart';
 
 class CastListWidget extends StatelessWidget {
   const CastListWidget({super.key});
@@ -38,9 +40,12 @@ class _BodyWidget extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return ColorVerticalList<CastListModel>(
-      model: model,
-      colorListType: ColorListType.cast,
+    return ParameterizedVerticalListWidget(
+      paramModel: ParameterizedWidgetModel(
+        altImagePath: AppImages.noProfile,
+        action: model.onPeopleScreen,
+        list: ConverterHelper.convertCasts(cast),
+      ),
     );
   }
 }

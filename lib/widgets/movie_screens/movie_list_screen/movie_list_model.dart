@@ -1,14 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/movie_api_client.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
-import 'package:the_movie_app/models/media_details_model/media_filter_model.dart';
-import 'package:the_movie_app/models/media_list_model/movie_list_model_mixin.dart';
+import 'package:the_movie_app/models/interfaces/i_media_filter_model.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
+import 'package:the_movie_app/models/interfaces/i_loading_status.dart';
 
-class MovieListModel extends ChangeNotifier with MovieListModelMixin, FilterMovieListModelMixin {
+class MovieListModel extends ChangeNotifier with FilterMovieListModelMixin implements ILoadingStatus {
   final ScrollController _scrollController = ScrollController();
   final _apiClient = MovieApiClient();
   final _movies = <MediaList>[];
@@ -17,19 +16,15 @@ class MovieListModel extends ChangeNotifier with MovieListModelMixin, FilterMovi
   late String _locale;
   var _isFirstLoadMovie = true;
   var _isMovieLoadingInProgress = false;
-  final _dateFormat = DateFormat.yMMMMd();
   Timer? _searchDebounce;
 
-  @override
   List<MediaList> get movies => List.unmodifiable(_movies);
 
   @override
-  bool get isMovieLoadingInProgress => _isMovieLoadingInProgress;
+  bool get isLoadingInProgress => _isMovieLoadingInProgress;
 
-  @override
   ScrollController get scrollController => _scrollController;
 
-  @override
   Future<void> firstLoadMovies() async {
     if(_isFirstLoadMovie) {
       _currentPage = 0;
@@ -39,7 +34,6 @@ class MovieListModel extends ChangeNotifier with MovieListModelMixin, FilterMovi
     }
   }
 
-  @override
   Future<void> loadMovies() async {
     if (_isMovieLoadingInProgress || _currentPage >= _totalPage) return;
     _isMovieLoadingInProgress = true;
@@ -57,7 +51,6 @@ class MovieListModel extends ChangeNotifier with MovieListModelMixin, FilterMovi
     }
   }
 
-  @override
   void preLoadMovies(int index) {
     if (index < _movies.length - 1) return;
     loadMovies();
@@ -153,7 +146,6 @@ class MovieListModel extends ChangeNotifier with MovieListModelMixin, FilterMovi
     _movies.clear();
   }
 
-  @override
   void onMovieScreen(BuildContext context, int index) {
     final id = _movies[index].id;
     Navigator.of(context).pushNamed(MainNavigationRouteNames.movieDetails, arguments: id);
@@ -173,19 +165,12 @@ class MovieListModel extends ChangeNotifier with MovieListModelMixin, FilterMovi
     scrollToTop();
   }
 
-  @override
-  String formatDate(String? date) =>
-      date != "" ? _dateFormat.format(DateTime.parse(date ?? "")) : "No date";
-
   // void setupLocale(BuildContext context) {
   //   final locale = Localizations.localeOf(context);
   // }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-mixin FilterMovieListModelMixin implements MediaFilter {
+mixin FilterMovieListModelMixin implements IMediaFilter {
   DateTime? _selectedDateStart;
   DateTime? _selectedDateEnd;
   final _genreActions = <String, Map<String, bool>>{

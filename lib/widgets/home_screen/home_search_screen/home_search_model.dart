@@ -1,61 +1,29 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/search_api_client.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
 import 'package:the_movie_app/domain/entity/media/media_collections/media_collections.dart';
 import 'package:the_movie_app/domain/entity/person/trending_person/trending_person.dart';
-import 'package:the_movie_app/models/color_list_model/base_color_list_model.dart';
-import 'package:the_movie_app/models/media_list_model/base_media_list_model.dart';
+import 'package:the_movie_app/models/interfaces/i_loading_status.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
-class HomeSearchModel extends ChangeNotifier implements BaseListModel, BaseColorListModel{
+class HomeSearchModel extends ChangeNotifier with HomeSearchMovieModelMixin, HomeSearchTVModelMixin,
+    HomeSearchPersonModelMixin, HomeSearchCollectionModelMixin {
   final TextEditingController _searchController;
   final _scrollController = ScrollController();
   final _searchApiClient = SearchApiClient();
   Timer? _searchDebounce;
   late String _locale;
-  late int _movieCurrentPage;
-  late int _movieTotalPage;
-  var _isFirstLoadMovie = true;
-  var _isMovieLoadingInProgress = false;
-  late int _tvCurrentPage;
-  late int _tvTotalPage;
-  var _isFirstLoadTvShow = true;
-  var _isTvsLoadingInProgress = false;
-  late int _personCurrentPage;
-  late int _personTotalPage;
-  var _isFirstLoadPerson = true;
-  var _isPersonLoadingInProgress = false;
-  late int _collectionCurrentPage;
-  late int _collectionTotalPage;
-  var _isFirstLoadCollection = true;
-  var _isCollectionLoadingInProgress = false;
-
-  final _movies = <MediaList>[];
-  final _tvs = <MediaList>[];
-  final _persons = <TrendingPersonList>[];
-  final _collections = <MediaCollections>[];
-
-  final _dateFormat = DateFormat.yMMMMd();
 
   HomeSearchModel(this._searchController);
 
   TextEditingController get searchController => _searchController;
   List<MediaCollections> get collections => _collections;
 
-  @override
-  bool get isMovieLoadingInProgress => _isMovieLoadingInProgress;
-  @override
-  bool get isTvsLoadingInProgress => _isTvsLoadingInProgress;
-  @override
   List<MediaList> get tvs => _tvs;
-  @override
   List<MediaList> get movies => _movies;
-  @override
   List<TrendingPersonList> get persons => _persons;
-  @override
   ScrollController get scrollController => _scrollController;
   bool get isPersonLoadingInProgress => _isPersonLoadingInProgress;
   bool get isCollectionLoadingInProgress => _isCollectionLoadingInProgress;
@@ -78,7 +46,6 @@ class HomeSearchModel extends ChangeNotifier implements BaseListModel, BaseColor
     });
   }
 
-  @override
   Future<void> firstLoadMovies() async {
     if(_isFirstLoadMovie) {
       _movieCurrentPage = 0;
@@ -88,7 +55,6 @@ class HomeSearchModel extends ChangeNotifier implements BaseListModel, BaseColor
     }
   }
 
-  @override
   Future<void> firstLoadTvShows() async {
     if(_isFirstLoadTvShow) {
       _tvCurrentPage = 0;
@@ -116,7 +82,6 @@ class HomeSearchModel extends ChangeNotifier implements BaseListModel, BaseColor
     }
   }
 
-  @override
   Future<void> loadMovies() async {
     if (_isMovieLoadingInProgress || _movieCurrentPage >= _movieTotalPage) return;
     _isMovieLoadingInProgress = true;
@@ -136,7 +101,6 @@ class HomeSearchModel extends ChangeNotifier implements BaseListModel, BaseColor
     }
   }
 
-  @override
   Future<void> loadTvShows() async {
     if (_isTvsLoadingInProgress || _tvCurrentPage >= _tvTotalPage) return;
     _isTvsLoadingInProgress = true;
@@ -210,19 +174,16 @@ class HomeSearchModel extends ChangeNotifier implements BaseListModel, BaseColor
     notifyListeners();
   }
 
-  @override
   void onMovieScreen(BuildContext context, int index) {
     final id = _movies[index].id;
     Navigator.of(context).pushNamed(MainNavigationRouteNames.movieDetails, arguments: id);
   }
 
-  @override
   void onPeopleDetailsScreen(BuildContext context, int index) {
     final id = _persons[index].id;
     Navigator.of(context).pushNamed(MainNavigationRouteNames.personDetails, arguments: id);
   }
 
-  @override
   void onTvShowScreen(BuildContext context, int index) {
     final id = _tvs[index].id;
     Navigator.of(context).pushNamed(MainNavigationRouteNames.tvShowDetails, arguments: id);
@@ -240,13 +201,11 @@ class HomeSearchModel extends ChangeNotifier implements BaseListModel, BaseColor
     });
   }
 
-  @override
   void preLoadMovies(int index) {
     if (index < _movies.length - 1) return;
     loadMovies();
   }
 
-  @override
   void preLoadTvShows(int index) {
     if (index < _tvs.length - 1) return;
     loadTvShows();
@@ -261,11 +220,48 @@ class HomeSearchModel extends ChangeNotifier implements BaseListModel, BaseColor
     if (index < _collections.length - 1) return;
     loadCollections();
   }
+}
+
+mixin HomeSearchMovieModelMixin implements ILoadingStatus {
+  final _movies = <MediaList>[];
+  var _isMovieLoadingInProgress = false;
+  late int _movieCurrentPage;
+  late int _movieTotalPage;
+  var _isFirstLoadMovie = true;
 
   @override
-  String formatDate(String? date) =>
-      date != "" ? _dateFormat.format(DateTime.parse(date ?? "")) : "No date";
+  bool get isLoadingInProgress => _isMovieLoadingInProgress;
+}
+
+mixin HomeSearchTVModelMixin implements ILoadingStatus {
+  final _tvs = <MediaList>[];
+  var _isTvsLoadingInProgress = false;
+  late int _tvCurrentPage;
+  late int _tvTotalPage;
+  var _isFirstLoadTvShow = true;
 
   @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+  bool get isLoadingInProgress => _isTvsLoadingInProgress;
+}
+
+mixin HomeSearchPersonModelMixin implements ILoadingStatus {
+  final _persons = <TrendingPersonList>[];
+  var _isPersonLoadingInProgress = false;
+  late int _personCurrentPage;
+  late int _personTotalPage;
+  var _isFirstLoadPerson = true;
+
+  @override
+  bool get isLoadingInProgress => _isPersonLoadingInProgress;
+}
+
+mixin HomeSearchCollectionModelMixin implements ILoadingStatus {
+  final _collections = <MediaCollections>[];
+  var _isCollectionLoadingInProgress = false;
+  late int _collectionCurrentPage;
+  late int _collectionTotalPage;
+  var _isFirstLoadCollection = true;
+
+  @override
+  bool get isLoadingInProgress => _isCollectionLoadingInProgress;
 }

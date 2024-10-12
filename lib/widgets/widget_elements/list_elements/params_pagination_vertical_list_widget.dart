@@ -1,57 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
-import 'package:the_movie_app/models/media_list_model/base_media_list_model.dart';
-import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
+import 'package:the_movie_app/models/interfaces/i_loading_status.dart';
+import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
 
-class VerticalListWithPaginationElementWidget<T extends BaseListModel> extends StatelessWidget {
-  final VerticalListWithPaginationElementType verticalListWithPaginationElementType;
+class ParameterizedPaginationVerticalListWidget<T extends ILoadingStatus> extends StatelessWidget {
   final T model;
-  const VerticalListWithPaginationElementWidget({super.key, required this.verticalListWithPaginationElementType, required this.model});
+  final ParameterizedWidgetModel paramModel;
+
+  const ParameterizedPaginationVerticalListWidget({super.key,
+    required this.model,
+    required this.paramModel});
 
   @override
   Widget build(BuildContext context) {
-    int itemCount = 0;
-
-    switch(verticalListWithPaginationElementType) {
-      case VerticalListWithPaginationElementType.movie:
-        itemCount = model.movies.length;
-      case VerticalListWithPaginationElementType.tv:
-        itemCount = model.tvs.length;
-    }
-
     return ListView.builder(
-        itemCount: itemCount,
-        controller: model.scrollController,
+        itemCount: paramModel.list.length,
+        controller: paramModel.scrollController,
         itemExtent: 163,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         itemBuilder: (BuildContext context, int index) {
-          String title = "";
-          String overview = "";
-          String date = "";
-          String? posterPath;
-          bool isLoadingInProgress = false;
-
-          switch(verticalListWithPaginationElementType) {
-            case VerticalListWithPaginationElementType.movie:
-              model.preLoadMovies(index);
-              isLoadingInProgress = model.isMovieLoadingInProgress;
-              final movie = model.movies[index];
-              title = movie.title ?? "";
-              overview = movie.overview;
-              date = model.formatDate(movie.releaseDate);
-              posterPath = movie.posterPath;
-            case VerticalListWithPaginationElementType.tv:
-              model.preLoadTvShows(index);
-              isLoadingInProgress = model.isTvsLoadingInProgress;
-              final tvs = model.tvs[index];
-              title = tvs.name ?? "";
-              overview = tvs.overview;
-              date = model.formatDate(tvs.firstAirDate);
-              posterPath = tvs.posterPath;
+          var preLoad = paramModel.preLoad;
+          if(preLoad != null) {
+            preLoad(index);
           }
 
-          if (!isLoadingInProgress) {
+          String? posterPath = paramModel.list[index].imagePath;
+
+          if (!model.isLoadingInProgress) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: Stack(
@@ -98,7 +74,7 @@ class VerticalListWithPaginationElementWidget<T extends BaseListModel> extends S
                               children: [
                                 const SizedBox(height: 15,),
                                 Text(
-                                  title,
+                                  paramModel.list[index].firstLine ?? "",
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold),
                                   maxLines: 1,
@@ -106,7 +82,7 @@ class VerticalListWithPaginationElementWidget<T extends BaseListModel> extends S
                                 ),
                                 const SizedBox(height: 5,),
                                 Text(
-                                  date,
+                                  paramModel.list[index].secondLine ?? "",
                                   // movie.releaseDate,
                                   style: const TextStyle(
                                       color: Colors.grey),
@@ -116,7 +92,7 @@ class VerticalListWithPaginationElementWidget<T extends BaseListModel> extends S
                                 const SizedBox(height: 15,),
                                 Expanded(
                                   child: Text(
-                                    overview,
+                                    paramModel.list[index].thirdLine ?? "",
                                     maxLines: 3,
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -134,13 +110,8 @@ class VerticalListWithPaginationElementWidget<T extends BaseListModel> extends S
                       borderRadius: const BorderRadius.all(Radius.circular(
                           10)),
                       onTap: () {
-                        switch(verticalListWithPaginationElementType) {
-                          case VerticalListWithPaginationElementType.movie:
-                            model.onMovieScreen(context, index);
-                          case VerticalListWithPaginationElementType.tv:
-                            model.onTvShowScreen(context, index);
-                        }
-                      },
+                        paramModel.action(context, index);
+                        },
                     ),
                   )
                 ],

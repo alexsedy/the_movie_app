@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
-import 'package:the_movie_app/widgets/test/model_covector.dart';
+import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
 
-class TestWidget extends StatelessWidget {
-  final ModelConvector model;
+class ParameterizedHorizontalListWidget extends StatelessWidget {
+  final ParameterizedWidgetModel paramModel;
 
-  const TestWidget({super.key, required this.model});
+  const ParameterizedHorizontalListWidget({super.key, required this.paramModel});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: model.boxHeight,
+      height: paramModel.boxHeight,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: model.length,
+          itemCount: paramModel.list.length,
           itemExtent: 125,
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           itemBuilder: (BuildContext context, int index) {
 
-            String? posterPath = model.posterPath;
+            var posterPath = paramModel.list[index].imagePath;
+            var firstLine = paramModel.list[index].firstLine;
+            var secondLine = paramModel.list[index].secondLine;
+            var thirdLine = paramModel.list[index].thirdLine;
 
             return Padding(
               padding: const EdgeInsets.all(8),
@@ -43,10 +46,10 @@ class TestWidget extends StatelessWidget {
                       // mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         AspectRatio(
-                          aspectRatio: model.aspectRatio,
+                          aspectRatio: paramModel.aspectRatio,
                           child: posterPath != null
                               ? Padding(
-                            padding: EdgeInsets.all(model.paddingEdgeInsets),
+                            padding: EdgeInsets.all(paramModel.paddingEdgeInsets),
                             child: Image.network(
                               loadingBuilder: (context, child, loadingProgress) {
                                 if (loadingProgress == null) return child;
@@ -58,17 +61,19 @@ class TestWidget extends StatelessWidget {
                                   ),);},
                               ApiClient.getImageByUrl(posterPath),),
                           )
-                              : Image.asset(model.altPosterPath,),
+                              : Image.asset(paramModel.altImagePath,),
                         ),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            // mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
+                              if(firstLine != null && firstLine.isNotEmpty)
                               Padding(
                                 padding: const EdgeInsets.only(left: 4, right: 2, top: 5),
                                 child: Text(
-                                  model.firstLine,
+                                  firstLine,
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
@@ -77,11 +82,11 @@ class TestWidget extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              if(model.secondLine.isNotEmpty)
+                              if(secondLine != null && secondLine.isNotEmpty)
                                 Padding(
                                   padding: const EdgeInsets.only(left: 4, right: 2, top: 5, bottom: 5),
                                   child: Text(
-                                    model.secondLine,
+                                    secondLine,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
@@ -90,12 +95,12 @@ class TestWidget extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                              if(model.thirdLine.isNotEmpty)
+                              if(thirdLine != null && thirdLine.isNotEmpty)
                                 Padding(
                                   padding: const EdgeInsets.only(left: 4, right: 2, top: 5, bottom: 5),
                                   child: Text(
-                                    model.thirdLine,
-                                    maxLines: 1,
+                                    thirdLine,
+                                    maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
                                         fontSize: 14,
@@ -114,7 +119,7 @@ class TestWidget extends StatelessWidget {
                     child: InkWell(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                       onTap: () {
-                        model.action;
+                        paramModel.action(context, index);
                       },
                     ),
                   )

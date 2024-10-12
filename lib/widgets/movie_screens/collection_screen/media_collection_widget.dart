@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:the_movie_app/constants/images_const/app_images.dart';
+import 'package:the_movie_app/helpers/converter_helper.dart';
+import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/movie_screens/collection_screen/media_collection_model.dart';
-import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
-import 'package:the_movie_app/widgets/widget_elements/list_elements/vertical_list_elemet_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/list_elements/params_vertical_list_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/color_list_shimmer_skeleton_widget.dart';
 
 class MediaCollectionWidget extends StatefulWidget {
@@ -94,9 +96,12 @@ class _BodyWidget extends StatelessWidget {
       children: [
         const _BodyOverviewWidget(),
         Expanded(
-          child: VerticalListElementWidget<MediaCollectionModel>(
-            model: model,
-            verticalListElementType: VerticalListElementType.collection,
+          child: ParameterizedVerticalListWidget(
+            paramModel: ParameterizedWidgetModel(
+              action: model.onMediaDetailsScreen,
+              altImagePath: AppImages.noPoster,
+              list: ConverterHelper.convertMediaCollection(mediaCollections),
+            ),
           ),
         )
       ],

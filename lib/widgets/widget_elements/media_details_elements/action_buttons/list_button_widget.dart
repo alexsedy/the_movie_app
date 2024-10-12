@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:the_movie_app/models/media_details_model/base_media_details_model.dart';
+import 'package:the_movie_app/models/interfaces/i_base_media_details_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
 
-class ListButtonWidget<T extends BaseMediaDetailsModel> extends StatelessWidget {
+class ListButtonWidget<T extends IBaseMediaDetailsModel> extends StatelessWidget {
   final MediaDetailsElementType mediaDetailsElementType;
   final T model;
-  const ListButtonWidget({Key? key, required this.mediaDetailsElementType, required this.model}) : super(key: key);
+  const ListButtonWidget({super.key, required this.mediaDetailsElementType, required this.model});
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +150,7 @@ class ListButtonWidget<T extends BaseMediaDetailsModel> extends StatelessWidget 
 }
 
 class CreateListWidget extends StatefulWidget {
-  final BaseMediaDetailsModel model;
+  final IBaseMediaDetailsModel model;
   const CreateListWidget({
     super.key, required this.model,
   });

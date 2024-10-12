@@ -1,14 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/tv_show_api_client.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
-import 'package:the_movie_app/models/media_details_model/media_filter_model.dart';
-import 'package:the_movie_app/models/media_list_model/tv_list_model_mixin.dart';
+import 'package:the_movie_app/models/interfaces/i_media_filter_model.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
+import 'package:the_movie_app/models/interfaces/i_loading_status.dart';
 
-class TvShowListModel extends ChangeNotifier with TvListModelMixin, FilterTvShowListModelMixin {
+class TvShowListModel extends ChangeNotifier with FilterTvShowListModelMixin implements ILoadingStatus {
   final ScrollController _scrollController = ScrollController();
   final _apiClient = TvShowApiClient();
   final _tvs = <MediaList>[];
@@ -17,19 +16,15 @@ class TvShowListModel extends ChangeNotifier with TvListModelMixin, FilterTvShow
   late String _locale;
   var _isFirstLoadTvShow = true;
   var _isTvsLoadingInProgress = false;
-  final _dateFormat = DateFormat.yMMMMd();
   Timer? _searchDebounce;
 
-  @override
   ScrollController get scrollController => _scrollController;
 
-  @override
   List<MediaList> get tvs => List.unmodifiable(_tvs);
 
   @override
-  bool get isTvsLoadingInProgress => _isTvsLoadingInProgress;
+  bool get isLoadingInProgress => _isTvsLoadingInProgress;
 
-  @override
   Future<void> firstLoadTvShows() async {
     if(_isFirstLoadTvShow) {
       _currentPage = 0;
@@ -39,11 +34,6 @@ class TvShowListModel extends ChangeNotifier with TvListModelMixin, FilterTvShow
     }
   }
 
-  @override
-  String formatDate(String? date) =>
-      date != "" ? _dateFormat.format(DateTime.parse(date ?? "")) : "No date";
-
-  @override
   Future<void> loadTvShows() async {
     if (_isTvsLoadingInProgress || _currentPage >= _totalPage) return;
     _isTvsLoadingInProgress = true;
@@ -143,13 +133,11 @@ class TvShowListModel extends ChangeNotifier with TvListModelMixin, FilterTvShow
     _scoreEnd = 10;
   }
 
-  @override
   void onTvShowScreen(BuildContext context, int index) {
     final id = _tvs[index].id;
     Navigator.of(context).pushNamed(MainNavigationRouteNames.tvShowDetails, arguments: id);
   }
 
-  @override
   void preLoadTvShows(int index) {
     if (index < _tvs.length - 1) return;
     loadTvShows();
@@ -178,12 +166,9 @@ class TvShowListModel extends ChangeNotifier with TvListModelMixin, FilterTvShow
   // void setupLocale(BuildContext context) {
   //   final locale = Localizations.localeOf(context);
   // }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-mixin FilterTvShowListModelMixin implements MediaFilter {
+mixin FilterTvShowListModelMixin implements IMediaFilter {
   DateTime? _selectedDateStart;
   DateTime? _selectedDateEnd;
   final _genreActions = <String, Map<String, bool>>{

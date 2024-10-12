@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:the_movie_app/constants/images_const/app_images.dart';
+import 'package:the_movie_app/helpers/converter_helper.dart';
+import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/provider/provider.dart';
+import 'package:the_movie_app/widgets/widget_elements/list_elements/params_vertical_list_widget.dart';
 import 'package:the_movie_app/widgets/tv_show_screens/season_details/season_details_model.dart';
-import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
-import 'package:the_movie_app/widgets/widget_elements/list_elements/vertical_list_elemet_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/color_list_shimmer_skeleton_widget.dart';
 
 class SeasonDetailsWidget extends StatefulWidget {
@@ -84,9 +86,12 @@ class _BodySeason extends StatelessWidget {
       return const ColorListShimmerSkeletonWidget();
     }
 
-    return VerticalListElementWidget<SeasonDetailsModel>(
-      model: model,
-      verticalListElementType: VerticalListElementType.seasonDetails,
+    return ParameterizedVerticalListWidget(
+      paramModel: ParameterizedWidgetModel(
+        altImagePath: AppImages.noPoster,
+        list: ConverterHelper.convertEpisodes(season),
+        action: model.onSeriesDetailsScreen,
+      ),
     );
   }
 }

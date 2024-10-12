@@ -1,52 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
-import 'package:the_movie_app/models/color_list_model/vertical_list_model.dart';
-import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
+import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
 
-class VerticalListElementWidget<T extends VerticalListModel> extends StatelessWidget {
-  final VerticalListElementType verticalListElementType;
-  final T model;
-  const VerticalListElementWidget({super.key, required this.verticalListElementType, required this.model});
+class ParameterizedVerticalListWidget extends StatelessWidget {
+  final ParameterizedWidgetModel paramModel;
+  const ParameterizedVerticalListWidget({super.key, required this.paramModel});
 
   @override
   Widget build(BuildContext context) {
-    int itemCount = 0;
-
-    switch(verticalListElementType) {
-      case VerticalListElementType.seasonDetails:
-        itemCount = model.season?.episodes.length ?? 0;
-      case VerticalListElementType.collection:
-        itemCount = model.mediaCollections?.parts?.length ?? 0;
-    }
-
     return ListView.builder(
-        itemCount: itemCount,
+        itemCount: paramModel.list.length,
         itemExtent: 163,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         itemBuilder: (BuildContext context, int index) {
-
-          String? posterPath;
-          String? firstLine;
-          String? secondLine;
-          String? thirdLine;
-
-          switch(verticalListElementType) {
-            case VerticalListElementType.seasonDetails:
-              posterPath = model.season?.episodes[index].stillPath;
-              final name = model.season?.episodes[index].name;
-              final episodeNumber = model.season?.episodes[index].episodeNumber;
-              firstLine = "$episodeNumber. $name";
-              final date = model.season?.episodes[index].airDate;
-              secondLine = model.formatDate(date);
-              thirdLine = model.season?.episodes[index].overview;
-            case VerticalListElementType.collection:
-              posterPath = model.mediaCollections?.parts?[index].posterPath;
-              firstLine = model.mediaCollections?.parts?[index].title;
-              final date = model.mediaCollections?.parts?[index].releaseDate;
-              secondLine = model.formatDate(date);
-              thirdLine = model.mediaCollections?.parts?[index].overview;
-          }
+          String? posterPath = paramModel.list[index].imagePath;
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -83,7 +50,7 @@ class VerticalListElementWidget<T extends VerticalListModel> extends StatelessWi
                             );
                           },
                           ApiClient.getImageByUrl(posterPath), width: 95, fit: BoxFit.fitHeight,)
-                            : Image.asset(AppImages.noPoster, width: 95, fit: BoxFit.fill,),
+                            : Image.asset(paramModel.altImagePath, width: 95, fit: BoxFit.fill,),
                       ),
                       Expanded(
                         child: Padding(
@@ -93,31 +60,35 @@ class VerticalListElementWidget<T extends VerticalListModel> extends StatelessWi
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const SizedBox(height: 15,),
-                              if(firstLine != null)
-                              Text(
-                                firstLine,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                              if(paramModel.list[index].firstLine != null)
+                                Text(
+                                  paramModel.list[index].firstLine ?? "",
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              if(paramModel.list[index].secondLine != null)
                               const SizedBox(height: 5,),
+                              if(paramModel.list[index].secondLine != null)
                               Text(
-                                secondLine,
+                                paramModel.list[index].secondLine ?? "",
                                 style: const TextStyle(
                                     color: Colors.grey),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              const SizedBox(height: 15,),
-                              if(thirdLine != null)
-                              Expanded(
-                                child: Text(
-                                  thirdLine,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
+                              if(paramModel.list[index].thirdLine != null)
+                                // const SizedBox(height: 15,),
+                                const SizedBox(height: 10,),
+                              if(paramModel.list[index].thirdLine != null)
+                                Expanded(
+                                  child: Text(
+                                    paramModel.list[index].thirdLine ?? "",
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
                             ],
                           ),
                         ),
@@ -130,12 +101,7 @@ class VerticalListElementWidget<T extends VerticalListModel> extends StatelessWi
                   child: InkWell(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     onTap: () {
-                      switch(verticalListElementType) {
-                        case VerticalListElementType.seasonDetails:
-                          model.onSeriesDetailsScreen(context, index);
-                        case VerticalListElementType.collection:
-                          model.onMediaDetailsScreen(context, index);
-                      }
+                      paramModel.action(context, index);
                     },
                   ),
                 )

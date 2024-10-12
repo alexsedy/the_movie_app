@@ -4,16 +4,17 @@ import 'package:the_movie_app/domain/api_client/account_api_client.dart';
 import 'package:the_movie_app/domain/api_client/tv_show_api_client.dart';
 import 'package:the_movie_app/domain/entity/account/account_state/account_state.dart';
 import 'package:the_movie_app/domain/entity/account/user_lists/user_lists.dart';
+import 'package:the_movie_app/domain/entity/media/list/list.dart';
 import 'package:the_movie_app/domain/entity/media/media_details/media_details.dart';
 import 'package:the_movie_app/domain/entity/media/state/item_state.dart';
 import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
 import 'package:the_movie_app/helpers/snack_bar_helper.dart';
-import 'package:the_movie_app/models/media_details_model/media_details_mixin.dart';
+import 'package:the_movie_app/models/interfaces/i_base_media_details_model.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
-class TvShowDetailsModel extends ChangeNotifier with MediaDetailsMixin {
+class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsModel{
   final _apiClient = TvShowApiClient();
   final _accountApiClient = AccountApiClient();
   MediaDetails? _tvShowDetails;
@@ -195,37 +196,31 @@ class TvShowDetailsModel extends ChangeNotifier with MediaDetailsMixin {
     }
   }
 
-  @override
-  void onCastListScreen(BuildContext context, List<Cast> cast) {
+  void onCastListScreen(BuildContext context, List<Cast>? cast) {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.castList, arguments: cast);
   }
 
-  @override
-  void onCrewListScreen(BuildContext context, List<Crew> crew) {
+  void onCrewListScreen(BuildContext context, List<Crew>? crew) {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.crewList, arguments: crew);
   }
 
-  @override
   void onPeopleDetailsScreen(BuildContext context, int index) {
     final id = _tvShowDetails?.credits.cast[index].id;
     Navigator.of(context).pushNamed(MainNavigationRouteNames.personDetails, arguments: id);
   }
 
-  @override
-  void onSeasonsListScreen(BuildContext context, List<Seasons> seasons) {
-    seasons.forEach((element) {
+  void onSeasonsListScreen(BuildContext context, List<Seasons>? seasons) {
+    seasons?.forEach((element) {
       element.tvShowId = _seriesId;
     });
     Navigator.of(context).pushNamed(MainNavigationRouteNames.seasonsList, arguments: seasons);
   }
 
-  @override
   void onSeasonDetailsScreen(BuildContext context, int index) {
     final seasonNumber = _tvShowDetails?.seasons?[index].seasonNumber;
     Navigator.of(context).pushNamed(MainNavigationRouteNames.seasonDetails, arguments: [_seriesId, seasonNumber]);
   }
 
-  @override
   void onMediaDetailsScreen(BuildContext context, int index){
     final id = _tvShowDetails?.recommendations?.list[index].id;
     Navigator.of(context).pushNamed(MainNavigationRouteNames.tvShowDetails, arguments: id);
@@ -244,5 +239,12 @@ class TvShowDetailsModel extends ChangeNotifier with MediaDetailsMixin {
       date != "" && date != null ? _dateFormat.format(DateTime.parse(date)) : "";
 
   @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+  void onCollectionScreen(BuildContext context) {
+    // TODO: implement onCollectionScreen
+  }
+
+  @override
+  void onRecommendationsListScreen(BuildContext context, List<MediaList>? mediaList) {
+    // TODO: implement onRecommendationsListScreen
+  }
 }

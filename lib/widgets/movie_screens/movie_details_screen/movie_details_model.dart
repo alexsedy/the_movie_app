@@ -3,15 +3,16 @@ import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/account_api_client.dart';
 import 'package:the_movie_app/domain/api_client/movie_api_client.dart';
 import 'package:the_movie_app/domain/entity/account/user_lists/user_lists.dart';
+import 'package:the_movie_app/domain/entity/media/list/list.dart';
 import 'package:the_movie_app/domain/entity/media/media_details/media_details.dart';
 import 'package:the_movie_app/domain/entity/media/state/item_state.dart';
 import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
 import 'package:the_movie_app/helpers/snack_bar_helper.dart';
-import 'package:the_movie_app/models/media_details_model/media_details_mixin.dart';
+import 'package:the_movie_app/models/interfaces/i_base_media_details_model.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class MovieDetailsModel extends ChangeNotifier with MediaDetailsMixin {
+class MovieDetailsModel extends ChangeNotifier implements IBaseMediaDetailsModel {
   final _apiClient = MovieApiClient();
   final _accountApiClient = AccountApiClient();
   MediaDetails? _movieDetails;
@@ -192,23 +193,19 @@ class MovieDetailsModel extends ChangeNotifier with MediaDetailsMixin {
     }
   }
 
-  @override
-  void onCastListScreen(BuildContext context, List<Cast> cast) {
+  void onCastListScreen(BuildContext context, List<Cast>? cast) {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.castList, arguments: cast);
   }
 
-  @override
-  void onCrewListScreen(BuildContext context, List<Crew> crew) {
+  void onCrewListScreen(BuildContext context, List<Crew>? crew) {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.crewList, arguments: crew);
   }
 
-  @override
   void onPeopleDetailsScreen(BuildContext context, int index) {
     final id = _movieDetails?.credits.cast[index].id;
     Navigator.of(context).pushNamed(MainNavigationRouteNames.personDetails, arguments: id);
   }
 
-  @override
   void onMediaDetailsScreen(BuildContext context, int index){
     final id = _movieDetails?.recommendations?.list[index].id;
     Navigator.of(context).pushNamed(MainNavigationRouteNames.movieDetails, arguments: id);
@@ -233,5 +230,7 @@ class MovieDetailsModel extends ChangeNotifier with MediaDetailsMixin {
       date != "" ? _dateFormat.format(DateTime.parse(date ?? "")) : "";
 
   @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+  void onRecommendationsListScreen(BuildContext context, List<MediaList>? mediaList) {
+    // TODO: implement onRecommendationsListScreen
+  }
 }

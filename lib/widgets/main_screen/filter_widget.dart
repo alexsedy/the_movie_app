@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:the_movie_app/models/media_details_model/media_filter_model.dart';
+import 'package:the_movie_app/models/interfaces/i_media_filter_model.dart';
 
 class FilterMoviesButtonWidget extends StatelessWidget {
-  final MediaFilter model;
+  final IMediaFilter model;
   const FilterMoviesButtonWidget({
     super.key, required this.model,
   });
@@ -55,7 +55,7 @@ class FilterMoviesButtonWidget extends StatelessWidget {
 }
 
 class _DateFilterWidget extends StatefulWidget {
-  final MediaFilter model;
+  final IMediaFilter model;
   const _DateFilterWidget({
     super.key, required this.model,
   });
@@ -197,7 +197,7 @@ class _DateFilterWidgetState extends State<_DateFilterWidget> {
 }
 
 class _GenresMoviesFilterWidget extends StatefulWidget {
-  final MediaFilter model;
+  final IMediaFilter model;
   const _GenresMoviesFilterWidget({
     super.key, required this.model,
   });
@@ -231,7 +231,7 @@ class _GenresMoviesFilterWidgetState extends State<_GenresMoviesFilterWidget> {
 }
 
 class _UserScoreFilterWidget extends StatefulWidget {
-  final MediaFilter model;
+  final IMediaFilter model;
   const _UserScoreFilterWidget({super.key, required this.model});
 
   @override
@@ -273,7 +273,7 @@ class _UserScoreFilterWidgetState extends State<_UserScoreFilterWidget> {
 }
 
 class _SortByFilterWidget extends StatefulWidget {
-  final MediaFilter model;
+  final IMediaFilter model;
   const _SortByFilterWidget({super.key, required this.model});
 
   @override
@@ -303,7 +303,7 @@ class _SortByFilterWidgetState extends State<_SortByFilterWidget> {
 }
 
 class _AcceptedButtonsWidget extends StatelessWidget {
-  final MediaFilter model;
+  final IMediaFilter model;
   const _AcceptedButtonsWidget({super.key, required this.model});
 
   @override

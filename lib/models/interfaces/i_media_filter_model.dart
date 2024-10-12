@@ -1,4 +1,4 @@
-abstract class MediaFilter {
+abstract class IMediaFilter {
   DateTime? get selectedDateStart;
   DateTime? get selectedDateEnd ;
   String? get genres;
