@@ -144,8 +144,10 @@ class _UserListBody extends StatelessWidget {
 }
 
 class MyListView extends StatefulWidget {
+  const MyListView({super.key});
+
   @override
-  _MyListViewState createState() => _MyListViewState();
+  State<MyListView> createState() => _MyListViewState();
 }
 
 class _MyListViewState extends State<MyListView> {
@@ -158,6 +160,7 @@ class _MyListViewState extends State<MyListView> {
       appBar: AppBar(
         title: Text('List View with Selection'),
         actions: [
+          if(_selected.firstWhere((e) => e == true,) == true)
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: _deleteSelectedItems,

@@ -39,15 +39,6 @@ class _DetailsUserListState extends State<DetailsUserList> {
             ),
           ),
         ],
-        // flexibleSpace: Container(
-        //   decoration: BoxDecoration(
-        //     gradient: LinearGradient(
-        //       colors: [Colors.blue, Colors.green],
-        //       begin: Alignment.topLeft,
-        //       end: Alignment.bottomRight,
-        //     ),
-        //   ),
-        // ),
       ),
       persistentFooterButtons: const [
         _FooterInfoWidget(),

@@ -16,7 +16,6 @@ class HomeSearchWidget extends StatefulWidget {
 }
 
 class _HomeSearchWidgetState extends State<HomeSearchWidget> {
-
   @override
   void initState() {
     super.initState();
@@ -30,11 +29,12 @@ class _HomeSearchWidgetState extends State<HomeSearchWidget> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0.9,
-          flexibleSpace: const _HeaderSearchBar(),
+          title: const _HeaderSearchBar(),
           leading: BackButton(
             onPressed: () {
               final model = NotifierProvider.read<HomeSearchModel>(context);
               model?.searchController.clear();
+              model?.searchFocusNode.unfocus();
               Navigator.of(context).pop();
             },
           ),
@@ -60,68 +60,46 @@ class _HomeSearchWidgetState extends State<HomeSearchWidget> {
   }
 }
 
-class _HeaderSearchBar extends StatefulWidget {
+class _HeaderSearchBar extends StatelessWidget {
   const _HeaderSearchBar({super.key});
 
   @override
-  State<_HeaderSearchBar> createState() => _HeaderSearchBarState();
-}
-
-class _HeaderSearchBarState extends State<_HeaderSearchBar> {
-  late FocusNode _searchFocusNode;
-
-  @override
-  void initState() {
-    super.initState();
-    _searchFocusNode = FocusNode();
-    _searchFocusNode.requestFocus();
-  }
-
-  @override
-  void dispose() {
-    _searchFocusNode.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-
     final model = NotifierProvider.watch<HomeSearchModel>(context);
 
-    if(model == null) {
+    if (model == null) {
       return const SizedBox.shrink();
     }
 
     final searchController = model.searchController;
+    final searchFocusNode = model.searchFocusNode;
 
-    return Padding(
-      padding: const EdgeInsets.only(left: 60, right: 16, top: 56),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(),
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        child: TextField(
-          controller: searchController,
-          focusNode: _searchFocusNode,
-          onChanged: (value) {
-            searchController.text = value;
-            model.loadAll();
-            if(value.isEmpty) {
-              model.backOnHomePage(context);
-            }
-          },
-          decoration: const InputDecoration(
-            contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
-            // hintText: 'Find anything',
-            border: InputBorder.none,
-          ),
+    searchFocusNode.requestFocus();
+
+    return Container(
+      height: 45.0,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: TextField(
+        focusNode: searchFocusNode,
+        controller: searchController,
+        onChanged: (value) {
+          searchController.text = value;
+          model.loadAll();
+          if (value.isEmpty) {
+            model.backOnHomePage(context);
+          }
+        },
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+          border: InputBorder.none,
         ),
       ),
     );
   }
 }
-
 
 class _MovieListWidget extends StatelessWidget {
   const _MovieListWidget({super.key});
@@ -154,13 +132,12 @@ class _MovieListWidget extends StatelessWidget {
 
     return ParameterizedPaginationVerticalListWidget(
       paramModel: ParameterizedWidgetModel(
-        action: model.onMovieScreen,
         altImagePath: AppImages.noPoster,
-        preLoad: model.preLoadMovies,
-        scrollController: model.scrollController,
+        action: model.onMovieScreen,
+        scrollController: model.movieScrollController,
         list: ConverterHelper.convertMoviesForVerticalWidget(model.movies),
       ),
-      model: model,
+      loadMoreItems: () => model.loadMovies(),
     );
   }
 }
@@ -198,11 +175,10 @@ class _TvShowListWidget extends StatelessWidget {
       paramModel: ParameterizedWidgetModel(
         action: model.onTvShowScreen,
         altImagePath: AppImages.noPoster,
-        preLoad: model.preLoadTvShows,
-        scrollController: model.scrollController,
+        scrollController: model.tvScrollController,
         list: ConverterHelper.convertTVShowsForVerticalWidget(model.tvs),
       ),
-      model: model,
+      loadMoreItems: model.loadTvShows,
     );
   }
 }
@@ -241,11 +217,10 @@ class _PersonListWidget extends StatelessWidget {
       paramModel: ParameterizedWidgetModel(
         action: model.onPeopleDetailsScreen,
         altImagePath: AppImages.noProfile,
-        preLoad: model.preLoadPersons,
-        scrollController: model.scrollController,
+        scrollController: model.personScrollController,
         list: ConverterHelper.convertTrendingPeopleForHorizontalWidget(model.persons),
       ),
-      model: model,
+      loadMoreItems: model.loadPersons,
     );
   }
 }
@@ -281,7 +256,7 @@ class _MediaCollectionListWidget extends StatelessWidget {
 
     return ListView.builder(
       itemCount: model.collections.length,
-      controller: model.scrollController,
+      controller: model.collectionScrollController,
       itemExtent: 163,
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       itemBuilder: (BuildContext context, int index) {

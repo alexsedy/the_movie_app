@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/list_elements/params_horizontal_list_widget.dart';
 
-class MediaDetailsListWidget extends StatelessWidget {
+class ParameterizedMediaDetailsListWidget extends StatelessWidget {
   final ParameterizedWidgetModel paramsModel;
   final Function secondAction;
-  const MediaDetailsListWidget({super.key, required this.paramsModel, required this.secondAction});
+  const ParameterizedMediaDetailsListWidget({super.key, required this.paramsModel, required this.secondAction});
 
   @override
   Widget build(BuildContext context) {

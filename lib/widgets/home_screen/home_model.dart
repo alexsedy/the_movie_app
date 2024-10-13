@@ -19,17 +19,15 @@ class HomeModel extends ChangeNotifier {
   String? _randomPoster;
   bool _isSwitch = true;
   final _searchController = TextEditingController();
+  final _searchFocusNode = FocusNode();
 
   set isSwitch(value) =>_isSwitch = value;
 
   TextEditingController get  searchController => _searchController;
-
+  FocusNode get searchFocusNode => _searchFocusNode;
   List<MediaList> get movies => List.unmodifiable(_movies);
-
   List<MediaList> get tvs => List.unmodifiable(_tvs);
-
   List<TrendingPersonList> get persons => List.unmodifiable(_persons);
-
   String? get randomPoster => _randomPoster;
 
   Future<void> loadMovies() async {
@@ -99,5 +97,12 @@ class HomeModel extends ChangeNotifier {
 
   void onHomeSearchScreen(BuildContext context) {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.homeSearch, arguments: _searchController);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _searchFocusNode.dispose();
+    super.dispose();
   }
 }

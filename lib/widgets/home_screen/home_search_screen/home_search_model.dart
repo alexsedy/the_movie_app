@@ -5,13 +5,12 @@ import 'package:the_movie_app/domain/api_client/search_api_client.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
 import 'package:the_movie_app/domain/entity/media/media_collections/media_collections.dart';
 import 'package:the_movie_app/domain/entity/person/trending_person/trending_person.dart';
-import 'package:the_movie_app/models/interfaces/i_loading_status.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
 class HomeSearchModel extends ChangeNotifier with HomeSearchMovieModelMixin, HomeSearchTVModelMixin,
     HomeSearchPersonModelMixin, HomeSearchCollectionModelMixin {
   final TextEditingController _searchController;
-  final _scrollController = ScrollController();
+  final _searchFocusNode = FocusNode();
   final _searchApiClient = SearchApiClient();
   Timer? _searchDebounce;
   late String _locale;
@@ -20,19 +19,19 @@ class HomeSearchModel extends ChangeNotifier with HomeSearchMovieModelMixin, Hom
 
   TextEditingController get searchController => _searchController;
   List<MediaCollections> get collections => _collections;
+  FocusNode get searchFocusNode => _searchFocusNode;
 
   List<MediaList> get tvs => _tvs;
   List<MediaList> get movies => _movies;
   List<TrendingPersonList> get persons => _persons;
-  ScrollController get scrollController => _scrollController;
   bool get isPersonLoadingInProgress => _isPersonLoadingInProgress;
   bool get isCollectionLoadingInProgress => _isCollectionLoadingInProgress;
 
   Future<void> firstLoadAll() async {
-    await firstLoadMovies();
-    await firstLoadTvShows();
-    await firstLoadPerson();
-    await firstLoadCollection();
+    await loadMovies();
+    await loadTvShows();
+    await loadPersons();
+    await loadCollections();
   }
 
   Future<void> loadAll() async {
@@ -44,42 +43,6 @@ class HomeSearchModel extends ChangeNotifier with HomeSearchMovieModelMixin, Hom
       await loadPersons();
       await loadCollections();
     });
-  }
-
-  Future<void> firstLoadMovies() async {
-    if(_isFirstLoadMovie) {
-      _movieCurrentPage = 0;
-      _movieTotalPage = 1;
-      loadMovies();
-      _isFirstLoadMovie = false;
-    }
-  }
-
-  Future<void> firstLoadTvShows() async {
-    if(_isFirstLoadTvShow) {
-      _tvCurrentPage = 0;
-      _tvTotalPage = 1;
-      loadTvShows();
-      _isFirstLoadTvShow = false;
-    }
-  }
-
-  Future<void> firstLoadPerson() async {
-    if(_isFirstLoadPerson) {
-      _personCurrentPage = 0;
-      _personTotalPage = 1;
-      loadPersons();
-      _isFirstLoadPerson = false;
-    }
-  }
-
-  Future<void> firstLoadCollection() async {
-    if(_isFirstLoadCollection) {
-      _collectionCurrentPage = 0;
-      _collectionTotalPage = 1;
-      loadCollections();
-      _isFirstLoadCollection = false;
-    }
   }
 
   Future<void> loadMovies() async {
@@ -201,67 +164,56 @@ class HomeSearchModel extends ChangeNotifier with HomeSearchMovieModelMixin, Hom
     });
   }
 
-  void preLoadMovies(int index) {
-    if (index < _movies.length - 1) return;
-    loadMovies();
-  }
-
-  void preLoadTvShows(int index) {
-    if (index < _tvs.length - 1) return;
-    loadTvShows();
-  }
-
-  void preLoadPersons(int index) {
-    if (index < _persons.length - 1) return;
-    loadPersons();
-  }
-
   void preLoadCollections(int index) {
     if (index < _collections.length - 1) return;
     loadCollections();
   }
+
+  @override
+  void dispose() {
+    // _searchController.dispose();
+    _searchFocusNode.dispose();
+    super.dispose();
+  }
 }
 
-mixin HomeSearchMovieModelMixin implements ILoadingStatus {
+mixin HomeSearchMovieModelMixin {
   final _movies = <MediaList>[];
   var _isMovieLoadingInProgress = false;
-  late int _movieCurrentPage;
-  late int _movieTotalPage;
-  var _isFirstLoadMovie = true;
+  int _movieCurrentPage = 0;
+  int _movieTotalPage = 1;
+  final ScrollController _movieScrollController = ScrollController();
 
-  @override
-  bool get isLoadingInProgress => _isMovieLoadingInProgress;
+  get movieScrollController => _movieScrollController;
 }
 
-mixin HomeSearchTVModelMixin implements ILoadingStatus {
+mixin HomeSearchTVModelMixin {
   final _tvs = <MediaList>[];
   var _isTvsLoadingInProgress = false;
-  late int _tvCurrentPage;
-  late int _tvTotalPage;
-  var _isFirstLoadTvShow = true;
+  int _tvCurrentPage = 0;
+  int _tvTotalPage = 1;
+  final ScrollController _tvScrollController = ScrollController();
 
-  @override
-  bool get isLoadingInProgress => _isTvsLoadingInProgress;
+  get tvScrollController => _tvScrollController;
 }
 
-mixin HomeSearchPersonModelMixin implements ILoadingStatus {
+mixin HomeSearchPersonModelMixin {
   final _persons = <TrendingPersonList>[];
   var _isPersonLoadingInProgress = false;
-  late int _personCurrentPage;
-  late int _personTotalPage;
-  var _isFirstLoadPerson = true;
+  int _personCurrentPage = 0;
+  int _personTotalPage = 1;
+  final ScrollController _personScrollController = ScrollController();
 
-  @override
-  bool get isLoadingInProgress => _isPersonLoadingInProgress;
+  get personScrollController => _personScrollController;
 }
 
-mixin HomeSearchCollectionModelMixin implements ILoadingStatus {
+mixin HomeSearchCollectionModelMixin {
   final _collections = <MediaCollections>[];
   var _isCollectionLoadingInProgress = false;
-  late int _collectionCurrentPage;
-  late int _collectionTotalPage;
-  var _isFirstLoadCollection = true;
+  int _collectionCurrentPage = 0;
+  int _collectionTotalPage = 1;
 
-  @override
-  bool get isLoadingInProgress => _isCollectionLoadingInProgress;
+  final ScrollController _collectionScrollController = ScrollController();
+
+  get collectionScrollController => _collectionScrollController;
 }

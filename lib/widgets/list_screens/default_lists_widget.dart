@@ -18,8 +18,8 @@ class _DefaultListsWidgetState extends State<DefaultListsWidget> {
   @override
   void initState() {
     super.initState();
-    NotifierProvider.read<DefaultListsModel>(context)?.firstLoadMovies();
-    NotifierProvider.read<DefaultListsModel>(context)?.firstLoadTvShows();
+    NotifierProvider.read<DefaultListsModel>(context)?.loadMovies();
+    NotifierProvider.read<DefaultListsModel>(context)?.loadTvShows();
   }
 
   @override
@@ -110,11 +110,10 @@ class _MovieListWidget extends StatelessWidget {
       paramModel: ParameterizedWidgetModel(
         action: model.onMovieScreen,
         altImagePath: AppImages.noPoster,
-        preLoad: model.preLoadMovies,
         scrollController: model.scrollController,
         list: ConverterHelper.convertMoviesForVerticalWidget(model.movies),
       ),
-      model: model,
+      loadMoreItems: model.loadMovies,
     );
   }
 }
@@ -154,11 +153,10 @@ class _TvShowListWidget extends StatelessWidget {
       paramModel: ParameterizedWidgetModel(
         action: model.onTvShowScreen,
         altImagePath: AppImages.noPoster,
-        preLoad: model.preLoadTvShows,
         scrollController: model.scrollController,
         list: ConverterHelper.convertTVShowsForVerticalWidget(model.tvs),
       ),
-      model: model,
+      loadMoreItems: model.loadTvShows,
     );
   }
 }

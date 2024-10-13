@@ -43,20 +43,14 @@ class _MovieListWidgetState extends State<MovieListWidget> {
       );
     }
 
-    // return VerticalListWithPaginationElementWidget<MovieListModel>(
-    //   verticalListWithPaginationElementType: VerticalListWithPaginationElementType.movie,
-    //   model: model,
-    // );
-
     return ParameterizedPaginationVerticalListWidget(
       paramModel: ParameterizedWidgetModel(
         altImagePath: AppImages.noPoster,
         action: model.onMovieScreen,
-        preLoad: model.preLoadMovies,
         scrollController: model.scrollController,
         list: ConverterHelper.convertMoviesForVerticalWidget(model.movies),
       ),
-      model: model,
+      loadMoreItems: () => model.loadMovies(),
     );
   }
 }

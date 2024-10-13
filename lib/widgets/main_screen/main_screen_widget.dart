@@ -55,8 +55,8 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
   @override
   void initState() {
     super.initState();
-    movieListModel.firstLoadMovies();
-    tvShowListModel.firstLoadTvShows();
+    movieListModel.loadMovies();
+    tvShowListModel.loadTvShows();
   }
 
   @override

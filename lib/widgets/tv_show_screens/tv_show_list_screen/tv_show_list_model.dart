@@ -5,34 +5,20 @@ import 'package:the_movie_app/domain/api_client/tv_show_api_client.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
 import 'package:the_movie_app/models/interfaces/i_media_filter_model.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
-import 'package:the_movie_app/models/interfaces/i_loading_status.dart';
 
-class TvShowListModel extends ChangeNotifier with FilterTvShowListModelMixin implements ILoadingStatus {
+class TvShowListModel extends ChangeNotifier with FilterTvShowListModelMixin {
   final ScrollController _scrollController = ScrollController();
   final _apiClient = TvShowApiClient();
   final _tvs = <MediaList>[];
-  late int _currentPage;
-  late int _totalPage;
+  int _currentPage = 0;
+  int _totalPage = 1;
   late String _locale;
-  var _isFirstLoadTvShow = true;
   var _isTvsLoadingInProgress = false;
   Timer? _searchDebounce;
 
   ScrollController get scrollController => _scrollController;
 
   List<MediaList> get tvs => List.unmodifiable(_tvs);
-
-  @override
-  bool get isLoadingInProgress => _isTvsLoadingInProgress;
-
-  Future<void> firstLoadTvShows() async {
-    if(_isFirstLoadTvShow) {
-      _currentPage = 0;
-      _totalPage = 1;
-      loadTvShows();
-      _isFirstLoadTvShow = false;
-    }
-  }
 
   Future<void> loadTvShows() async {
     if (_isTvsLoadingInProgress || _currentPage >= _totalPage) return;

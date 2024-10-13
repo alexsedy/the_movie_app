@@ -5,34 +5,20 @@ import 'package:the_movie_app/domain/api_client/movie_api_client.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
 import 'package:the_movie_app/models/interfaces/i_media_filter_model.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
-import 'package:the_movie_app/models/interfaces/i_loading_status.dart';
 
-class MovieListModel extends ChangeNotifier with FilterMovieListModelMixin implements ILoadingStatus {
+class MovieListModel extends ChangeNotifier with FilterMovieListModelMixin {
   final ScrollController _scrollController = ScrollController();
   final _apiClient = MovieApiClient();
   final _movies = <MediaList>[];
-  late int _currentPage;
-  late int _totalPage;
+  int _currentPage = 0;
+  int _totalPage = 1;
   late String _locale;
-  var _isFirstLoadMovie = true;
   var _isMovieLoadingInProgress = false;
   Timer? _searchDebounce;
 
   List<MediaList> get movies => List.unmodifiable(_movies);
 
-  @override
-  bool get isLoadingInProgress => _isMovieLoadingInProgress;
-
   ScrollController get scrollController => _scrollController;
-
-  Future<void> firstLoadMovies() async {
-    if(_isFirstLoadMovie) {
-      _currentPage = 0;
-      _totalPage = 1;
-      loadMovies();
-      _isFirstLoadMovie = false;
-    }
-  }
 
   Future<void> loadMovies() async {
     if (_isMovieLoadingInProgress || _currentPage >= _totalPage) return;
@@ -50,12 +36,6 @@ class MovieListModel extends ChangeNotifier with FilterMovieListModelMixin imple
       _isMovieLoadingInProgress = false;
     }
   }
-
-  void preLoadMovies(int index) {
-    if (index < _movies.length - 1) return;
-    loadMovies();
-  }
-
 
   Future<void> searchMovies(String text) async {
     _searchDebounce?.cancel();

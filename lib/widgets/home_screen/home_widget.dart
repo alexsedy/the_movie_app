@@ -56,6 +56,7 @@ class _SearchWidget extends StatelessWidget {
     }
 
     final searchController = model.searchController;
+    final searchFocusNode = model.searchFocusNode;
 
     return Stack(
       children: [
@@ -93,9 +94,11 @@ class _SearchWidget extends StatelessWidget {
                         onChanged: (value) {
                           if(value.isNotEmpty) {
                             model.onHomeSearchScreen(context);
+                            searchFocusNode.unfocus();
                           }
                         },
                         controller: searchController,
+                        focusNode: searchFocusNode,
                         decoration: const InputDecoration(
                           contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
                           hintText: 'Search movie, TV, person',

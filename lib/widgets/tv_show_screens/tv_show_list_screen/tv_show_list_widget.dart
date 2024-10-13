@@ -53,11 +53,9 @@ class _MovieListWidgetState extends State<TvShowListWidget> {
       paramModel: ParameterizedWidgetModel(
         action: model.onTvShowScreen,
         altImagePath: AppImages.noPoster,
-        preLoad: model.preLoadTvShows,
         scrollController: model.scrollController,
         list: ConverterHelper.convertTVShowsForVerticalWidget(model.tvs),
-      ),
-      model: model,
+      ), loadMoreItems: model.loadTvShows,
     );
   }
 }
