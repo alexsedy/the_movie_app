@@ -60,6 +60,7 @@ class TvShowListModel extends ChangeNotifier with FilterTvShowListModelMixin {
         _isTvsLoadingInProgress = false;
       }
     });
+    scrollToTop();
   }
 
   @override
@@ -98,6 +99,7 @@ class TvShowListModel extends ChangeNotifier with FilterTvShowListModelMixin {
     } catch (e) {
       _isTvsLoadingInProgress = false;
     }
+    scrollToTop();
   }
 
   @override
