@@ -94,7 +94,6 @@ class _SearchWidget extends StatelessWidget {
                         onChanged: (value) {
                           if(value.isNotEmpty) {
                             model.onHomeSearchScreen(context);
-                            searchFocusNode.unfocus();
                           }
                         },
                         controller: searchController,

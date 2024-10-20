@@ -113,6 +113,7 @@ class _DateFilterWidgetState extends State<_DateFilterWidget> {
       initialDate: _selectedDateStart,
       firstDate: DateTime(1900),
       lastDate: DateTime(2101),
+      initialDatePickerMode: DatePickerMode.year,
     );
     if (picked != null && picked != _selectedDateStart) {
       if (_selectedDateEnd != null && picked.isAfter(_selectedDateEnd!)) {
@@ -137,6 +138,7 @@ class _DateFilterWidgetState extends State<_DateFilterWidget> {
       initialDate: _selectedDateEnd ?? DateTime.now(),
       firstDate: DateTime(1900),
       lastDate: DateTime(2099),
+      initialDatePickerMode: DatePickerMode.year,
     );
     if (picked != null && picked != _selectedDateEnd) {
       if (_selectedDateStart != null && picked.isBefore(_selectedDateStart!)) {
