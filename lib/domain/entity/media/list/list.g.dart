@@ -8,12 +8,12 @@ part of 'list.dart';
 
 MediaListResponse _$MediaListResponseFromJson(Map<String, dynamic> json) =>
     MediaListResponse(
-      page: json['page'] as int,
+      page: (json['page'] as num).toInt(),
       list: (json['results'] as List<dynamic>)
           .map((e) => MediaList.fromJson(e as Map<String, dynamic>))
           .toList(),
-      totalPages: json['total_pages'] as int,
-      totalResults: json['total_results'] as int,
+      totalPages: (json['total_pages'] as num).toInt(),
+      totalResults: (json['total_results'] as num).toInt(),
     );
 
 Map<String, dynamic> _$MediaListResponseToJson(MediaListResponse instance) =>
@@ -27,8 +27,10 @@ Map<String, dynamic> _$MediaListResponseToJson(MediaListResponse instance) =>
 MediaList _$MediaListFromJson(Map<String, dynamic> json) => MediaList(
       json['adult'] as bool?,
       json['backdrop_path'] as String?,
-      (json['genre_ids'] as List<dynamic>).map((e) => e as int).toList(),
-      json['id'] as int,
+      (json['genre_ids'] as List<dynamic>)
+          .map((e) => (e as num).toInt())
+          .toList(),
+      (json['id'] as num).toInt(),
       json['original_language'] as String,
       json['original_title'] as String?,
       json['overview'] as String,
@@ -38,7 +40,7 @@ MediaList _$MediaListFromJson(Map<String, dynamic> json) => MediaList(
       json['title'] as String?,
       json['video'] as bool?,
       (json['vote_average'] as num).toDouble(),
-      json['vote_count'] as int,
+      (json['vote_count'] as num).toInt(),
       json['first_air_date'] as String?,
       json['name'] as String?,
       (json['origin_country'] as List<dynamic>?)

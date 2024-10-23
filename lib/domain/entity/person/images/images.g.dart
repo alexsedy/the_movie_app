@@ -7,7 +7,7 @@ part of 'images.dart';
 // **************************************************************************
 
 Images _$ImagesFromJson(Map<String, dynamic> json) => Images(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       (json['profiles'] as List<dynamic>)
           .map((e) => Profile.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -20,12 +20,12 @@ Map<String, dynamic> _$ImagesToJson(Images instance) => <String, dynamic>{
 
 Profile _$ProfileFromJson(Map<String, dynamic> json) => Profile(
       (json['aspect_ratio'] as num).toDouble(),
-      json['height'] as int,
+      (json['height'] as num).toInt(),
       json['iso_639_1'] as String?,
       json['file_path'] as String,
       (json['vote_average'] as num).toDouble(),
-      json['vote_count'] as int,
-      json['width'] as int,
+      (json['vote_count'] as num).toInt(),
+      (json['width'] as num).toInt(),
     );
 
 Map<String, dynamic> _$ProfileToJson(Profile instance) => <String, dynamic>{

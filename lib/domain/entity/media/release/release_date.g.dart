@@ -8,7 +8,7 @@ part of 'release_date.dart';
 
 ReleaseDateRoot _$ReleaseDateRootFromJson(Map<String, dynamic> json) =>
     ReleaseDateRoot(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       results: (json['results'] as List<dynamic>)
           .map((e) => ReleaseResult.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -42,7 +42,7 @@ ReleaseDates _$ReleaseDatesFromJson(Map<String, dynamic> json) => ReleaseDates(
       iso: json['iso_639_1'] as String,
       note: json['note'] as String,
       releaseDate: DateTime.parse(json['release_date'] as String),
-      type: json['type'] as int,
+      type: (json['type'] as num).toInt(),
     );
 
 Map<String, dynamic> _$ReleaseDatesToJson(ReleaseDates instance) =>

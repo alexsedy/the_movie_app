@@ -8,12 +8,12 @@ part of 'trending_person.dart';
 
 TrendingPerson _$TrendingPersonFromJson(Map<String, dynamic> json) =>
     TrendingPerson(
-      json['page'] as int,
+      (json['page'] as num).toInt(),
       (json['results'] as List<dynamic>)
           .map((e) => TrendingPersonList.fromJson(e as Map<String, dynamic>))
           .toList(),
-      json['total_pages'] as int,
-      json['total_results'] as int,
+      (json['total_pages'] as num).toInt(),
+      (json['total_results'] as num).toInt(),
     );
 
 Map<String, dynamic> _$TrendingPersonToJson(TrendingPerson instance) =>
@@ -27,7 +27,7 @@ Map<String, dynamic> _$TrendingPersonToJson(TrendingPerson instance) =>
 KnownFor _$KnownForFromJson(Map<String, dynamic> json) => KnownFor(
       json['adult'] as bool?,
       json['backdrop_path'] as String?,
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['title'] as String?,
       json['original_language'] as String?,
       json['original_title'] as String?,
@@ -38,7 +38,7 @@ KnownFor _$KnownForFromJson(Map<String, dynamic> json) => KnownFor(
       json['release_date'] as String?,
       json['video'] as bool?,
       (json['vote_average'] as num?)?.toDouble(),
-      json['vote_count'] as int?,
+      (json['vote_count'] as num?)?.toInt(),
       json['name'] as String?,
       json['original_name'] as String?,
       json['first_air_date'] as String?,
@@ -71,16 +71,16 @@ Map<String, dynamic> _$KnownForToJson(KnownFor instance) => <String, dynamic>{
 TrendingPersonList _$TrendingPersonListFromJson(Map<String, dynamic> json) =>
     TrendingPersonList(
       json['adult'] as bool,
-      json['id'] as int,
+      (json['id'] as num).toInt(),
       json['name'] as String,
       json['original_name'] as String,
       json['media_type'] as String?,
       (json['popularity'] as num).toDouble(),
-      json['gender'] as int,
+      (json['gender'] as num).toInt(),
       json['known_for_department'] as String?,
       json['profile_path'] as String?,
-      (json['known_for'] as List<dynamic>)
-          .map((e) => KnownFor.fromJson(e as Map<String, dynamic>))
+      (json['known_for'] as List<dynamic>?)
+          ?.map((e) => KnownFor.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
@@ -95,5 +95,5 @@ Map<String, dynamic> _$TrendingPersonListToJson(TrendingPersonList instance) =>
       'gender': instance.gender,
       'known_for_department': instance.knownForDepartment,
       'profile_path': instance.profilePath,
-      'known_for': instance.knownFor.map((e) => e.toJson()).toList(),
+      'known_for': instance.knownFor?.map((e) => e.toJson()).toList(),
     };

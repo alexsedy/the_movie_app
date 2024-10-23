@@ -7,12 +7,12 @@ part of 'user_lists.dart';
 // **************************************************************************
 
 UserLists _$UserListsFromJson(Map<String, dynamic> json) => UserLists(
-      json['page'] as int,
+      (json['page'] as num).toInt(),
       (json['results'] as List<dynamic>)
           .map((e) => Lists.fromJson(e as Map<String, dynamic>))
           .toList(),
-      json['total_pages'] as int,
-      json['total_results'] as int,
+      (json['total_pages'] as num).toInt(),
+      (json['total_results'] as num).toInt(),
     );
 
 Map<String, dynamic> _$UserListsToJson(UserLists instance) => <String, dynamic>{
@@ -24,18 +24,18 @@ Map<String, dynamic> _$UserListsToJson(UserLists instance) => <String, dynamic>{
 
 Lists _$ListsFromJson(Map<String, dynamic> json) => Lists(
       json['account_object_id'] as String,
-      json['adult'] as int,
+      (json['adult'] as num).toInt(),
       (json['average_rating'] as num).toDouble(),
       json['created_at'] as String,
       json['description'] as String,
-      json['featured'] as int,
-      json['id'] as int,
+      (json['featured'] as num).toInt(),
+      (json['id'] as num).toInt(),
       json['iso_3166_1'] as String,
       json['iso_639_1'] as String,
       json['name'] as String,
-      json['number_of_items'] as int,
-      json['public'] as int,
-      json['sort_by'] as int,
+      (json['number_of_items'] as num).toInt(),
+      (json['public'] as num).toInt(),
+      (json['sort_by'] as num).toInt(),
       json['updated_at'] as String,
       json['backdrop_path'] as String?,
       json['poster_path'] as String?,

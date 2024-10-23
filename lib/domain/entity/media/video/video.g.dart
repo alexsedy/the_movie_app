@@ -7,7 +7,7 @@ part of 'video.dart';
 // **************************************************************************
 
 Videos _$VideosFromJson(Map<String, dynamic> json) => Videos(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       (json['results'] as List<dynamic>)
           .map((e) => VideosResult.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -24,7 +24,7 @@ VideosResult _$VideosResultFromJson(Map<String, dynamic> json) => VideosResult(
       json['name'] as String,
       json['key'] as String,
       json['site'] as String,
-      json['size'] as int,
+      (json['size'] as num).toInt(),
       json['type'] as String,
       json['official'] as bool,
       json['published_at'] as String,

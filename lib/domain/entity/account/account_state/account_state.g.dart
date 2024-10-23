@@ -8,7 +8,7 @@ part of 'account_state.dart';
 
 AccountSate _$AccountSateFromJson(Map<String, dynamic> json) => AccountSate(
       avatar: Avatar.fromJson(json['avatar'] as Map<String, dynamic>),
-      id: json['id'] as int,
+      id: (json['id'] as num).toInt(),
       isoOne: json['iso_639_1'] as String,
       isoTwo: json['iso_3166_1'] as String,
       name: json['name'] as String,

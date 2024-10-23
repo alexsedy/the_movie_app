@@ -8,12 +8,12 @@ part of 'media_collections.dart';
 
 CollectionsList _$CollectionsListFromJson(Map<String, dynamic> json) =>
     CollectionsList(
-      json['page'] as int,
+      (json['page'] as num).toInt(),
       (json['results'] as List<dynamic>)
           .map((e) => MediaCollections.fromJson(e as Map<String, dynamic>))
           .toList(),
-      json['total_pages'] as int,
-      json['total_results'] as int,
+      (json['total_pages'] as num).toInt(),
+      (json['total_results'] as num).toInt(),
     );
 
 Map<String, dynamic> _$CollectionsListToJson(CollectionsList instance) =>
@@ -26,7 +26,7 @@ Map<String, dynamic> _$CollectionsListToJson(CollectionsList instance) =>
 
 MediaCollections _$MediaCollectionsFromJson(Map<String, dynamic> json) =>
     MediaCollections(
-      json['id'] as int,
+      (json['id'] as num).toInt(),
       json['name'] as String,
       json['overview'] as String?,
       json['poster_path'] as String?,

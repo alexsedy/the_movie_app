@@ -13,7 +13,7 @@ Credits _$CreditsFromJson(Map<String, dynamic> json) => Credits(
       (json['crew'] as List<dynamic>)
           .map((e) => Crew.fromJson(e as Map<String, dynamic>))
           .toList(),
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       (json['guest_stars'] as List<dynamic>?)
           ?.map((e) => Cast.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -29,8 +29,10 @@ Map<String, dynamic> _$CreditsToJson(Credits instance) => <String, dynamic>{
 Cast _$CastFromJson(Map<String, dynamic> json) => Cast(
       json['adult'] as bool,
       json['backdrop_path'] as String?,
-      (json['genre_ids'] as List<dynamic>?)?.map((e) => e as int).toList(),
-      json['id'] as int,
+      (json['genre_ids'] as List<dynamic>?)
+          ?.map((e) => (e as num).toInt())
+          .toList(),
+      (json['id'] as num).toInt(),
       json['original_language'] as String?,
       json['original_title'] as String?,
       json['overview'] as String?,
@@ -40,17 +42,17 @@ Cast _$CastFromJson(Map<String, dynamic> json) => Cast(
       json['title'] as String?,
       json['video'] as bool?,
       (json['vote_average'] as num?)?.toDouble(),
-      json['vote_count'] as int?,
+      (json['vote_count'] as num?)?.toInt(),
       json['character'] as String,
       json['credit_id'] as String,
-      json['order'] as int?,
+      (json['order'] as num?)?.toInt(),
       (json['origin_country'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
       json['original_name'] as String?,
       json['first_air_date'] as String?,
       json['name'] as String?,
-      json['episode_count'] as int?,
+      (json['episode_count'] as num?)?.toInt(),
       json['profile_path'] as String?,
     );
 
@@ -83,8 +85,10 @@ Map<String, dynamic> _$CastToJson(Cast instance) => <String, dynamic>{
 Crew _$CrewFromJson(Map<String, dynamic> json) => Crew(
       json['adult'] as bool,
       json['backdrop_path'] as String?,
-      (json['genre_ids'] as List<dynamic>?)?.map((e) => e as int).toList(),
-      json['id'] as int,
+      (json['genre_ids'] as List<dynamic>?)
+          ?.map((e) => (e as num).toInt())
+          .toList(),
+      (json['id'] as num).toInt(),
       json['original_language'] as String?,
       json['original_title'] as String?,
       json['overview'] as String?,
@@ -94,7 +98,7 @@ Crew _$CrewFromJson(Map<String, dynamic> json) => Crew(
       json['title'] as String?,
       json['video'] as bool?,
       (json['vote_average'] as num?)?.toDouble(),
-      json['vote_count'] as int?,
+      (json['vote_count'] as num?)?.toInt(),
       json['credit_id'] as String,
       json['department'] as String,
       json['job'] as String,
@@ -104,7 +108,7 @@ Crew _$CrewFromJson(Map<String, dynamic> json) => Crew(
       json['original_name'] as String?,
       json['first_air_date'] as String?,
       json['name'] as String?,
-      json['episode_count'] as int?,
+      (json['episode_count'] as num?)?.toInt(),
       json['profile_path'] as String?,
     );
 

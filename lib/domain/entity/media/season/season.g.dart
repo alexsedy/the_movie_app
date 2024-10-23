@@ -14,9 +14,9 @@ Season _$SeasonFromJson(Map<String, dynamic> json) => Season(
           .toList(),
       json['name'] as String,
       json['overview'] as String,
-      json['id'] as int,
+      (json['id'] as num).toInt(),
       json['poster_path'] as String?,
-      json['season_number'] as int,
+      (json['season_number'] as num).toInt(),
       (json['vote_average'] as num).toDouble(),
     );
 
@@ -34,17 +34,17 @@ Map<String, dynamic> _$SeasonToJson(Season instance) => <String, dynamic>{
 
 Episode _$EpisodeFromJson(Map<String, dynamic> json) => Episode(
       json['air_date'] as String?,
-      json['episode_number'] as int,
-      json['id'] as int,
+      (json['episode_number'] as num).toInt(),
+      (json['id'] as num).toInt(),
       json['name'] as String,
       json['overview'] as String,
       json['production_code'] as String,
-      json['runtime'] as int?,
-      json['season_number'] as int,
-      json['show_id'] as int,
+      (json['runtime'] as num?)?.toInt(),
+      (json['season_number'] as num).toInt(),
+      (json['show_id'] as num).toInt(),
       json['still_path'] as String?,
       (json['vote_average'] as num).toDouble(),
-      json['vote_count'] as int,
+      (json['vote_count'] as num).toInt(),
     );
 
 Map<String, dynamic> _$EpisodeToJson(Episode instance) => <String, dynamic>{

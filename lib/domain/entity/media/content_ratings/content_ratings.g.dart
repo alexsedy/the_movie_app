@@ -11,7 +11,7 @@ ContentRatings _$ContentRatingsFromJson(Map<String, dynamic> json) =>
       (json['results'] as List<dynamic>)
           .map((e) => Ratings.fromJson(e as Map<String, dynamic>))
           .toList(),
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$ContentRatingsToJson(ContentRatings instance) =>

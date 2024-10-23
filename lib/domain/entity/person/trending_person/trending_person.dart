@@ -74,7 +74,7 @@ class TrendingPersonList {
   final int gender;
   final String? knownForDepartment;
   final String? profilePath;
-  final List<KnownFor> knownFor;
+  final List<KnownFor>? knownFor;
 
   TrendingPersonList(
       this.adult,

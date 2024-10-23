@@ -7,7 +7,7 @@ part of 'item_state.dart';
 // **************************************************************************
 
 ItemState _$ItemStateFromJson(Map<String, dynamic> json) => ItemState(
-      json['id'] as int,
+      (json['id'] as num).toInt(),
       json['favorite'] as bool,
       const RatedConverter().fromJson(json['rated']),
       json['watchlist'] as bool,

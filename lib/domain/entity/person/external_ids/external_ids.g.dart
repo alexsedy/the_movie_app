@@ -7,11 +7,11 @@ part of 'external_ids.dart';
 // **************************************************************************
 
 ExternalIds _$ExternalIdsFromJson(Map<String, dynamic> json) => ExternalIds(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['freebase_mid'] as String?,
       json['freebase_id'] as String?,
       json['imdb_id'] as String?,
-      json['tvrage_id'] as int?,
+      (json['tvrage_id'] as num?)?.toInt(),
       json['wikidata_id'] as String?,
       json['facebook_id'] as String?,
       json['instagram_id'] as String?,
