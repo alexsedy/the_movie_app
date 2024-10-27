@@ -8,11 +8,12 @@ import 'package:the_movie_app/widgets/credits_list_screen/crew_list_screen/crew_
 import 'package:the_movie_app/widgets/credits_list_screen/crew_list_screen/crew_list_widget.dart';
 import 'package:the_movie_app/widgets/home_screen/home_search_screen/home_search_model.dart';
 import 'package:the_movie_app/widgets/home_screen/home_search_screen/home_search_widget.dart';
-import 'package:the_movie_app/widgets/list_screens/default_lists_model.dart';
-import 'package:the_movie_app/widgets/list_screens/default_lists_widget.dart';
-import 'package:the_movie_app/widgets/list_screens/details_user_list.dart';
-import 'package:the_movie_app/widgets/list_screens/user_lists_model.dart';
-import 'package:the_movie_app/widgets/list_screens/user_lists_widget.dart';
+import 'package:the_movie_app/widgets/list_screens/default_list/default_lists_model.dart';
+import 'package:the_movie_app/widgets/list_screens/default_list/default_lists_widget.dart';
+import 'package:the_movie_app/widgets/list_screens/user_list/list_details/details_user_list.dart';
+import 'package:the_movie_app/widgets/list_screens/user_list/list_details/list_details_model.dart';
+import 'package:the_movie_app/widgets/list_screens/user_list/user_lists_model.dart';
+import 'package:the_movie_app/widgets/list_screens/user_list/user_lists_widget.dart';
 import 'package:the_movie_app/widgets/main_screen/main_screen_widget.dart';
 import 'package:the_movie_app/widgets/movie_screens/collection_screen/media_collection_model.dart';
 import 'package:the_movie_app/widgets/movie_screens/collection_screen/media_collection_widget.dart';
@@ -157,7 +158,7 @@ class MainNavigation {
         final listId = arguments is int ? arguments : 0;
         return MaterialPageRoute(
           builder: (context) => NotifierProvider(
-              create: () => UserListsModel(listId: listId),
+              create: () => ListDetailsModel(listId: listId),
               // model: MovieDetailsModel(movieId),
               child: const DetailsUserList()),
         );

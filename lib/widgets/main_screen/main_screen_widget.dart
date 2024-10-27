@@ -44,19 +44,16 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
       _selectedTab = index;
     });
 
-    //todo подумать над другим способом реализации закрытии поиска (лучший варинат переключать фокус поиска)
     if(isSearchOpen) {
       isSearchOpen = !isSearchOpen;
-      movieListModel.closeSearch();
-      tvShowListModel.closeSearch();
     }
   }
 
   @override
   void initState() {
     super.initState();
-    movieListModel.loadMovies();
-    tvShowListModel.loadTvShows();
+    movieListModel.loadContent();
+    tvShowListModel.loadContent();
   }
 
   @override
@@ -87,17 +84,8 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
             onPressed: () {
               setState(() {
                 isSearchOpen = !isSearchOpen;
-                SearchFieldWidget.searchController.text = "";
                 movieListModel.clearFilterValue();
               });
-              if(!isSearchOpen) {
-                if(_selectedTab == 1) {
-                  movieListModel.closeSearch();
-                }
-                if (_selectedTab == 2) {
-                  tvShowListModel.closeSearch();
-                }
-              }
             },
             splashRadius: 15,
             icon: AnimatedSwitcher(
@@ -162,24 +150,29 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
 }
 
 class SearchFieldWidget extends StatelessWidget {
-  static final searchController = TextEditingController();
   const SearchFieldWidget({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    final movieListModel = context.findAncestorStateOfType<_MainScreenWidgetState>()?.movieListModel;
-    final tvShowListModel = context.findAncestorStateOfType<_MainScreenWidgetState>()?.tvShowListModel;
+    final homeModel = context.findAncestorStateOfType<_MainScreenWidgetState>()?.homeModel;
     final selectedTab = context.findAncestorStateOfType<_MainScreenWidgetState>()?._selectedTab;
 
+    if(homeModel == null || selectedTab == null) {
+      return SizedBox.shrink();
+    }
+    final searchController = homeModel.searchController;
+
     return TextField(
-      onChanged: (text) {
-        if(selectedTab == 1 && movieListModel != null) {
-          movieListModel.searchMovies(text);
-        }
-        if (selectedTab == 2 && tvShowListModel != null) {
-          tvShowListModel.searchTvShows(text);
+      onChanged: (value) {
+        if(value.isNotEmpty) {
+          if (selectedTab == 1) {
+            homeModel.onHomeSearchScreen(context);
+          } else {
+            //todo need to open TV tab when you search form TV shows tab
+            homeModel.onHomeSearchScreen(context);
+          }
         }
       },
       controller: searchController,

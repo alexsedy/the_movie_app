@@ -54,6 +54,7 @@ class _ParameterizedPaginationVerticalListWidgetState extends State<Parameterize
   Widget build(BuildContext context) {
     return ListView.builder(
       itemExtent: 163,
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       controller: _scrollController,
       itemCount: widget.paramModel.list.length + 1,
       itemBuilder: (BuildContext context, int index) {

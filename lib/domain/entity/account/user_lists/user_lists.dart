@@ -30,7 +30,7 @@ class Lists {
   @JsonKey(name: "iso_639_1")
   final String isoTwo;
   final String name;
-  final int numberOfItems;
+  int numberOfItems;
   final int public;
   // final String? revenue;
   // final int runtime;

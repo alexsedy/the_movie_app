@@ -162,7 +162,7 @@ class CreateListWidget extends StatefulWidget {
 class _CreateListWidgetState extends State<CreateListWidget> {
   final _descriptionController = TextEditingController();
   final _nameController = TextEditingController();
-  final _createButtonController = MaterialStatesController();
+  final _createButtonController = WidgetStatesController();
   bool _isPublic = false;
 
   @override

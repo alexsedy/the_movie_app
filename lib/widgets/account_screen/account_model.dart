@@ -1,13 +1,13 @@
 import 'dart:async';
 
+import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/domain/api_client/auth_api_client.dart';
 import 'package:the_movie_app/domain/cache_management/account_management.dart';
 import 'package:the_movie_app/domain/data_providers/session_data_provider.dart';
 import 'package:the_movie_app/domain/entity/account/account_state/account_state.dart';
-import 'package:the_movie_app/widgets/list_screens/default_lists_model.dart';
+import 'package:the_movie_app/widgets/list_screens/default_list/default_lists_model.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
-import 'package:uni_links/uni_links.dart';
 
 
 class AccountModel extends ChangeNotifier {
@@ -15,7 +15,8 @@ class AccountModel extends ChangeNotifier {
   AccountSate? _accountSate;
   final _sessionDataProvider = SessionDataProvider();
   var _isLoggedIn = false;
-  StreamSubscription? _sub;
+  late AppLinks _appLinks;
+  StreamSubscription<Uri>? _sub;
 
   AccountSate? get accountSate => _accountSate;
   bool get isLoggedIn => _isLoggedIn;
@@ -55,7 +56,7 @@ class AccountModel extends ChangeNotifier {
       // if (initialUri != null) {
       //   _handleAuthDeepLink(initialUri);
       // }
-      _sub = uriLinkStream.listen((Uri? uri) async {
+      _sub = _appLinks.uriLinkStream.listen((Uri? uri) async {
         if (uri != null) {
           if(uri.toString() == "app://the_movie_app/auth_approve") {
             final authData = await _apiClientAuth.createAccessToken(requestToken: requestToken);
@@ -109,5 +110,11 @@ class AccountModel extends ChangeNotifier {
 
   void onUserLists(BuildContext context) {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.userLists);
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
   }
 }

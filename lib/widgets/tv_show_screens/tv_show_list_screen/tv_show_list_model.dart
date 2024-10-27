@@ -14,13 +14,21 @@ class TvShowListModel extends ChangeNotifier with FilterTvShowListModelMixin {
   int _totalPage = 1;
   late String _locale;
   var _isTvsLoadingInProgress = false;
-  Timer? _searchDebounce;
 
   ScrollController get scrollController => _scrollController;
-
   List<MediaList> get tvs => List.unmodifiable(_tvs);
 
-  Future<void> loadTvShows() async {
+  @override
+  Future<void> loadContent() async {
+    _selectedGenres();
+    if(isFiltered()) {
+      await _loadFiltered();
+    } else {
+      await _loadTvShows();
+    }
+  }
+
+  Future<void> _loadTvShows() async {
     if (_isTvsLoadingInProgress || _currentPage >= _totalPage) return;
     _isTvsLoadingInProgress = true;
     final nextPage = _currentPage + 1;
@@ -37,35 +45,7 @@ class TvShowListModel extends ChangeNotifier with FilterTvShowListModelMixin {
     }
   }
 
-  Future<void> searchTvShows(String text) async {
-    _searchDebounce?.cancel();
-    _searchDebounce = Timer(const Duration(milliseconds: 300), () async {
-      if(text.isEmpty) {
-        resetList();
-        loadTvShows();
-      }
-      resetList();
-      if (_isTvsLoadingInProgress || _currentPage >= _totalPage) return;
-      _isTvsLoadingInProgress = true;
-      final nextPage = _currentPage + 1;
-
-      try {
-        final tvShowsResponse = await _apiClient.searchTvShow(nextPage, text);
-        _tvs.addAll(tvShowsResponse.list);
-        _currentPage = tvShowsResponse.page;
-        _totalPage = tvShowsResponse.totalPages;
-        _isTvsLoadingInProgress = false;
-        notifyListeners();
-      } catch (e) {
-        _isTvsLoadingInProgress = false;
-      }
-    });
-    scrollToTop();
-  }
-
-  @override
-  Future<void> loadFiltered() async {
-    resetList();
+  Future<void> _loadFiltered() async {
     if (_isTvsLoadingInProgress || _currentPage >= _totalPage) return;
     _isTvsLoadingInProgress = true;
     final nextPage = _currentPage + 1;
@@ -99,15 +79,14 @@ class TvShowListModel extends ChangeNotifier with FilterTvShowListModelMixin {
     } catch (e) {
       _isTvsLoadingInProgress = false;
     }
-    scrollToTop();
   }
 
   @override
   void clearAllFilters() {
     clearFilterValue();
-    // resetList();
-    // loadMovies();
-    // scrollToTop();
+    resetList();
+    loadContent();
+    scrollToTop();
     notifyListeners();
   }
 
@@ -126,11 +105,6 @@ class TvShowListModel extends ChangeNotifier with FilterTvShowListModelMixin {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.tvShowDetails, arguments: id);
   }
 
-  void preLoadTvShows(int index) {
-    if (index < _tvs.length - 1) return;
-    loadTvShows();
-  }
-
   void scrollToTop() {
     scrollController.animateTo(
       0.0,
@@ -139,19 +113,19 @@ class TvShowListModel extends ChangeNotifier with FilterTvShowListModelMixin {
     );
   }
 
-  Future<void> resetList() async {
+  void resetList() {
     _currentPage = 0;
     _totalPage = 1;
     _tvs.clear();
   }
 
-  void closeSearch() {
-    resetList();
-    loadTvShows();
+  @override
+  void applyFilter() {
     scrollToTop();
+    resetList();
   }
 
-  // void setupLocale(BuildContext context) {
+// void setupLocale(BuildContext context) {
   //   final locale = Localizations.localeOf(context);
   // }
 }
@@ -233,10 +207,6 @@ mixin FilterTvShowListModelMixin implements IMediaFilter {
   set sortingValue(value) {
     _sortingValue = value;
   }
-
-
-  @override
-  Future<void> loadFiltered();
 
   @override
   bool isFiltered() {

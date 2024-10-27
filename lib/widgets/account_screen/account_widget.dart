@@ -170,9 +170,45 @@ class _LogoutButtonWidget extends StatelessWidget {
     }
 
     return ElevatedButton(
-      onPressed: () => model?.makeLogout(context),
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text("Do you really want to leave?"),
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
+                      );
+                      await model?.makeLogout(context);
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("Yes"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Cancel"),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+      // onPressed: () => model?.makeLogout(context),
       style: ButtonStyle(
-        backgroundColor: MaterialStatePropertyAll(Colors.redAccent.shade100),
+        backgroundColor: WidgetStatePropertyAll(Colors.redAccent.shade100),
       ),
       child: const Text("Logout"),
     );

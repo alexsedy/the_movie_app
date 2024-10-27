@@ -3,7 +3,7 @@ import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/helpers/converter_helper.dart';
 import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/provider/provider.dart';
-import 'package:the_movie_app/widgets/list_screens/default_lists_model.dart';
+import 'package:the_movie_app/widgets/list_screens/default_list/default_lists_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/list_elements/params_pagination_vertical_list_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/list_shimmer_skeleton_widget.dart';
 

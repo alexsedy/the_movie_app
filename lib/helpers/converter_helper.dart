@@ -196,12 +196,39 @@ class ConverterHelper {
     }
   }
 
-  static String _formatDateOnlyYear(String? date) =>
-      date != "" ? _dateYear.format(DateTime.parse(date ?? "")) : "No date";
+  static String _formatDateOnlyYear(String? date) {
+    if (date == null || date.isEmpty) {
+      return "No date";
+    }
 
-  static String _formatFullDate(String? date) =>
-      date != "" ? _dateFull.format(DateTime.parse(date ?? "")) : "No date";
+    try {
+      return _dateYear.format(DateTime.parse(date));
+    } catch (e) {
+      return "No date";
+    }
+  }
 
-  static String _formatFullShortDate(String? date) =>
-      date != "" ? _dateFullShort.format(DateTime.parse(date ?? "")) : "No date";
+  static String _formatFullDate(String? date) {
+    if (date == null || date.isEmpty) {
+      return "No date";
+    }
+
+    try {
+      return _dateFull.format(DateTime.parse(date));
+    } catch (e) {
+      return "No date";
+    }
+  }
+
+  static String _formatFullShortDate(String? date) {
+    if (date == null || date.isEmpty) {
+      return "No date";
+    }
+
+    try {
+      return _dateFullShort.format(DateTime.parse(date));
+    } catch (e) {
+      return "No date";
+    }
+  }
 }

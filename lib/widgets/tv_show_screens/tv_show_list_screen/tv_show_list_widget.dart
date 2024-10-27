@@ -55,7 +55,7 @@ class _MovieListWidgetState extends State<TvShowListWidget> {
         altImagePath: AppImages.noPoster,
         scrollController: model.scrollController,
         list: ConverterHelper.convertTVShowsForVerticalWidget(model.tvs),
-      ), loadMoreItems: model.loadTvShows,
+      ), loadMoreItems: model.loadContent,
     );
   }
 }

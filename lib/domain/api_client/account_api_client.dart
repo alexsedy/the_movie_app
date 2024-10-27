@@ -4,10 +4,11 @@ import 'dart:io';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/domain/cache_management/account_management.dart';
 import 'package:the_movie_app/domain/entity/account/account_state/account_state.dart';
+import 'package:the_movie_app/domain/entity/account/items_to_delete/remove_items.dart';
 import 'package:the_movie_app/domain/entity/account/user_list_details/user_list_details.dart';
 import 'package:the_movie_app/domain/entity/account/user_lists/user_lists.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
-import 'package:the_movie_app/widgets/list_screens/default_lists_model.dart';
+import 'package:the_movie_app/widgets/list_screens/default_list/default_lists_model.dart';
 
 class AccountApiClient extends ApiClient {
 
@@ -221,6 +222,27 @@ class AccountApiClient extends ApiClient {
 
     final tvShowResponse = MediaListResponse.fromJson(json);
     return tvShowResponse;
+  }
+
+  Future<void> removeItems(int listId, ListOfItemsToRemove listOfItemsToRemove) async {
+    final sessionId = await sessionDataProvider.getSessionId();
+
+    final url = makeUriFour(
+      "/list/$listId/items",
+      <String, dynamic>{
+        "api_key": apiKey,
+        "session_id": sessionId,
+      },
+    );
+
+    final request = await client.deleteUrl(url);
+    request.headers.add("Authorization", "Bearer $accessToken");
+    request.headers.contentType = ContentType.json;
+    request.write(jsonEncode(listOfItemsToRemove.toJson()));
+    final response = await request.close();
+    final json = (await response.jsonDecode()) as Map<String, dynamic>;
+
+    validateError(response, json);
   }
 }
 

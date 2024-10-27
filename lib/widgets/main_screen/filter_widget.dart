@@ -350,7 +350,8 @@ class _AcceptedButtonsWidget extends StatelessWidget {
         // ),
         ElevatedButton(
           onPressed: () {
-            model.loadFiltered();
+            model.applyFilter();
+            model.loadContent();
             Navigator.pop(context);
           },
           child: const Text("Ok"),

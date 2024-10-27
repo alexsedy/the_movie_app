@@ -14,13 +14,22 @@ class MovieListModel extends ChangeNotifier with FilterMovieListModelMixin {
   int _totalPage = 1;
   late String _locale;
   var _isMovieLoadingInProgress = false;
-  Timer? _searchDebounce;
 
   List<MediaList> get movies => List.unmodifiable(_movies);
 
   ScrollController get scrollController => _scrollController;
 
-  Future<void> loadMovies() async {
+  @override
+  Future<void> loadContent() async {
+    _selectedGenres();
+    if(isFiltered()) {
+      await _loadFiltered();
+    } else {
+      await _loadMovies();
+    }
+  }
+
+  Future<void> _loadMovies() async {
     if (_isMovieLoadingInProgress || _currentPage >= _totalPage) return;
     _isMovieLoadingInProgress = true;
     final nextPage = _currentPage + 1;
@@ -37,34 +46,7 @@ class MovieListModel extends ChangeNotifier with FilterMovieListModelMixin {
     }
   }
 
-  Future<void> searchMovies(String text) async {
-    _searchDebounce?.cancel();
-    _searchDebounce = Timer(const Duration(milliseconds: 300), () async {
-      if(text.isEmpty) {
-        resetList();
-        loadMovies();
-      }
-      resetList();
-      if (_isMovieLoadingInProgress || _currentPage >= _totalPage) return;
-      _isMovieLoadingInProgress = true;
-      final nextPage = _currentPage + 1;
-
-      try {
-        final moviesResponse = await _apiClient.searchMovie(nextPage, text);
-        _movies.addAll(moviesResponse.list);
-        _currentPage = moviesResponse.page;
-        _totalPage = moviesResponse.totalPages;
-        _isMovieLoadingInProgress = false;
-        notifyListeners();
-      } catch (e) {
-        _isMovieLoadingInProgress = false;
-      }
-    });
-  }
-
-  @override
-  Future<void> loadFiltered() async {
-    resetList();
+  Future<void> _loadFiltered() async {
     if (_isMovieLoadingInProgress || _currentPage >= _totalPage) return;
     _isMovieLoadingInProgress = true;
     final nextPage = _currentPage + 1;
@@ -98,14 +80,13 @@ class MovieListModel extends ChangeNotifier with FilterMovieListModelMixin {
     } catch (e) {
       _isMovieLoadingInProgress = false;
     }
-    scrollToTop();
   }
 
   @override
   void clearAllFilters() {
     clearFilterValue();
     resetList();
-    loadMovies();
+    loadContent();
     scrollToTop();
     notifyListeners();
   }
@@ -120,7 +101,7 @@ class MovieListModel extends ChangeNotifier with FilterMovieListModelMixin {
     _scoreEnd = 10;
   }
 
-  Future<void> resetList() async {
+  void resetList() async {
     _currentPage = 0;
     _totalPage = 1;
     _movies.clear();
@@ -139,10 +120,10 @@ class MovieListModel extends ChangeNotifier with FilterMovieListModelMixin {
     );
   }
 
-  void closeSearch() {
-    resetList();
-    loadMovies();
+  @override
+  void applyFilter() {
     scrollToTop();
+    resetList();
   }
 
   // void setupLocale(BuildContext context) {
@@ -231,10 +212,6 @@ mixin FilterMovieListModelMixin implements IMediaFilter {
     _sortingValue = value;
   }
 
-
-  @override
-  Future<void> loadFiltered();
-
   @override
   bool isFiltered() {
     if(_selectedDateStart != null || _selectedDateEnd != null ||
@@ -274,4 +251,7 @@ mixin FilterMovieListModelMixin implements IMediaFilter {
       });
     });
   }
+
+  @override
+  void applyFilter();
 }
