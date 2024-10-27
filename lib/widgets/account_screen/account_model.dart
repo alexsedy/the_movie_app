@@ -56,6 +56,7 @@ class AccountModel extends ChangeNotifier {
       // if (initialUri != null) {
       //   _handleAuthDeepLink(initialUri);
       // }
+      _appLinks = AppLinks();
       _sub = _appLinks.uriLinkStream.listen((Uri? uri) async {
         if (uri != null) {
           if(uri.toString() == "app://the_movie_app/auth_approve") {
