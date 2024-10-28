@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
-import '../movie_list_screen/movie_list_widget.dart';
+import 'package:the_movie_app/provider/provider.dart';
+import 'package:the_movie_app/widgets/account_screen/account_model.dart';
+import 'package:the_movie_app/widgets/account_screen/account_widget.dart';
+import 'package:the_movie_app/widgets/home_screen/home_model.dart';
+import 'package:the_movie_app/widgets/home_screen/home_widget.dart';
+import 'package:the_movie_app/widgets/main_screen/filter_widget.dart';
+import 'package:the_movie_app/widgets/movie_screens/movie_list_screen/movie_list_model.dart';
+import 'package:the_movie_app/widgets/movie_screens/movie_list_screen/movie_list_widget.dart';
+import 'package:the_movie_app/widgets/tv_show_screens/tv_show_list_screen/tv_show_list_model.dart';
+import 'package:the_movie_app/widgets/tv_show_screens/tv_show_list_screen/tv_show_list_widget.dart';
 
 class MainScreenWidget extends StatefulWidget {
   const MainScreenWidget({super.key});
@@ -9,37 +18,73 @@ class MainScreenWidget extends StatefulWidget {
 }
 
 class _MainScreenWidgetState extends State<MainScreenWidget> {
+  final movieListModel = MovieListModel();
+  final tvShowListModel = TvShowListModel();
+  final homeModel = HomeModel();
+  final accountModel = AccountModel();
   int _selectedTab = 0;
   bool isSearchOpen = false;
 
-  //todo реализация при которой виджеты сбрасываются [1]
-  // static final List<Widget> _widgetOptions = <Widget>[
-  //   Text("Home"),
-  //   MovieListWidget(),
-  //   Text("TV Shows"),
-  // ];
-
   void onSelectTab(int index) {
-    if (_selectedTab == index) return;
+
+    //todo подумать на лучшим способом проверить логин статус если ты уже залогинен
+    if (index == 3) {
+      accountModel.checkLoginStatus();
+    }
+
+    if (_selectedTab == index) {
+      if(index == 1) {
+        movieListModel.scrollToTop();
+      } else if (index == 2) {
+        tvShowListModel.scrollToTop();
+      }
+      return;
+    }
     setState(() {
       _selectedTab = index;
     });
+
+    if(isSearchOpen) {
+      isSearchOpen = !isSearchOpen;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    movieListModel.loadContent();
+    tvShowListModel.loadContent();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // movieListModel.setupLocale(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    final routeArguments = ModalRoute.of(context)?.settings.arguments;
+    if(routeArguments != null) {
+      _selectedTab = routeArguments as int;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: AnimatedSwitcher(
           duration: const Duration(milliseconds: 500),
-          child: isSearchOpen ? SearchFieldWidget() : const Text("The Movie"),
+          child: isSearchOpen ? const SearchFieldWidget() : const Text("The Movie"),
         ),
         actions: [
-          IconButton(
+          if(_selectedTab == 1)
+            FilterMoviesButtonWidget(model: movieListModel,),
+          if(_selectedTab == 2)
+            FilterMoviesButtonWidget(model: tvShowListModel,),
+          if (_selectedTab == 1 || _selectedTab == 2) IconButton(
             onPressed: () {
               setState(() {
                 isSearchOpen = !isSearchOpen;
-                SearchFieldWidget.searchController.text = "";
+                movieListModel.clearFilterValue();
               });
             },
             splashRadius: 15,
@@ -52,29 +97,35 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
           ),
         ],
       ),
-      // floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,  //todo реализовать кнопку вверх
-      // floatingActionButton: Container(
-      //   decoration: BoxDecoration(color: AppColors.mainBlue, borderRadius: BorderRadius.circular(30.0)),
-      //   child: IconButton(
-      //     color: Colors.white,
-      //     splashRadius: 30,
-      //     onPressed: () {  },
-      //     icon: Icon(Icons.arrow_upward),),
-      // ),
-              //todo реализация при которой виджеты сбрасываются [2]
-      // body: Center(
-      //   child: _widgetOptions[_selectedTab],
-      // ),
       body: IndexedStack(
         index: _selectedTab,
         children: [
-          Center(child: Text("Home")),
-          MovieListWidget(),
-          Center(child: Text("TV Shows")),
+          NotifierProvider(
+            create: () => homeModel,
+            isManagingModel: false,
+            child: const HomeWidget(),
+          ),
+          NotifierProvider(
+            create: () => movieListModel,
+            isManagingModel: false,
+            child: const MovieListWidget(),
+          ),
+          NotifierProvider(
+            create: () => tvShowListModel,
+            isManagingModel: false,
+              child: const TvShowListWidget(),
+          ),
+          NotifierProvider(
+              create: () => accountModel,
+              isManagingModel: false,
+              child: const AccountWidget(),
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: _selectedTab,
+        onTap: onSelectTab,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -88,37 +139,56 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
             icon: Icon(Icons.tv),
             label: "TV Shows"
           ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: "Profile"
+          ),
         ],
-        onTap: onSelectTab,
       ),
     );
   }
 }
 
 class SearchFieldWidget extends StatelessWidget {
-  static final searchController = TextEditingController();
   const SearchFieldWidget({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    final homeModel = context.findAncestorStateOfType<_MainScreenWidgetState>()?.homeModel;
+    final selectedTab = context.findAncestorStateOfType<_MainScreenWidgetState>()?._selectedTab;
+
+    if(homeModel == null || selectedTab == null) {
+      return SizedBox.shrink();
+    }
+    final searchController = homeModel.searchController;
+
     return TextField(
+      onChanged: (value) {
+        if(value.isNotEmpty) {
+          if (selectedTab == 1) {
+            homeModel.onHomeSearchScreen(context);
+          } else {
+            //todo need to open TV tab when you search form TV shows tab
+            homeModel.onHomeSearchScreen(context);
+          }
+        }
+      },
       controller: searchController,
       autofocus: true,
       decoration: const InputDecoration(
         border: InputBorder.none,
         hintText: 'Search',
         hintStyle: TextStyle(
-          color: Colors.white,
+          // color: Colors.white,
           fontSize: 20,
         ),
       ),
       style: const TextStyle(
-        color: Colors.white,
+        // color: Colors.white,
         fontSize: 20,
       ),
     );
   }
 }
-

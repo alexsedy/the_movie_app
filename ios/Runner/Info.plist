@@ -45,5 +45,24 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+    <!-- Deeplink settings -->
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>app</string>
+    </array>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>com.example.movieapp</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>app</string>
+            </array>
+        </dict>
+    </array>
+    <!-- End Deeplink settings -->
 </dict>
 </plist>
