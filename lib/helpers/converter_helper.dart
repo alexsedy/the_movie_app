@@ -67,35 +67,27 @@ class ConverterHelper {
     }).toList();
   }
 
-  static List<ParameterizedWidgetDisplayModel> convertCasts(List<Cast>? casts){
-    if(casts != null) {
-      return casts.map((media) {
-        return ParameterizedWidgetDisplayModel(
-          firstLine: media.name,
-          secondLine: null,
-          thirdLine: media.character,
-          imagePath: media.profilePath,
-        );
-      }).toList();
-    } else {
-      return <ParameterizedWidgetDisplayModel>[];
+  static List<ParameterizedWidgetDisplayModel> convertCasts(List<Cast> casts){
+    return casts.map((media) {
+      return ParameterizedWidgetDisplayModel(
+        firstLine: media.name,
+        secondLine: null,
+        thirdLine: media.character,
+        imagePath: media.profilePath,
+      );
+    }).toList();
     }
-  }
 
-  static List<ParameterizedWidgetDisplayModel> convertCrew(List<Crew>? crew){
-    if(crew != null) {
-      return crew.map((media) {
-        return ParameterizedWidgetDisplayModel(
-          firstLine: media.name,
-          secondLine: media.job,
-          thirdLine: null,
-          imagePath: media.profilePath,
-        );
-      }).toList();
-    } else {
-      return <ParameterizedWidgetDisplayModel>[];
+  static List<ParameterizedWidgetDisplayModel> convertCrew(List<Crew> crew){
+    return crew.map((media) {
+      return ParameterizedWidgetDisplayModel(
+        firstLine: media.name,
+        secondLine: media.job,
+        thirdLine: null,
+        imagePath: media.profilePath,
+      );
+    }).toList();
     }
-  }
 
   static List<ParameterizedWidgetDisplayModel> convertSeason( List<Seasons> seasons){
     return seasons.map((media) {
@@ -108,7 +100,7 @@ class ConverterHelper {
     }).toList();
   }
 
-  static List<ParameterizedWidgetDisplayModel> convertSeasonHorizontal( List<Seasons>? seasons){
+  static List<ParameterizedWidgetDisplayModel> convertSeasonHorizontal(List<Seasons>? seasons){
     if(seasons != null) {
       return seasons.map((media) {
         return ParameterizedWidgetDisplayModel(
@@ -151,50 +143,38 @@ class ConverterHelper {
     }
   }
 
-  static List<ParameterizedWidgetDisplayModel> convertCompanies(List<ProductionCompanie>? companies){
-    if(companies != null) {
-      return companies.map((media) {
-        return ParameterizedWidgetDisplayModel(
-          firstLine: media.name,
-          secondLine: null,
-          thirdLine: null,
-          imagePath: media.logoPath,
-        );
-      }).toList();
-    } else {
-      return <ParameterizedWidgetDisplayModel>[];
+  static List<ParameterizedWidgetDisplayModel> convertCompanies(List<ProductionCompanie> companies){
+    return companies.map((media) {
+      return ParameterizedWidgetDisplayModel(
+        firstLine: media.name,
+        secondLine: null,
+        thirdLine: null,
+        imagePath: media.logoPath,
+      );
+    }).toList();
     }
-  }
 
-  static List<ParameterizedWidgetDisplayModel> convertNetworks(List<Network>? networks){
-    if(networks != null) {
-      return networks.map((media) {
-        return ParameterizedWidgetDisplayModel(
-          firstLine: media.name,
-          secondLine: null,
-          thirdLine: null,
-          imagePath: media.logoPath,
-        );
-      }).toList();
-    } else {
-      return <ParameterizedWidgetDisplayModel>[];
+  static List<ParameterizedWidgetDisplayModel> convertNetworks(List<Network> networks){
+    return networks.map((media) {
+      return ParameterizedWidgetDisplayModel(
+        firstLine: media.name,
+        secondLine: null,
+        thirdLine: null,
+        imagePath: media.logoPath,
+      );
+    }).toList();
     }
-  }
 
-  static List<ParameterizedWidgetDisplayModel> convertRecommendation(List<MediaList>? mediaList) {
-    if (mediaList != null) {
-      return mediaList.map((media) {
-        return ParameterizedWidgetDisplayModel(
-          firstLine: media.title ?? media.name,
-          secondLine: _formatFullShortDate(media.releaseDate ?? media.firstAirDate),
-          thirdLine: null,
-          imagePath: media.posterPath,
-        );
-      }).toList();
-    } else {
-      return <ParameterizedWidgetDisplayModel>[];
+  static List<ParameterizedWidgetDisplayModel> convertRecommendation(List<MediaList> mediaList) {
+    return mediaList.map((media) {
+      return ParameterizedWidgetDisplayModel(
+        firstLine: media.title ?? media.name,
+        secondLine: _formatFullShortDate(media.releaseDate ?? media.firstAirDate),
+        thirdLine: null,
+        imagePath: media.posterPath,
+      );
+    }).toList();
     }
-  }
 
   static String _formatDateOnlyYear(String? date) {
     if (date == null || date.isEmpty) {

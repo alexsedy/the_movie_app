@@ -23,6 +23,14 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
 
     if(model == null) return const SizedBox.shrink();
 
+    final overview = model.mediaDetails?.overview;
+    final productionCompanies = model.mediaDetails?.productionCompanies;
+    final crew = model.mediaDetails?.credits.crew;
+    final cast = model.mediaDetails?.credits.cast;
+    final seasons = model.mediaDetails?.seasons;
+    final networks = model.mediaDetails?.networks;
+    final recommendations = model.mediaDetails?.recommendations?.list;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -49,43 +57,54 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
             ),
           ],
         ),
+
+        if(overview != null && overview.isNotEmpty)
         OverviewWidget<TvShowDetailsModel>(
           mediaDetailsElementType: MediaDetailsElementType.tv,
           model: model,
         ),
+
         if(model.mediaDetails?.belongsToCollection != null)
           BelongsToCollectionWidget<TvShowDetailsModel>(
             model: model,
           ),
+
+        if(crew != null && crew.isNotEmpty)
         ParameterizedMediaCrewWidget(
           paramsModel: ParameterizedWidgetModel(
-            list: ConverterHelper.convertCrew(model.mediaDetails?.credits.crew),
+            list: ConverterHelper.convertCrew(crew),
             action: (BuildContext context, int index) {},
             additionalText: "TV Show Crew",
           ),
-          secondAction: () => model.onCrewListScreen(context, model.mediaDetails?.credits.crew),
+          secondAction: () => model.onCrewListScreen(context, crew),
         ),
+
+        if(cast != null && cast.isNotEmpty)
         ParameterizedMediaDetailsListWidget(
           paramsModel: ParameterizedWidgetModel(
-            list: ConverterHelper.convertCasts(model.mediaDetails?.credits.cast),
+            list: ConverterHelper.convertCasts(cast),
             action: model.onPeopleDetailsScreen,
             additionalText: "TV Show Cast",
             altImagePath: AppImages.noProfile,
           ),
-          secondAction: () => model.onCastListScreen(context, model.mediaDetails?.credits.cast),
+          secondAction: () => model.onCastListScreen(context, cast),
         ),
+
+        if(seasons != null && seasons.isNotEmpty)
         ParameterizedMediaDetailsListWidget(
           paramsModel: ParameterizedWidgetModel(
-            list: ConverterHelper.convertSeasonHorizontal(model.mediaDetails?.seasons),
+            list: ConverterHelper.convertSeasonHorizontal(seasons),
             action: model.onSeasonDetailsScreen,
             additionalText: "Seasons",
             altImagePath: AppImages.noPoster,
           ),
-          secondAction: () => model.onSeasonsListScreen(context, model.mediaDetails?.seasons),
+          secondAction: () => model.onSeasonsListScreen(context, seasons),
         ),
+
+        if(networks != null && networks.isNotEmpty)
         ParameterizedMediaDetailsListWidget(
           paramsModel: ParameterizedWidgetModel(
-            list: ConverterHelper.convertNetworks(model.mediaDetails?.networks),
+            list: ConverterHelper.convertNetworks(networks),
             action: model.onPeopleDetailsScreen,
             additionalText: "Networks",
             altImagePath: AppImages.noLogo,
@@ -93,11 +112,13 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
             boxHeight: 215,
             paddingEdgeInsets: 4,
           ),
-          secondAction: () => model.onCastListScreen(context, model.mediaDetails?.credits.cast),
+          secondAction: () {},
         ),
+
+        if(productionCompanies != null && productionCompanies.isNotEmpty)
         ParameterizedMediaDetailsListWidget(
           paramsModel: ParameterizedWidgetModel(
-            list: ConverterHelper.convertCompanies(model.mediaDetails?.productionCompanies),
+            list: ConverterHelper.convertCompanies(productionCompanies),
             action: model.onPeopleDetailsScreen,
             additionalText: "Production Companies",
             altImagePath: AppImages.noLogo,
@@ -105,17 +126,20 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
             boxHeight: 215,
             paddingEdgeInsets: 4,
           ),
-          secondAction: () => model.onCastListScreen(context, model.mediaDetails?.credits.cast),
+          secondAction: () {},
         ),
+
+        if(recommendations != null && recommendations.isNotEmpty)
         ParameterizedMediaDetailsListWidget(
           paramsModel: ParameterizedWidgetModel(
-            list: ConverterHelper.convertRecommendation(model.mediaDetails?.recommendations?.list),
+            list: ConverterHelper.convertRecommendation(recommendations),
             action: model.onMediaDetailsScreen,
             additionalText: "Recommendation TV Shows",
             altImagePath: AppImages.noPoster,
           ),
           secondAction: () => {},
         ),
+
         const SizedBox(height: 20,),
       ],
     );

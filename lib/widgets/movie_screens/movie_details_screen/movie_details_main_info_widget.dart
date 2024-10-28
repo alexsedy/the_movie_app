@@ -35,6 +35,12 @@ class _MovieDetailsWidget extends StatelessWidget {
 
     if(model == null) return const SizedBox.shrink();
 
+    final overview = model.mediaDetails?.overview;
+    final crew = model.mediaDetails?.credits.crew;
+    final cast = model.mediaDetails?.credits.cast;
+    final productionCompanies = model.mediaDetails?.productionCompanies;
+    final recommendations = model.mediaDetails?.recommendations?.list;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -61,34 +67,43 @@ class _MovieDetailsWidget extends StatelessWidget {
             ),
           ],
         ),
-        OverviewWidget<MovieDetailsModel>(
+
+        if(overview != null && overview.isNotEmpty)
+          OverviewWidget<MovieDetailsModel>(
           mediaDetailsElementType: MediaDetailsElementType.movie,
           model: model,
         ),
+
         if(model.mediaDetails?.belongsToCollection != null)
           BelongsToCollectionWidget<MovieDetailsModel>(
             model: model,
           ),
+
+        if(crew != null && crew.isNotEmpty)
         ParameterizedMediaCrewWidget(
           paramsModel: ParameterizedWidgetModel(
-            list: ConverterHelper.convertCrew(model.mediaDetails?.credits.crew),
+            list: ConverterHelper.convertCrew(crew),
             action: (BuildContext context, int index) {},
             additionalText: "Movie Crew",
           ),
-          secondAction: () => model.onCrewListScreen(context, model.mediaDetails?.credits.crew),
+          secondAction: () => model.onCrewListScreen(context, crew),
         ),
+
+        if(cast != null && cast.isNotEmpty)
         ParameterizedMediaDetailsListWidget(
           paramsModel: ParameterizedWidgetModel(
-            list: ConverterHelper.convertCasts(model.mediaDetails?.credits.cast),
+            list: ConverterHelper.convertCasts(cast),
             action: model.onPeopleDetailsScreen,
             additionalText: "Movie Cast",
             altImagePath: AppImages.noProfile,
           ),
-          secondAction: () => model.onCastListScreen(context, model.mediaDetails?.credits.cast),
+          secondAction: () => model.onCastListScreen(context, cast),
         ),
+
+        if(productionCompanies != null && productionCompanies.isNotEmpty)
         ParameterizedMediaDetailsListWidget(
           paramsModel: ParameterizedWidgetModel(
-            list: ConverterHelper.convertCompanies(model.mediaDetails?.productionCompanies),
+            list: ConverterHelper.convertCompanies(productionCompanies),
             action: model.onPeopleDetailsScreen,
             additionalText: "Production Companies",
             altImagePath: AppImages.noLogo,
@@ -96,17 +111,20 @@ class _MovieDetailsWidget extends StatelessWidget {
             boxHeight: 215,
             paddingEdgeInsets: 4,
           ),
-          secondAction: () => model.onCastListScreen(context, model.mediaDetails?.credits.cast),
+          secondAction: () {},
         ),
+
+        if(recommendations != null && recommendations.isNotEmpty)
         ParameterizedMediaDetailsListWidget(
           paramsModel: ParameterizedWidgetModel(
-            list: ConverterHelper.convertRecommendation(model.mediaDetails?.recommendations?.list),
+            list: ConverterHelper.convertRecommendation(recommendations),
             action: model.onMediaDetailsScreen,
             additionalText: "Recommendation Movies",
             altImagePath: AppImages.noPoster,
           ),
           secondAction: () {},
         ),
+
         const SizedBox(height: 20,),
       ],
     );

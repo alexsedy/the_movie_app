@@ -23,15 +23,15 @@ class SeriesDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
     notifyListeners();
   }
 
-  void onCastListScreen(BuildContext context, List<Cast>? cast) {
+  void onCastListScreen(BuildContext context, List<Cast> cast) {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.castList, arguments: cast);
   }
 
-  void onGuestCastListScreen(BuildContext context, List<Cast>? cast) {
+  void onGuestCastListScreen(BuildContext context, List<Cast> cast) {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.castList, arguments: cast);
   }
 
-  void onCrewListScreen(BuildContext context, List<Crew>? crew) {
+  void onCrewListScreen(BuildContext context, List<Crew> crew) {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.crewList, arguments: crew);
   }
 
