@@ -84,6 +84,7 @@ class _UserListBody extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 final lists = model.lists[index];
                 final name = lists.name;
+                final description = lists.description;
                 final numberOfItems = lists.numberOfItems;
                 final public = lists.public == 1;
                 final createdAt = model.formatDate(lists.createdAt.substring(0, lists.createdAt.length - 4));
@@ -167,12 +168,22 @@ class _UserListBody extends StatelessWidget {
                     leading: public
                         ? Icon(Icons.lock_open, color: Colors.greenAccent[700],)
                         : Icon(Icons.lock_outline, color: Colors.redAccent[700],),
-                    title: Row(
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           name,
                           style: const TextStyle(
                             fontSize: 22,
+                          ),
+                        ),
+                        Text(
+                          description,
+                          maxLines: 1,
+                          overflow: TextOverflow.clip,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontStyle: FontStyle.italic,
                           ),
                         ),
                       ],

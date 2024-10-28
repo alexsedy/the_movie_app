@@ -113,8 +113,8 @@ class UserListsShimmerSkeletonWidget extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.all(8),
               child: Container(
-                height: 97,
-                width: 407.5,
+                height: 140,
+                width: 411.5,
                 decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border.all(color: Colors.black.withOpacity(0.2)),
