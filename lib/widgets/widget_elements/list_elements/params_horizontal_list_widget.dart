@@ -18,10 +18,22 @@ class ParameterizedHorizontalListWidget extends StatelessWidget {
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           itemBuilder: (BuildContext context, int index) {
 
-            var posterPath = paramModel.list[index].imagePath;
-            var firstLine = paramModel.list[index].firstLine;
-            var secondLine = paramModel.list[index].secondLine;
-            var thirdLine = paramModel.list[index].thirdLine;
+            final posterPath = paramModel.list[index].imagePath;
+            final firstLine = paramModel.list[index].firstLine;
+            final secondLine = paramModel.list[index].secondLine;
+            final thirdLine = paramModel.list[index].thirdLine;
+
+            var firstMaxLine = 3;
+            var thirdMaxLine = 2;
+
+            if(firstLine != null && firstLine.length > 20) {
+              thirdMaxLine = 1;
+            }
+
+            if(secondLine != null && thirdLine != null) {
+              firstMaxLine = 1;
+              thirdMaxLine = 1;
+            }
 
             return Padding(
               padding: const EdgeInsets.all(8),
@@ -74,7 +86,7 @@ class ParameterizedHorizontalListWidget extends StatelessWidget {
                                 padding: const EdgeInsets.only(left: 4, right: 2, top: 5),
                                 child: Text(
                                   firstLine,
-                                  maxLines: 3,
+                                  maxLines: firstMaxLine,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                       fontSize: 15,
@@ -100,7 +112,7 @@ class ParameterizedHorizontalListWidget extends StatelessWidget {
                                   padding: const EdgeInsets.only(left: 4, right: 2, top: 5, bottom: 5),
                                   child: Text(
                                     thirdLine,
-                                    maxLines: 2,
+                                    maxLines: thirdMaxLine,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
                                         fontSize: 14,
