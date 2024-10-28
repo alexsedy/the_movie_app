@@ -224,7 +224,7 @@ class AccountApiClient extends ApiClient {
     return tvShowResponse;
   }
 
-  Future<void> removeItems(int listId, ListOfItemsToRemove listOfItemsToRemove) async {
+  Future<bool> removeItems(int listId, ListOfItemsToRemove listOfItemsToRemove) async {
     final sessionId = await sessionDataProvider.getSessionId();
 
     final url = makeUriFour(
@@ -243,6 +243,59 @@ class AccountApiClient extends ApiClient {
     final json = (await response.jsonDecode()) as Map<String, dynamic>;
 
     validateError(response, json);
+
+    return json["success"];
+  }
+
+  Future<bool> removeList(int listId) async {
+    final sessionId = await sessionDataProvider.getSessionId();
+
+    final url = makeUri(
+      "/list/$listId",
+      <String, dynamic>{
+        "api_key": apiKey,
+        "session_id": sessionId,
+      },
+    );
+
+    final request = await client.deleteUrl(url);
+    request.headers.add("Authorization", "Bearer $accessToken");
+    request.headers.contentType = ContentType.json;
+    final response = await request.close();
+    final json = (await response.jsonDecode()) as Map<String, dynamic>;
+
+    validateError(response, json);
+
+    return json["success"];
+  }
+
+  Future<bool> updateList({required String? description, required String name,
+    required bool public, required int listId}) async {
+    final accessToken = await sessionDataProvider.getAccessToken();
+
+    final url = makeUriFour(
+      "/list/$listId",
+      <String, dynamic>{
+      },
+    );
+
+    final parameters = <String, dynamic>{
+      "description": description,
+      "name": name,
+      "sort_by": "original_order.asc",
+      "public": public.toString(),
+    };
+
+    final request = await client.putUrl(url);
+    request.headers.contentType = ContentType.json;
+    request.headers.add("Authorization", "Bearer $accessToken");
+    request.write(jsonEncode(parameters));
+    final response = await request.close();
+    final json = (await response.jsonDecode()) as Map<String, dynamic>;
+
+    validateError(response, json);
+
+    return json["success"];
   }
 }
 

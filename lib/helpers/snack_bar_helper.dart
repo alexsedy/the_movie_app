@@ -122,7 +122,8 @@ abstract class SnackBarHelper{
   }
 
   static Future<void> handleErrorWithMessage({required Function apiReq,
-    required BuildContext context, required MessageType messageType, required String message}) async {
+    required BuildContext context, required MessageType messageType,
+    String message = ""}) async {
     try {
       await apiReq();
 
@@ -147,6 +148,14 @@ abstract class SnackBarHelper{
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             duration: const Duration(seconds: 5),
             content: Text("This tv show has been added to the \"$message\" list", style: TextStyle(fontSize: 20),),
+          ));
+          Navigator.of(context).pop();
+          return;
+
+        case MessageType.remove:
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            duration: const Duration(seconds: 5),
+            content: Text("The list has been removed", style: TextStyle(fontSize: 20),),
           ));
           Navigator.of(context).pop();
           return;
@@ -181,5 +190,5 @@ abstract class SnackBarHelper{
 }
 
 enum MessageType {
-  listCreated, movieAddedToList, tvShowAddedToList, favorite, watch, rate
+  listCreated, movieAddedToList, tvShowAddedToList, favorite, watch, rate, remove
 }

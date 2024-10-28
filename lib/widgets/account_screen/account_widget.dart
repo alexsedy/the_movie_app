@@ -180,6 +180,10 @@ class _LogoutButtonWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Cancel"),
+                  ),
+                  ElevatedButton(
                     onPressed: () async {
                       showDialog(
                         context: context,
@@ -195,10 +199,6 @@ class _LogoutButtonWidget extends StatelessWidget {
                       Navigator.of(context).pop();
                     },
                     child: const Text("Yes"),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text("Cancel"),
                   ),
                 ],
               ),

@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/account_api_client.dart';
 import 'package:the_movie_app/domain/entity/account/items_to_delete/remove_items.dart';
 import 'package:the_movie_app/domain/entity/account/user_list_details/user_list_details.dart';
+import 'package:the_movie_app/helpers/event_bus.dart';
 import 'package:the_movie_app/widgets/list_screens/user_list/list_update_event_bus.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
@@ -98,7 +99,10 @@ class ListDetailsModel extends ChangeNotifier {
     _selectedIndexes.clear();
     resetList();
     await loadContent();
-    ListUpdateEventBus().updateList(listId, userListDetails?.itemCount ?? 0);
+    Events.eventBus.fire(ListUpdateEvent(
+        listId,
+        userListDetails?.itemCount ?? 0
+    ));
 
     notifyListeners();
   }

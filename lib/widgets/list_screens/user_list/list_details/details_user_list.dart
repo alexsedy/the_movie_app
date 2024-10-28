@@ -49,6 +49,10 @@ class _DetailsUserListState extends State<DetailsUserList> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           ElevatedButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text("Cancel"),
+                          ),
+                          ElevatedButton(
                             onPressed: () async {
                               showDialog(
                                 context: context,
@@ -64,10 +68,6 @@ class _DetailsUserListState extends State<DetailsUserList> {
                               Navigator.of(context).pop();
                             },
                             child: const Text("Yes"),
-                          ),
-                          ElevatedButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text("Cancel"),
                           ),
                         ],
                       ),
