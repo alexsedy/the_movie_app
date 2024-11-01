@@ -16,6 +16,8 @@ class HomeSearchWidget extends StatefulWidget {
 }
 
 class _HomeSearchWidgetState extends State<HomeSearchWidget> {
+  int _selectedTab = 0;
+
   @override
   void initState() {
     super.initState();
@@ -23,9 +25,19 @@ class _HomeSearchWidgetState extends State<HomeSearchWidget> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final routeArguments = ModalRoute.of(context)?.settings.arguments;
+    if(routeArguments != null) {
+      _selectedTab = routeArguments as int;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 4,
+      initialIndex: _selectedTab,
       child: Scaffold(
         appBar: AppBar(
           elevation: 0.9,
