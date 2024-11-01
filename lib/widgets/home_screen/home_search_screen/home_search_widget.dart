@@ -22,15 +22,7 @@ class _HomeSearchWidgetState extends State<HomeSearchWidget> {
   void initState() {
     super.initState();
     NotifierProvider.read<HomeSearchModel>(context)?.firstLoadAll();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final routeArguments = ModalRoute.of(context)?.settings.arguments;
-    if(routeArguments != null) {
-      _selectedTab = routeArguments as int;
-    }
+    _selectedTab = NotifierProvider.read<HomeSearchModel>(context)?.index ?? 0;
   }
 
   @override

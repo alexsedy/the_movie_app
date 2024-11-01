@@ -95,8 +95,13 @@ class HomeModel extends ChangeNotifier {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.personDetails, arguments: id);
   }
 
-  void onHomeSearchScreen(BuildContext context) {
-    Navigator.of(context).pushNamed(MainNavigationRouteNames.homeSearch, arguments: _searchController);
+  void onHomeSearchScreen({required BuildContext context, int index = 0}) {
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.homeSearch,
+        arguments: {
+          "searchController": _searchController,
+          "index": index,
+        }
+    );
   }
 
   @override

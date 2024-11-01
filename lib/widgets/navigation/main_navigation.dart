@@ -175,10 +175,14 @@ class MainNavigation {
 
       case MainNavigationRouteNames.homeSearch:
         final arguments = settings.arguments;
-        final searchController = arguments is TextEditingController ? arguments : TextEditingController();
+        // final searchController = arguments is TextEditingController ? arguments : TextEditingController();
+        final args = arguments is Map ? arguments : {};
+        final searchController = args["searchController"];
+        final index = args["index"];
+
         return MaterialPageRoute(
           builder: (context) => NotifierProvider(
-              create: () => HomeSearchModel(searchController),
+              create: () => HomeSearchModel(searchController, index),
               // model: MovieDetailsModel(movieId),
               child: const HomeSearchWidget()),
         );

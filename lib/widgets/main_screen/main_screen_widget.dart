@@ -57,6 +57,7 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
     if(routeArguments != null) {
       _selectedTab = routeArguments as int;
     }
+    accountModel.checkLoginStatus();
     // movieListModel.setupLocale(context);
   }
 
@@ -161,9 +162,9 @@ class SearchFieldWidget extends StatelessWidget {
       onChanged: (value) {
         if(value.isNotEmpty) {
           if (selectedTab == 1) {
-            homeModel.onHomeSearchScreen(context);
+            homeModel.onHomeSearchScreen(context: context);
           } else {
-            homeModel.onHomeSearchScreen(context);
+            homeModel.onHomeSearchScreen(context: context, index: 1);
           }
         }
       },
