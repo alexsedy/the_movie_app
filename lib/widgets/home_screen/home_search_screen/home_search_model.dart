@@ -12,6 +12,7 @@ class HomeSearchModel extends ChangeNotifier with HomeSearchMovieModelMixin, Hom
   final TextEditingController _searchController;
   final _searchFocusNode = FocusNode();
   final _searchApiClient = SearchApiClient();
+  bool _isDisposed = false;
   Timer? _searchDebounce;
   late String _locale;
 
@@ -28,10 +29,10 @@ class HomeSearchModel extends ChangeNotifier with HomeSearchMovieModelMixin, Hom
   bool get isCollectionLoadingInProgress => _isCollectionLoadingInProgress;
 
   Future<void> firstLoadAll() async {
-    await loadMovies();
-    await loadTvShows();
-    await loadPersons();
-    await loadCollections();
+    if (!_isDisposed) await loadMovies();
+    if (!_isDisposed) await loadTvShows();
+    if (!_isDisposed) await loadPersons();
+    if (!_isDisposed) await loadCollections();
   }
 
   Future<void> loadAll() async {
@@ -172,6 +173,7 @@ class HomeSearchModel extends ChangeNotifier with HomeSearchMovieModelMixin, Hom
   @override
   void dispose() {
     // _searchController.dispose();
+    _isDisposed = true;
     _searchFocusNode.dispose();
     super.dispose();
   }
