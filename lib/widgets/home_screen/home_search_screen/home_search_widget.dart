@@ -16,16 +16,20 @@ class HomeSearchWidget extends StatefulWidget {
 }
 
 class _HomeSearchWidgetState extends State<HomeSearchWidget> {
+  int _selectedTab = 0;
+
   @override
   void initState() {
     super.initState();
     NotifierProvider.read<HomeSearchModel>(context)?.firstLoadAll();
+    _selectedTab = NotifierProvider.read<HomeSearchModel>(context)?.index ?? 0;
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 4,
+      initialIndex: _selectedTab,
       child: Scaffold(
         appBar: AppBar(
           elevation: 0.9,

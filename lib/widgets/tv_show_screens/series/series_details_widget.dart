@@ -80,41 +80,55 @@ class _BodyDetails extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
+    final overview = mediaDetails.overview;
+    final cast = mediaDetails.credits.cast;
+    final crew = mediaDetails.credits.crew;
+    final guestStars = mediaDetails.credits.guestStars;
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 20,),
+
+          if(overview != null && overview.isNotEmpty)
           OverviewWidget<SeriesDetailsModel>(
             mediaDetailsElementType: MediaDetailsElementType.series,
             model: model,
           ),
+
+          if(crew.isNotEmpty)
           ParameterizedMediaCrewWidget(
             paramsModel: ParameterizedWidgetModel(
-              list: ConverterHelper.convertCrew(model.mediaDetails?.credits.crew),
+              list: ConverterHelper.convertCrew(crew),
               action: (BuildContext context, int index) {},
               additionalText: "Series Crew",
             ),
-            secondAction: () => model.onCrewListScreen(context, model.mediaDetails?.credits.crew),
+            secondAction: () => model.onCrewListScreen(context, crew),
           ),
+
+          if(cast.isNotEmpty)
           ParameterizedMediaDetailsListWidget(
             paramsModel: ParameterizedWidgetModel(
-              list: ConverterHelper.convertCasts(model.mediaDetails?.credits.cast),
+              list: ConverterHelper.convertCasts(cast),
               action: model.onPeopleDetailsScreen,
               additionalText: "Series Cast",
               altImagePath: AppImages.noProfile,
             ),
-            secondAction: () => model.onCastListScreen(context, model.mediaDetails?.credits.cast),
+            secondAction: () => model.onCastListScreen(context, cast),
           ),
+
+          if(guestStars != null && guestStars.isNotEmpty)
           ParameterizedMediaDetailsListWidget(
             paramsModel: ParameterizedWidgetModel(
-              list: ConverterHelper.convertCasts(model.mediaDetails?.credits.guestStars),
+              list: ConverterHelper.convertCasts(guestStars),
               action: model.onGuestPeopleDetailsScreen,
               additionalText: "Series Guest Stars",
               altImagePath: AppImages.noProfile,
             ),
-            secondAction: () => model.onGuestCastListScreen(context, model.mediaDetails?.credits.guestStars),
+            secondAction: () => model.onGuestCastListScreen(context, guestStars),
           ),
+
           const SizedBox(height: 20,),
         ],
       ),

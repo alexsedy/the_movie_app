@@ -93,7 +93,7 @@ class _SearchWidget extends StatelessWidget {
                         dragStartBehavior: DragStartBehavior.start,
                         onChanged: (value) {
                           if(value.isNotEmpty) {
-                            model.onHomeSearchScreen(context);
+                            model.onHomeSearchScreen(context: context);
                           }
                         },
                         controller: searchController,

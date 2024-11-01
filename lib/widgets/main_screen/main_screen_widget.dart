@@ -26,12 +26,6 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
   bool isSearchOpen = false;
 
   void onSelectTab(int index) {
-
-    //todo подумать на лучшим способом проверить логин статус если ты уже залогинен
-    if (index == 3) {
-      accountModel.checkLoginStatus();
-    }
-
     if (_selectedTab == index) {
       if(index == 1) {
         movieListModel.scrollToTop();
@@ -59,16 +53,16 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    final routeArguments = ModalRoute.of(context)?.settings.arguments;
+    if(routeArguments != null) {
+      _selectedTab = routeArguments as int;
+    }
+    accountModel.checkLoginStatus();
     // movieListModel.setupLocale(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    final routeArguments = ModalRoute.of(context)?.settings.arguments;
-    if(routeArguments != null) {
-      _selectedTab = routeArguments as int;
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: AnimatedSwitcher(
@@ -168,10 +162,9 @@ class SearchFieldWidget extends StatelessWidget {
       onChanged: (value) {
         if(value.isNotEmpty) {
           if (selectedTab == 1) {
-            homeModel.onHomeSearchScreen(context);
+            homeModel.onHomeSearchScreen(context: context);
           } else {
-            //todo need to open TV tab when you search form TV shows tab
-            homeModel.onHomeSearchScreen(context);
+            homeModel.onHomeSearchScreen(context: context, index: 1);
           }
         }
       },
