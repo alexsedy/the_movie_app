@@ -7,6 +7,7 @@ import 'package:the_movie_app/widgets/home_screen/home_widget.dart';
 import 'package:the_movie_app/widgets/main_screen/filter_widget.dart';
 import 'package:the_movie_app/widgets/movie_screens/movie_list_screen/movie_list_model.dart';
 import 'package:the_movie_app/widgets/movie_screens/movie_list_screen/movie_list_widget.dart';
+import 'package:the_movie_app/widgets/my_app/my_app_model.dart';
 import 'package:the_movie_app/widgets/tv_show_screens/tv_show_list_screen/tv_show_list_model.dart';
 import 'package:the_movie_app/widgets/tv_show_screens/tv_show_list_screen/tv_show_list_widget.dart';
 
@@ -24,6 +25,7 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
   final accountModel = AccountModel();
   int _selectedTab = 0;
   bool isSearchOpen = false;
+  Locale? _locale;
 
   void onSelectTab(int index) {
     if (_selectedTab == index) {
@@ -46,6 +48,7 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
   @override
   void initState() {
     super.initState();
+    _locale = Provider.read<MyAppModel>(context)?.locale;
     movieListModel.loadContent();
     tvShowListModel.loadContent();
   }
@@ -58,7 +61,15 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
       _selectedTab = routeArguments as int;
     }
     accountModel.checkLoginStatus();
-    // movieListModel.setupLocale(context);
+
+    // final appModel = Provider.watch<MyAppModel>(context);
+    // if(_locale != appModel?.locale) {
+    //   appModel?.initLocaleForAPI();
+    //   movieListModel.resetList();
+    //   tvShowListModel.resetList();
+    //   movieListModel.loadContent();
+    //   tvShowListModel.loadContent();
+    // }
   }
 
   @override

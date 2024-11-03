@@ -15,7 +15,7 @@ class TvShowApiClient extends ApiClient {
       <String, dynamic>{
         "api_key": apiKey,
         "page": page.toString(),
-        // "language": "uk-UA"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);
@@ -28,14 +28,15 @@ class TvShowApiClient extends ApiClient {
     return tvShowResponse;
   }
 
+  @deprecated
   Future<MediaListResponse> searchTvShow(int page, String query) async {
     final url = makeUri(
       "/search/tv",
       <String, dynamic>{
         "api_key": apiKey,
         "page": page.toString(),
-        "query": query
-        // "language": "uk-UA"
+        "query": query,
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);
@@ -75,7 +76,7 @@ class TvShowApiClient extends ApiClient {
         "vote_average.lte": voteEnd.toString(),
         if(genres != null && genres.isNotEmpty)
           "with_genres": genres,
-        // "language": "uk-UA"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);
@@ -94,7 +95,7 @@ class TvShowApiClient extends ApiClient {
       <String, dynamic>{
         "api_key": apiKey,
         "append_to_response": "credits,videos,content_ratings,recommendations",
-        // "language": "uk-UA"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);
@@ -246,7 +247,7 @@ class TvShowApiClient extends ApiClient {
       <String, dynamic>{
         "api_key": apiKey,
         // "page": page.toString(),
-        "language": "en-US"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);
@@ -264,7 +265,7 @@ class TvShowApiClient extends ApiClient {
       "/tv/$seriesId/season/$seasonNumber",
       <String, dynamic>{
         "api_key": apiKey,
-        // "language": "uk-UA"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);
@@ -283,7 +284,7 @@ class TvShowApiClient extends ApiClient {
       <String, dynamic>{
         "api_key": apiKey,
         "append_to_response" : "account_states,credits,videos",
-        // "language": "uk-UA"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);

@@ -9,7 +9,7 @@ class PeopleApiClient extends ApiClient {
       <String, dynamic>{
         "api_key": apiKey,
         "append_to_response": "external_ids,images,movie_credits,tv_credits",
-        // "language": "uk-UA"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);
@@ -29,7 +29,7 @@ class PeopleApiClient extends ApiClient {
       <String, dynamic>{
         "api_key": apiKey,
         // "page": page.toString(),
-        "language": "en-US"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);
