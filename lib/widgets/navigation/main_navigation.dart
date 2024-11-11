@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:the_movie_app/domain/entity/media/media_details/media_details.dart';
 import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
 import 'package:the_movie_app/provider/provider.dart';
+import 'package:the_movie_app/widgets/ai_feature_screen/ai_list_recommendation/ai_recommendation_list_screen_widget.dart';
+import 'package:the_movie_app/widgets/ai_feature_screen/ai_recommendation/ai_recommendation_model.dart';
+import 'package:the_movie_app/widgets/ai_feature_screen/ai_recommendation/ai_recommendation_screen_widget.dart';
+import 'package:the_movie_app/widgets/ai_feature_screen/ai_list_recommendation/ai_recommendation_list_model.dart';
 import 'package:the_movie_app/widgets/credits_list_screen/cast_list_screen/cast_list_model.dart';
 import 'package:the_movie_app/widgets/credits_list_screen/cast_list_screen/cast_list_widget.dart';
 import 'package:the_movie_app/widgets/credits_list_screen/crew_list_screen/crew_list_model.dart';
@@ -45,6 +49,8 @@ abstract class MainNavigationRouteNames {
   static const seriesDetails = "/series_details";
   static const collection = "/collection";
   static const homeSearch = "/home_search";
+  static const aiRecommendation = "/ai_recommendation";
+  static const aiRecommendationList = "/ai_recommendation_list";
 }
 
 class MainNavigation {
@@ -179,12 +185,34 @@ class MainNavigation {
         final args = arguments is Map ? arguments : {};
         final searchController = args["searchController"];
         final index = args["index"];
-
         return MaterialPageRoute(
           builder: (context) => NotifierProvider(
               create: () => HomeSearchModel(searchController, index),
               // model: MovieDetailsModel(movieId),
               child: const HomeSearchWidget()),
+        );
+
+      case MainNavigationRouteNames.aiRecommendation:
+        return MaterialPageRoute(
+          builder: (context) => NotifierProvider(
+              create: () => AiRecommendationModel(),
+              // model: MovieDetailsModel(movieId),
+              child: const AiRecommendationScreenWidget()),
+        );
+
+      case MainNavigationRouteNames.aiRecommendationList:
+        final arguments = settings.arguments;
+        final args = arguments is Map ? arguments : {};
+        final prompt = args["prompt"];
+        final isMovie = args["isMovie"];
+        return MaterialPageRoute(
+          builder: (context) => NotifierProvider(
+              create: () => AiRecommendationListModel(
+                prompt: prompt,
+                isMovie: isMovie,
+              ),
+              // model: MovieDetailsModel(movieId),
+              child: const AiRecommendationListScreenWidget()),
         );
 
       default:

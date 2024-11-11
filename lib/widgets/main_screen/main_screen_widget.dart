@@ -52,6 +52,7 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
     _locale = Provider.read<MyAppModel>(context)?.locale;
     movieListModel.loadContent();
     tvShowListModel.loadContent();
+    accountModel.checkLoginStatus();
   }
 
   @override

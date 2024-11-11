@@ -113,6 +113,11 @@ class AccountModel extends ChangeNotifier {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.userLists);
   }
 
+  void onAIFeatureScreen(BuildContext context) {
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.aiRecommendation);
+  }
+
+
   @override
   void dispose() {
     _sub?.cancel();

@@ -98,6 +98,42 @@ class DefaultListsShimmerSkeletonWidget extends StatelessWidget {
   }
 }
 
+class AiListsShimmerSkeletonWidget extends StatelessWidget {
+  const AiListsShimmerSkeletonWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.blueAccent.withOpacity(0.5),
+      highlightColor: Colors.green.withOpacity(0.5),
+      child: ListView.builder(
+          itemCount: 6,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (BuildContext context, _) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Container(
+                height: 143,
+                width: 391.5,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.black.withOpacity(0.2)),
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 8,
+                        offset: const Offset(1, 2),
+                      )]
+                ),
+              ),
+            );
+          }
+      ),
+    );
+  }
+}
+
 class UserListsShimmerSkeletonWidget extends StatelessWidget {
   const UserListsShimmerSkeletonWidget({super.key});
 

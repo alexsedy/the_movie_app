@@ -414,6 +414,41 @@ class _AccountBodyWidget extends StatelessWidget {
             ),
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: InkWell(
+            onTap: () => model?.onAIFeatureScreen(context),
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              width: double.infinity,
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.try_sms_star_outlined, size: 40,),
+                        SizedBox(width: 15,),
+                        Text(
+                          "AI Recommendation",
+                          style: TextStyle(
+                              fontSize: 24
+                          ),
+                        ),
+                      ],
+                    ),
+                    Icon(Icons.arrow_forward_ios),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
