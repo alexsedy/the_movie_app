@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:the_movie_app/domain/data_providers/session_data_provider.dart';
 
 enum ApiClientExceptionType {
@@ -21,11 +22,14 @@ class ApiClient {
   static const _imageUrl = "https://image.tmdb.org/t/p/w500";
   static const _apiKey = "772a84be1e646a7870931e64417537cb";
   static const _accessToken = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3NzJhODRiZTFlNjQ2YTc4NzA5MzFlNjQ0MTc1MzdjYiIsInN1YiI6IjY1YWQ5ODE0MTU4Yzg1MDEwYTlmOWVhMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.9ispaOKnbNvLhBOeCYXexoXY0-25gm1VJOz-wwsWAgA";
+  static String _languageCode = "en";
+  static String _countryCode = "US";
 
   String get apiKey => _apiKey;
   String get host => _host;
   String get hostFour => _hostFour;
   String get accessToken => _accessToken;
+  String get reqLocale => "$_languageCode-$_countryCode";
 
   static String getImageByUrl(String path) => _imageUrl + path;
 
@@ -44,6 +48,16 @@ class ApiClient {
       return uri.replace(queryParameters: parameters);
     } else {
       return uri;
+    }
+  }
+
+  void initLocale(Locale? locale)  {
+    if(locale != null) {
+      _languageCode = locale.languageCode;
+      final countryCode = locale.countryCode;
+      if(countryCode != null) {
+        _countryCode = countryCode;
+      }
     }
   }
 

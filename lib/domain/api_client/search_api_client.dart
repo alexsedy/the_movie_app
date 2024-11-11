@@ -12,7 +12,7 @@ class SearchApiClient extends ApiClient {
         "api_key": apiKey,
         "query": query,
         "page": page.toString(),
-        // "language": "uk-UA"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);
@@ -32,7 +32,7 @@ class SearchApiClient extends ApiClient {
         "api_key": apiKey,
         "query": query,
         "page": page.toString(),
-        // "language": "uk-UA"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);
@@ -52,7 +52,7 @@ class SearchApiClient extends ApiClient {
         "api_key": apiKey,
         "query": query,
         "page": page.toString(),
-        // "language": "uk-UA"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);
@@ -72,7 +72,7 @@ class SearchApiClient extends ApiClient {
         "api_key": apiKey,
         "query": query,
         "page": page.toString(),
-        // "language": "uk-UA"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);
