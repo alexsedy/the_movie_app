@@ -21,5 +21,30 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{};
+  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "collectionsSearchTabText":
+            MessageLookupByLibrary.simpleMessage("Collections"),
+        "dayToggleText": MessageLookupByLibrary.simpleMessage("Day"),
+        "findAnythingWelcomeText":
+            MessageLookupByLibrary.simpleMessage("Find anything"),
+        "homeText": MessageLookupByLibrary.simpleMessage("Home"),
+        "movieText": MessageLookupByLibrary.simpleMessage("Movie"),
+        "moviesSearchTabText": MessageLookupByLibrary.simpleMessage("Movies"),
+        "noResultsEmptyListText":
+            MessageLookupByLibrary.simpleMessage("No results."),
+        "personsSearchTabText": MessageLookupByLibrary.simpleMessage("Persons"),
+        "profileText": MessageLookupByLibrary.simpleMessage("Profile"),
+        "searchGlobalSearchHint":
+            MessageLookupByLibrary.simpleMessage("Search movie, TV, person"),
+        "searchTextHint": MessageLookupByLibrary.simpleMessage("Search"),
+        "trendingMoviesText":
+            MessageLookupByLibrary.simpleMessage("Trending movies"),
+        "trendingPersonsText":
+            MessageLookupByLibrary.simpleMessage("Trending persons"),
+        "trendingTvText": MessageLookupByLibrary.simpleMessage("Trending TVs"),
+        "tvShowsSearchTabText":
+            MessageLookupByLibrary.simpleMessage("TV Shows"),
+        "tvShowsText": MessageLookupByLibrary.simpleMessage("TV Shows"),
+        "weekToggleText": MessageLookupByLibrary.simpleMessage("Week")
+      };
 }

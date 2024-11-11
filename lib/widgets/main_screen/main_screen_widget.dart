@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/account_screen/account_model.dart';
 import 'package:the_movie_app/widgets/account_screen/account_widget.dart';
@@ -131,22 +132,22 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedTab,
         onTap: onSelectTab,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Home"
+            icon: const Icon(Icons.home),
+            label: context.l10n.homeText
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.local_movies),
-            label: "Movie"
+            icon: const Icon(Icons.local_movies),
+            label: context.l10n.movieText
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.tv),
-            label: "TV Shows"
+            icon: const Icon(Icons.tv),
+            label: context.l10n.tvShowsText
           ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: "Profile"
+              icon: const Icon(Icons.person),
+              label: context.l10n.profileText
           ),
         ],
       ),
@@ -181,10 +182,10 @@ class SearchFieldWidget extends StatelessWidget {
       },
       controller: searchController,
       autofocus: true,
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         border: InputBorder.none,
-        hintText: 'Search',
-        hintStyle: TextStyle(
+        hintText: context.l10n.searchTextHint,
+        hintStyle: const TextStyle(
           // color: Colors.white,
           fontSize: 20,
         ),

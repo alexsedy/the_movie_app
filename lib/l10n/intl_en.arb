@@ -1,1 +1,19 @@
-{}
+{
+  "homeText": "Home",
+  "movieText": "Movie",
+  "tvShowsText": "TV Shows",
+  "profileText": "Profile",
+  "searchTextHint": "Search",
+  "findAnythingWelcomeText": "Find anything",
+  "searchGlobalSearchHint": "Search movie, TV, person",
+  "trendingMoviesText": "Trending movies",
+  "trendingTvText": "Trending TVs",
+  "trendingPersonsText": "Trending persons",
+  "dayToggleText": "Day",
+  "weekToggleText": "Week",
+  "moviesSearchTabText": "Movies",
+  "tvShowsSearchTabText": "TV Shows",
+  "personsSearchTabText": "Persons",
+  "collectionsSearchTabText": "Collections",
+  "noResultsEmptyListText": "No results."
+}
