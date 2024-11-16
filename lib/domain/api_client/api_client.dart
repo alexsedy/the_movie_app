@@ -20,8 +20,9 @@ class ApiClient {
   static const _host = "https://api.themoviedb.org/3";
   static const _hostFour = "https://api.themoviedb.org/4";
   static const _imageUrl = "https://image.tmdb.org/t/p/w500";
-  static const _apiKey = "772a84be1e646a7870931e64417537cb";
-  static const _accessToken = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3NzJhODRiZTFlNjQ2YTc4NzA5MzFlNjQ0MTc1MzdjYiIsInN1YiI6IjY1YWQ5ODE0MTU4Yzg1MDEwYTlmOWVhMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.9ispaOKnbNvLhBOeCYXexoXY0-25gm1VJOz-wwsWAgA";
+  static const _apiKey = String.fromEnvironment('API_KEY');
+  static const _token = String.fromEnvironment('ACCESS_TOKEN');
+  static const _accessToken = "Bearer $_token";
   static String _languageCode = "en";
   static String _countryCode = "US";
 

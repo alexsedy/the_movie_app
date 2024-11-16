@@ -10,7 +10,7 @@ class AiRecommendationListModel extends ChangeNotifier{
   final bool isMovie;
   final bool isGenre;
   final _apiClient = SearchApiClient();
-  static const _apiKey = "AIzaSyBQoaxE_7G6m_xJz_d88CkGx8_n4NBi1Q4";
+  static const _apiKey = String.fromEnvironment('GEMINI_API_KEY');
   final _model = GenerativeModel(
     model: 'gemini-1.5-flash-latest',
     apiKey: _apiKey,
