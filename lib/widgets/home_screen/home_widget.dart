@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/home_screen/home_model.dart';
@@ -74,8 +75,8 @@ class _SearchWidget extends StatelessWidget {
         Column(
           children: [
             const SizedBox(height: 40),
-            const Text(
-              "Find anything",
+            Text(
+              context.l10n.findAnythingWelcomeText,
               style: textStyle,
             ),
             const SizedBox(height: 20),
@@ -98,9 +99,9 @@ class _SearchWidget extends StatelessWidget {
                         },
                         controller: searchController,
                         focusNode: searchFocusNode,
-                        decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
-                          hintText: 'Search movie, TV, person',
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          hintText: context.l10n.searchGlobalSearchHint,
                           border: InputBorder.none,
                         ),
                       ),
@@ -179,11 +180,11 @@ class _TrendingToggleWidgetState extends State<_TrendingToggleWidget> {
   String _getName() {
     switch(widget.horizontalListElementType){
       case HorizontalListElementType.movie:
-        return "Trending movies";
+        return context.l10n.trendingMoviesText;
       case HorizontalListElementType.tv:
-        return "Trending TVs";
+        return context.l10n.trendingTvText;
       case HorizontalListElementType.trendingPerson:
-        return "Trending persons";
+        return context.l10n.trendingPersonsText;
       default:
         return "";
     }
@@ -238,9 +239,9 @@ class _TrendingToggleWidgetState extends State<_TrendingToggleWidget> {
                       }
                     });
                   },
-                  children: const [
-                    SizedBox(width: 80, child: Center(child: Text('Day',),),),
-                    SizedBox(width: 80, child: Center(child: Text('Week',),),),
+                  children: [
+                    SizedBox(width: 80, child: Center(child: Text(context.l10n.dayToggleText,),),),
+                    SizedBox(width: 80, child: Center(child: Text(context.l10n.weekToggleText,),),),
                   ],
                 ),
               ),

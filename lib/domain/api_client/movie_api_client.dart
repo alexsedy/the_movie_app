@@ -17,7 +17,7 @@ class MovieApiClient extends ApiClient {
       <String, dynamic>{
         "api_key": apiKey,
         "page": page.toString(),
-        // "language": "uk-UA"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);
@@ -57,7 +57,7 @@ class MovieApiClient extends ApiClient {
           "vote_average.lte": voteEnd.toString(),
         if(genres != null && genres.isNotEmpty)
           "with_genres": genres,
-        // "language": "uk-UA"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);
@@ -70,6 +70,7 @@ class MovieApiClient extends ApiClient {
     return movieResponse;
   }
 
+  @deprecated
   Future<MediaListResponse> searchMovie(int page, String query) async {
     final url = makeUri(
       "/search/movie",
@@ -96,7 +97,7 @@ class MovieApiClient extends ApiClient {
       <String, dynamic>{
         "api_key": apiKey,
         "append_to_response": "release_dates,credits,videos,recommendations",
-        // "language": "uk-UA"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);
@@ -144,6 +145,7 @@ class MovieApiClient extends ApiClient {
       <String, dynamic>{
         "api_key": apiKey,
         "session_id": sessionId,
+        "language": reqLocale,
       },
     );
 
@@ -168,7 +170,7 @@ class MovieApiClient extends ApiClient {
       "/movie/$movieId/credits",
       <String, dynamic>{
         "api_key": apiKey,
-        // "language": "uk-UA"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);
@@ -279,7 +281,7 @@ class MovieApiClient extends ApiClient {
       "/collection/$collectionId",
       <String, dynamic>{
         "api_key": apiKey,
-        // "language": "uk-UA"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);

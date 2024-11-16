@@ -12,7 +12,7 @@ class SearchApiClient extends ApiClient {
         "api_key": apiKey,
         "query": query,
         "page": page.toString(),
-        // "language": "uk-UA"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);
@@ -32,7 +32,7 @@ class SearchApiClient extends ApiClient {
         "api_key": apiKey,
         "query": query,
         "page": page.toString(),
-        // "language": "uk-UA"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);
@@ -52,7 +52,7 @@ class SearchApiClient extends ApiClient {
         "api_key": apiKey,
         "query": query,
         "page": page.toString(),
-        // "language": "uk-UA"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);
@@ -72,7 +72,7 @@ class SearchApiClient extends ApiClient {
         "api_key": apiKey,
         "query": query,
         "page": page.toString(),
-        // "language": "uk-UA"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);
@@ -83,5 +83,25 @@ class SearchApiClient extends ApiClient {
 
     final personResponse = TrendingPerson.fromJson(json);
     return personResponse;
+  }
+
+  Future<MediaListResponse> getSearchMulti({required String query, required int page}) async {
+    final url = makeUri(
+      "/search/multi",
+      <String, dynamic>{
+        "api_key": apiKey,
+        "query": query,
+        "page": page.toString(),
+        "language": reqLocale,
+      },
+    );
+    final request = await client.getUrl(url);
+    final response = await request.close();
+    final json = (await response.jsonDecode()) as Map<String, dynamic>;
+
+    validateError(response, json);
+
+    final mediaResponse = MediaListResponse.fromJson(json);
+    return mediaResponse;
   }
 }

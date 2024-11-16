@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/helpers/converter_helper.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/home_screen/home_search_screen/home_search_model.dart';
@@ -42,12 +43,12 @@ class _HomeSearchWidgetState extends State<HomeSearchWidget> {
               Navigator.of(context).pop();
             },
           ),
-          bottom: const TabBar(
+          bottom: TabBar(
             tabs: [
-              Tab(text: "Movies"),
-              Tab(text: "TV Shows"),
-              Tab(text: "Persons"),
-              Tab(text: "Collections"),
+              Tab(text: context.l10n.moviesSearchTabText),
+              Tab(text: context.l10n.tvShowsSearchTabText),
+              Tab(text: context.l10n.personsSearchTabText),
+              Tab(text: context.l10n.collectionsSearchTabText),
             ],
           ),
         ),
@@ -121,10 +122,10 @@ class _MovieListWidget extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const DefaultListsShimmerSkeletonWidget();
           } else {
-            return const Center(
+            return Center(
               child: Text(
-                "No results.",
-                style: TextStyle(
+                context.l10n.noResultsEmptyListText,
+                style: const TextStyle(
                   fontSize: 36,
                 ),
               ),
@@ -162,10 +163,10 @@ class _TvShowListWidget extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const DefaultListsShimmerSkeletonWidget();
           } else {
-            return const Center(
+            return Center(
               child: Text(
-                "No results.",
-                style: TextStyle(
+                context.l10n.noResultsEmptyListText,
+                style: const TextStyle(
                   fontSize: 36,
                 ),
               ),
@@ -204,10 +205,10 @@ class _PersonListWidget extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const DefaultListsShimmerSkeletonWidget();
           } else {
-            return const Center(
+            return Center(
               child: Text(
-                "No results.",
-                style: TextStyle(
+                context.l10n.noResultsEmptyListText,
+                style: const TextStyle(
                   fontSize: 36,
                 ),
               ),
@@ -245,10 +246,10 @@ class _MediaCollectionListWidget extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const DefaultListsShimmerSkeletonWidget();
           } else {
-            return const Center(
+            return Center(
               child: Text(
-                "No results.",
-                style: TextStyle(
+                context.l10n.noResultsEmptyListText,
+                style: const TextStyle(
                   fontSize: 36,
                 ),
               ),
