@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:the_movie_app/domain/entity/media/media_details/media_details.dart';
 import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
 import 'package:the_movie_app/provider/provider.dart';
-import 'package:the_movie_app/widgets/ai_feature_screen/ai_list_recommendation/ai_recommendation_list_screen_widget.dart';
-import 'package:the_movie_app/widgets/ai_feature_screen/ai_recommendation/ai_recommendation_model.dart';
-import 'package:the_movie_app/widgets/ai_feature_screen/ai_recommendation/ai_recommendation_screen_widget.dart';
+import 'package:the_movie_app/widgets/ai_feature_screen/ai_feature_start_sreen/ai_feature_start_model.dart';
+import 'package:the_movie_app/widgets/ai_feature_screen/ai_feature_start_sreen/ai_feature_start_screen_widget.dart';
 import 'package:the_movie_app/widgets/ai_feature_screen/ai_list_recommendation/ai_recommendation_list_model.dart';
+import 'package:the_movie_app/widgets/ai_feature_screen/ai_list_recommendation/ai_recommendation_list_screen_widget.dart';
+import 'package:the_movie_app/widgets/ai_feature_screen/by_description/ai_recommendation_by_description/ai_recommendation_by_description_model.dart';
+import 'package:the_movie_app/widgets/ai_feature_screen/by_description/ai_recommendation_by_description/ai_recommendation_by_description_screen_widget.dart';
+import 'package:the_movie_app/widgets/ai_feature_screen/by_genre/ai_recommendation_by_genre/ai_recommendation_by_genre_model.dart';
+import 'package:the_movie_app/widgets/ai_feature_screen/by_genre/ai_recommendation_by_genre/ai_recommendation_by_genre_screen_widget.dart';
 import 'package:the_movie_app/widgets/credits_list_screen/cast_list_screen/cast_list_model.dart';
 import 'package:the_movie_app/widgets/credits_list_screen/cast_list_screen/cast_list_widget.dart';
 import 'package:the_movie_app/widgets/credits_list_screen/crew_list_screen/crew_list_model.dart';
@@ -49,8 +53,10 @@ abstract class MainNavigationRouteNames {
   static const seriesDetails = "/series_details";
   static const collection = "/collection";
   static const homeSearch = "/home_search";
-  static const aiRecommendation = "/ai_recommendation";
+  static const aiFeatureStart = "/ai_feature_start";
+  static const aiRecommendationByGenre = "/ai_recommendation_by_genre";
   static const aiRecommendationList = "/ai_recommendation_list";
+  static const aiRecommendationByDescription = "/ai_recommendation_by_description";
 }
 
 class MainNavigation {
@@ -192,12 +198,25 @@ class MainNavigation {
               child: const HomeSearchWidget()),
         );
 
-      case MainNavigationRouteNames.aiRecommendation:
+      case MainNavigationRouteNames.aiFeatureStart:
         return MaterialPageRoute(
           builder: (context) => NotifierProvider(
-              create: () => AiRecommendationModel(),
-              // model: MovieDetailsModel(movieId),
-              child: const AiRecommendationScreenWidget()),
+              create: () => AiFeatureStartModel(),
+              child: const AiFeatureStartScreen(),),
+        );
+
+      case MainNavigationRouteNames.aiRecommendationByGenre:
+        return MaterialPageRoute(
+          builder: (context) => NotifierProvider(
+              create: () => AiRecommendationByGenreModel(),
+              child: const AiRecommendationByGenreScreenWidget()),
+        );
+
+      case MainNavigationRouteNames.aiRecommendationByDescription:
+        return MaterialPageRoute(
+          builder: (context) => NotifierProvider(
+              create: () => AiRecommendationByDescriptionModel(),
+              child: const AiRecommendationByDescriptionScreenWidget()),
         );
 
       case MainNavigationRouteNames.aiRecommendationList:
@@ -205,13 +224,14 @@ class MainNavigation {
         final args = arguments is Map ? arguments : {};
         final prompt = args["prompt"];
         final isMovie = args["isMovie"];
+        final isGenre = args["isGenre"];
         return MaterialPageRoute(
           builder: (context) => NotifierProvider(
               create: () => AiRecommendationListModel(
                 prompt: prompt,
                 isMovie: isMovie,
+                isGenre: isGenre,
               ),
-              // model: MovieDetailsModel(movieId),
               child: const AiRecommendationListScreenWidget()),
         );
 

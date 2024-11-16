@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/provider/provider.dart';
-import 'package:the_movie_app/widgets/ai_feature_screen/ai_recommendation/ai_recommendation_model.dart';
+import 'package:the_movie_app/widgets/ai_feature_screen/by_genre/ai_recommendation_by_genre/ai_recommendation_by_genre_model.dart';
+import 'package:the_movie_app/widgets/widget_elements/animation_element/running_color_border.dart';
 
-class AiRecommendationScreenWidget extends StatelessWidget {
-  const AiRecommendationScreenWidget({super.key});
+class AiRecommendationByGenreScreenWidget extends StatelessWidget {
+  const AiRecommendationByGenreScreenWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class _GenerateMovieByGenreWidgetState extends State<_GenerateMovieByGenreWidget
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<AiRecommendationModel>(context);
+    final model = NotifierProvider.watch<AiRecommendationByGenreModel>(context);
 
     if(model == null) {
       return SizedBox.shrink();
@@ -119,7 +120,7 @@ class _GenerateMovieByGenreWidgetState extends State<_GenerateMovieByGenreWidget
             ),
           SizedBox(height: 20,),
           Text(
-            "Select number of items",
+            "Select max number of items",
             style: TextStyle(
               fontSize: 20,
             ),
@@ -134,15 +135,20 @@ class _GenerateMovieByGenreWidgetState extends State<_GenerateMovieByGenreWidget
             },
             label: _sliderValue.toInt().toString(),
             min: 1,
-            max: 30,
-            divisions: 29,
+            max: 100,
+            divisions: 99,
           ),
-          ElevatedButton(
-            onPressed: isReadyToGenerate ? () =>
-              model.onGenerateContent(context, _sliderValue.toInt(), _isSelected.first)
-              : null,
-            child: Text("Generate"),
-          )
+          SizedBox(height: 20,),
+          SizedBox(
+            height: 50,
+            width: 300,
+            child: ElevatedButton(
+              onPressed: isReadyToGenerate ? () =>
+                model.onGenerateContent(context, _sliderValue.toInt(), _isSelected.first)
+                : null,
+              child: Text("Generate"),
+            ),
+          ),
         ],
       ),
     );

@@ -8,6 +8,7 @@ class AiRecommendationListModel extends ChangeNotifier{
   List<MediaList> listResponse = [];
   final String prompt;
   final bool isMovie;
+  final bool isGenre;
   final _apiClient = SearchApiClient();
   static const _apiKey = "AIzaSyBQoaxE_7G6m_xJz_d88CkGx8_n4NBi1Q4";
   final _model = GenerativeModel(
@@ -15,10 +16,9 @@ class AiRecommendationListModel extends ChangeNotifier{
     apiKey: _apiKey,
   );
 
+  AiRecommendationListModel({required this.prompt, required this.isMovie, required this.isGenre,});
 
-  AiRecommendationListModel({required this.prompt, required this.isMovie});
-
-  Stream<List<MediaList>> generateAndGetMovies() async* {
+  Stream<List<MediaList>> generateAndGetContent() async* {
     final response = await _model.generateContent([Content.text(prompt)]);
     final text = await response.text;
 
@@ -29,21 +29,49 @@ class AiRecommendationListModel extends ChangeNotifier{
       list = text.split(";");
     }
 
-    for(var movie in list) {
-      movie = movie.trim();
-      // .replaceAll("\n", "");
+    for(var item in list) {
+      item = item.trim().replaceAll("\n", "");
 
       if(isMovie) {
         final response = await _apiClient.getSearchMovies(
-            query: movie, page: 1);
-        listResponse.add(response.list.first);
+            query: item, page: 1);
+        if (response.list.isNotEmpty) {
+          listResponse.add(response.list.first);
+        }
       } else {
         final response = await _apiClient.getSearchTvs(
-            query: movie, page: 1);
+            query: item, page: 1);
+        if (response.list.isNotEmpty) {
+          listResponse.add(response.list.first);
+        }
+      }
+
+      yield List.from(listResponse);
+    }
+  }
+
+  Stream<List<MediaList>> generateAndGetContent2() async* {
+    final response = await _model.generateContent([Content.text(prompt)]);
+    final text = await response.text;
+
+    List<MediaList> listResponse = [];
+    List<String> list = [];
+
+    if(text != null) {
+      list = text.split(";");
+    }
+
+    for(var item in list) {
+      item = item.trim().replaceAll("\n", "");
+
+
+      final response = await _apiClient.getSearchMulti(
+          query: item, page: 1);
+      if (response.list.isNotEmpty) {
         listResponse.add(response.list.first);
       }
 
-      yield listResponse;
+      yield List.from(listResponse);
     }
   }
 
@@ -53,5 +81,13 @@ class AiRecommendationListModel extends ChangeNotifier{
 
   void onTvShowScreen(BuildContext context, int id) {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.tvShowDetails, arguments: id);
+  }
+
+  void onMediaScreen(BuildContext context, int id, String mediaType) {
+    if(mediaType == "movie") {
+      Navigator.of(context).pushNamed(MainNavigationRouteNames.movieDetails, arguments: id);
+    } else {
+      Navigator.of(context).pushNamed(MainNavigationRouteNames.tvShowDetails, arguments: id);
+    }
   }
 }

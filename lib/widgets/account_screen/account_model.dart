@@ -114,7 +114,7 @@ class AccountModel extends ChangeNotifier {
   }
 
   void onAIFeatureScreen(BuildContext context) {
-    Navigator.of(context).pushNamed(MainNavigationRouteNames.aiRecommendation);
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.aiFeatureStart);
   }
 
 

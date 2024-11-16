@@ -20,7 +20,7 @@ class AiRecommendationListScreenWidget extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text("AI Recommendation List")),
       body: StreamBuilder<List<MediaList>>(
-        stream: model.generateAndGetMovies(),
+        stream: model.isGenre ? model.generateAndGetContent() : model.generateAndGetContent2(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return AiListsShimmerSkeletonWidget();
@@ -119,10 +119,15 @@ class AiRecommendationListScreenWidget extends StatelessWidget {
                             borderRadius: const BorderRadius.all(Radius.circular(10)),
                             onTap: () {
                               final id = snapshot.data?[index].id;
+                              final mediaType = snapshot.data?[index].mediaType;
                               if(id != null) {
-                                model.isMovie
-                                    ? model.onMovieScreen(context, id)
-                                    : model.onTvShowScreen(context, id);
+                                if(mediaType != null) {
+                                  model.onMediaScreen(context, id, mediaType);
+                                } else {
+                                  model.isMovie
+                                      ? model.onMovieScreen(context, id)
+                                      : model.onTvShowScreen(context, id);
+                                }
                               }
                             },
                           ),
