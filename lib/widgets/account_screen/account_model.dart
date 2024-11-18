@@ -9,12 +9,12 @@ import 'package:the_movie_app/domain/entity/account/account_state/account_state.
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/widgets/list_screens/default_list/default_lists_model.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 class AccountModel extends ChangeNotifier {
   final _apiClientAuth = AuthApiClient();
   AccountSate? _accountSate;
-  final _sessionDataProvider = SessionDataProvider();
   var _isLoggedIn = false;
   late AppLinks _appLinks;
   StreamSubscription<Uri>? _sub;
@@ -23,7 +23,7 @@ class AccountModel extends ChangeNotifier {
   bool get isLoggedIn => _isLoggedIn;
 
   Future<void> checkLoginStatus() async {
-    final sessionId = await _sessionDataProvider.getSessionId();
+    final sessionId = await SessionDataProvider.getSessionId();
     _isLoggedIn = sessionId != null;
 
     if (_isLoggedIn && _accountSate == null) {
@@ -35,11 +35,12 @@ class AccountModel extends ChangeNotifier {
 
   Future<void> makeLogout(BuildContext context) async {
     await _apiClientAuth.deleteSession();
+    await _apiClientAuth.logout();
     await AccountManager.resetAccountData();
     _accountSate = null;
     await AccountManager.resetAccountId();
-    await _sessionDataProvider.setSessionId(null);
-    await _sessionDataProvider.setAccessToken(null);
+    await SessionDataProvider.setSessionId(null);
+    await SessionDataProvider.setAccessToken(null);
 
     _isLoggedIn = false;
 
@@ -47,8 +48,16 @@ class AccountModel extends ChangeNotifier {
   }
 
   Future<void> makeLogin(BuildContext context) async {
-    final requestToken = await _apiClientAuth.auth();
+    final requestToken = await _apiClientAuth.createRequestToken();
+    await _launchAuthPage(requestToken: requestToken);
     await _handleAuthDeepLink(requestToken, context);
+  }
+
+  Future<void> _launchAuthPage({required String requestToken}) async {
+    final Uri url = Uri.parse('https://www.themoviedb.org/auth/access?request_token=$requestToken');
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
   }
 
   Future<void> _handleAuthDeepLink(String requestToken, BuildContext context) async {
@@ -67,10 +76,10 @@ class AccountModel extends ChangeNotifier {
             _sub?.cancel();
 
             if(accountId != null && accessToken != null) {
-              await _sessionDataProvider.setAccessToken(accessToken);
+              await SessionDataProvider.setAccessToken(accessToken);
               await AccountManager.setAccountId(accountId);
               final sessionId = await _apiClientAuth.createSession(accessToken);
-              _sessionDataProvider.setSessionId(sessionId);
+              await SessionDataProvider.setSessionId(sessionId);
 
               await _getAccountState();
 

@@ -1,10 +1,10 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class SessionDataProvider{
+abstract class SessionDataProvider{
   static const _secureStorage = FlutterSecureStorage();
 
-  Future<String?> getSessionId() => _secureStorage.read(key: _Keys.sessionId);
-  Future<void> setSessionId(String? value) {
+  static Future<String?> getSessionId() => _secureStorage.read(key: _Keys.sessionId);
+  static Future<void> setSessionId(String? value) {
     if(value != null) {
       return _secureStorage.write(key: _Keys.sessionId, value: value);
     } else {
@@ -12,8 +12,8 @@ class SessionDataProvider{
     }
   }
 
-  Future<String?> getAccessToken() => _secureStorage.read(key: _Keys.accessToken);
-  Future<void> setAccessToken(String? value) {
+  static Future<String?> getAccessToken() => _secureStorage.read(key: _Keys.accessToken);
+  static Future<void> setAccessToken(String? value) {
     if(value != null) {
       return _secureStorage.write(key: _Keys.accessToken, value: value);
     } else {
