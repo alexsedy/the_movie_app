@@ -136,7 +136,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "ok": MessageLookupByLibrary.simpleMessage("Ок"),
         "otherProjects": MessageLookupByLibrary.simpleMessage("Другие проекты"),
         "overview": MessageLookupByLibrary.simpleMessage("Обзор"),
-        "persons": MessageLookupByLibrary.simpleMessage("Персоны"),
+        "persons": MessageLookupByLibrary.simpleMessage("Знаменитости"),
         "placeOfBirth": MessageLookupByLibrary.simpleMessage("Место рождения:"),
         "playTrailer":
             MessageLookupByLibrary.simpleMessage("Воспроизвести трейлер"),
@@ -157,7 +157,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "releaseDates": MessageLookupByLibrary.simpleMessage("Даты выхода"),
         "search": MessageLookupByLibrary.simpleMessage("Поиск"),
         "searchGlobalSearchHint": MessageLookupByLibrary.simpleMessage(
-            "Поиск фильмов, сериалов, персон"),
+            "Поиск фильмов, сериалов, знаменитостей"),
         "seasons": MessageLookupByLibrary.simpleMessage("Сезоны"),
         "selectMaxNumberOfItems": MessageLookupByLibrary.simpleMessage(
             "Выберите максимальное количество элементов"),
@@ -182,7 +182,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "trendingMovies":
             MessageLookupByLibrary.simpleMessage("Популярные фильмы"),
         "trendingPersons":
-            MessageLookupByLibrary.simpleMessage("Популярные персоны"),
+            MessageLookupByLibrary.simpleMessage("Популярные знаменитости"),
         "trendingTvs":
             MessageLookupByLibrary.simpleMessage("Популярные сериалы"),
         "tvAddedToListMessage": m11,

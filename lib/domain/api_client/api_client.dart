@@ -16,20 +16,16 @@ class ApiClientException implements Exception {
 
 class ApiClient {
   final client = HttpClient();
-  final sessionDataProvider = SessionDataProvider();
   static const _host = "https://api.themoviedb.org/3";
   static const _hostFour = "https://api.themoviedb.org/4";
   static const _imageUrl = "https://image.tmdb.org/t/p/w500";
   static const _apiKey = String.fromEnvironment('API_KEY');
-  static const _token = String.fromEnvironment('ACCESS_TOKEN');
-  static const _accessToken = "Bearer $_token";
   static String _languageCode = "en";
   static String _countryCode = "US";
 
   String get apiKey => _apiKey;
   String get host => _host;
   String get hostFour => _hostFour;
-  String get accessToken => _accessToken;
   String get reqLocale => "$_languageCode-$_countryCode";
   String get languageCode => _languageCode;
   String get countryCode => _countryCode;

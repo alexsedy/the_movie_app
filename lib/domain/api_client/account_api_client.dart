@@ -15,7 +15,7 @@ import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
 class AccountApiClient extends ApiClient {
 
   Future<AccountSate> getAccountState() async {
-    final sessionId = await sessionDataProvider.getSessionId();
+    final sessionId = await SessionDataProvider.getSessionId();
 
     final url = makeUri(
       "/account",
@@ -36,6 +36,7 @@ class AccountApiClient extends ApiClient {
 
   Future<UserLists> getUserLists(int page) async {
     final accountObjectId = await AccountManager.getAccountId();
+    final accessToken = await SessionDataProvider.getAccessToken();
 
     final url = makeUriFour(
       "/account/$accountObjectId/lists",
@@ -44,7 +45,7 @@ class AccountApiClient extends ApiClient {
       },
     );
     final request = await client.getUrl(url);
-    request.headers.add("Authorization", accessToken);
+    request.headers.add("Authorization", "Bearer $accessToken");
     final response = await request.close();
     final json = (await response.jsonDecode()) as Map<String, dynamic>;
 
@@ -55,7 +56,7 @@ class AccountApiClient extends ApiClient {
   }
 
   Future<UserListDetails> getUserListDetails({required int listId, required int page}) async {
-    final accessToken = await sessionDataProvider.getAccessToken();
+    final accessToken = await SessionDataProvider.getAccessToken();
 
     final url = makeUriFour(
       "/list/$listId",
@@ -76,7 +77,7 @@ class AccountApiClient extends ApiClient {
   }
 
   Future<void> addNewList({required String? description, required String name, required bool public}) async {
-    final accessToken = await sessionDataProvider.getAccessToken();
+    final accessToken = await SessionDataProvider.getAccessToken();
 
     final url = makeUriFour(
       "/list",
@@ -103,7 +104,7 @@ class AccountApiClient extends ApiClient {
   }
 
   Future<void> addItemListToList({required int listId, required MediaType mediaType, required int mediaId}) async {
-    final accessToken = await sessionDataProvider.getAccessToken();
+    final accessToken = await SessionDataProvider.getAccessToken();
 
     final url = makeUriFour(
       "/list/$listId/items",
@@ -131,7 +132,7 @@ class AccountApiClient extends ApiClient {
   }
 
   Future<bool> isAddedToListToList({required int listId, required MediaType mediaType, required int mediaId}) async {
-    final accessToken = await sessionDataProvider.getAccessToken();
+    final accessToken = await SessionDataProvider.getAccessToken();
 
     final mediaTypeString = mediaType == MediaType.movie ? "movie" : "tv_show";
 
@@ -154,7 +155,7 @@ class AccountApiClient extends ApiClient {
   }
 
   Future<MediaListResponse> getDefaultMovieLists({required int page, required ListType listType}) async {
-    final accessToken = await sessionDataProvider.getAccessToken();
+    final accessToken = await SessionDataProvider.getAccessToken();
     final accountObjectId = await AccountManager.getAccountId();
 
     String list;
@@ -191,7 +192,7 @@ class AccountApiClient extends ApiClient {
   }
 
   Future<MediaListResponse> getDefaultTvShowLists({required int page, required ListType listType}) async {
-    final accessToken = await sessionDataProvider.getAccessToken();
+    final accessToken = await SessionDataProvider.getAccessToken();
     final accountObjectId = await AccountManager.getAccountId();
 
     String list;
@@ -228,7 +229,8 @@ class AccountApiClient extends ApiClient {
   }
 
   Future<bool> removeItems(int listId, ListOfItemsToRemove listOfItemsToRemove) async {
-    final sessionId = await sessionDataProvider.getSessionId();
+    final sessionId = await SessionDataProvider.getSessionId();
+    final accessToken = await SessionDataProvider.getAccessToken();
 
     final url = makeUriFour(
       "/list/$listId/items",
@@ -251,7 +253,8 @@ class AccountApiClient extends ApiClient {
   }
 
   Future<bool> removeList(int listId) async {
-    final sessionId = await sessionDataProvider.getSessionId();
+    final sessionId = await SessionDataProvider.getSessionId();
+    final accessToken = await SessionDataProvider.getAccessToken();
 
     final url = makeUri(
       "/list/$listId",
@@ -274,7 +277,7 @@ class AccountApiClient extends ApiClient {
 
   Future<bool> updateList({required String? description, required String name,
     required bool public, required int listId}) async {
-    final accessToken = await sessionDataProvider.getAccessToken();
+    final accessToken = await SessionDataProvider.getAccessToken();
 
     final url = makeUriFour(
       "/list/$listId",
