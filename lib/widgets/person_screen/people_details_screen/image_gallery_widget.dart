@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/person_screen/people_details_screen/people_details_model.dart';
 
@@ -20,11 +21,11 @@ class ImageGallery extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 10, bottom: 10),
+        Padding(
+          padding: const EdgeInsets.only(left: 10, bottom: 10),
           child: Text(
-            "Image gallery",
-            style: TextStyle(
+            context.l10n.imageGallery,
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 24,
             ),

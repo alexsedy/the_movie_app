@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/models/interfaces/i_base_media_details_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
 import 'package:the_movie_app/widgets/widget_elements/widget_elements/create_list_widget.dart';
@@ -39,9 +40,9 @@ class ListButtonWidget<T extends IBaseMediaDetailsModel> extends StatelessWidget
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text(
-                                    "Add to the list",
-                                    style: TextStyle(fontSize: 22),
+                                  Text(
+                                    context.l10n.addToTheList,
+                                    style: const TextStyle(fontSize: 22),
                                   ),
                                   ElevatedButton(
                                     onPressed: () {
@@ -68,7 +69,7 @@ class ListButtonWidget<T extends IBaseMediaDetailsModel> extends StatelessWidget
                                           }
                                       );
                                     },
-                                    child: const Text("New list"),
+                                    child: Text(context.l10n.newList),
                                   ),
                                 ],
                               ),
@@ -104,7 +105,7 @@ class ListButtonWidget<T extends IBaseMediaDetailsModel> extends StatelessWidget
                                       subtitle: Row(
                                         children: [
                                           Text(
-                                            "Item: $numberOfItems",
+                                            context.l10n.itemNumberOfItems(numberOfItems),
                                             style: const TextStyle(
                                               fontStyle: FontStyle.italic,
                                             ),
@@ -135,14 +136,14 @@ class ListButtonWidget<T extends IBaseMediaDetailsModel> extends StatelessWidget
             }
         );
       },
-      child: const SizedBox(
-        width: 60,
-        height: 60,
+      child: SizedBox(
+        width: 80,
+        height: 80,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.list),
-            Text("List"),
+            const Icon(Icons.list),
+            Text(context.l10n.list,),
           ],
         ),
       ),

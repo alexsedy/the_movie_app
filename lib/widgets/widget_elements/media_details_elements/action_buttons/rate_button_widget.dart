@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/models/interfaces/i_base_media_details_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
 
@@ -25,15 +26,15 @@ class RateButtonWidget<T extends IBaseMediaDetailsModel> extends StatelessWidget
         );
       },
       child: SizedBox(
-        width: 60,
-        height: 60,
+        width: 80,
+        height: 80,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             isRated
                 ? const Icon(Icons.star, color: Colors.amber,)
                 : const Icon(Icons.star_outline),
-            const Text("Rate"),
+            Text(context.l10n.rate,),
           ],
         ),
       ),
@@ -62,11 +63,11 @@ class _RateDialogWidgetState extends State<_RateDialogWidget> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      title: const Text("Rate movie"),
+      title: Text(context.l10n.rateMovie),
       children: [
         Center(
           child: Text(
-            "Rate: ${rate.round()}",
+            "${context.l10n.rate}: ${rate.round()}",
             style: TextStyle(
               fontSize: 18,
               color: Theme.of(context).primaryColor,
@@ -92,7 +93,7 @@ class _RateDialogWidgetState extends State<_RateDialogWidget> {
             widget.model.toggleAddRating(context, rate);
             Navigator.pop(context);
           },
-          child: const Text("Ok"),),
+          child: Text(context.l10n.ok),),
       ],
     );
   }

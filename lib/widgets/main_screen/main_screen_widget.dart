@@ -136,19 +136,19 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
         items: [
           BottomNavigationBarItem(
             icon: const Icon(Icons.home),
-            label: context.l10n.homeText
+            label: context.l10n.home
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.local_movies),
-            label: context.l10n.movieText
+            label: context.l10n.movies
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.tv),
-            label: context.l10n.tvShowsText
+            label: context.l10n.tvShows
           ),
           BottomNavigationBarItem(
               icon: const Icon(Icons.person),
-              label: context.l10n.profileText
+              label: context.l10n.profile
           ),
         ],
       ),
@@ -185,7 +185,7 @@ class SearchFieldWidget extends StatelessWidget {
       autofocus: true,
       decoration: InputDecoration(
         border: InputBorder.none,
-        hintText: context.l10n.searchTextHint,
+        hintText: context.l10n.search,
         hintStyle: const TextStyle(
           // color: Colors.white,
           fontSize: 20,

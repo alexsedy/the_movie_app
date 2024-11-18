@@ -3,12 +3,14 @@ import 'dart:io';
 
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/domain/cache_management/account_management.dart';
+import 'package:the_movie_app/domain/data_providers/session_data_provider.dart';
 import 'package:the_movie_app/domain/entity/account/account_state/account_state.dart';
 import 'package:the_movie_app/domain/entity/account/items_to_delete/remove_items.dart';
 import 'package:the_movie_app/domain/entity/account/user_list_details/user_list_details.dart';
 import 'package:the_movie_app/domain/entity/account/user_lists/user_lists.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
 import 'package:the_movie_app/widgets/list_screens/default_list/default_lists_model.dart';
+import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
 
 class AccountApiClient extends ApiClient {
 
@@ -59,6 +61,7 @@ class AccountApiClient extends ApiClient {
       "/list/$listId",
       <String, dynamic>{
         "page": page.toString(),
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);
@@ -84,8 +87,8 @@ class AccountApiClient extends ApiClient {
     final parameters = <String, dynamic>{
       "description": description,
       "name": name,
-      "iso_3166_1": "US",
-      "iso_639_1": "en",
+      "iso_3166_1": countryCode,
+      "iso_639_1": languageCode,
       "public": public.toString(),
     };
 
@@ -170,8 +173,8 @@ class AccountApiClient extends ApiClient {
     final url = makeUriFour(
       "/account/$accountObjectId/movie/$list",
       <String, dynamic>{
-        "language": "en-US",
         "page": page.toString(),
+        "language": reqLocale,
       },
     );
 
@@ -207,8 +210,8 @@ class AccountApiClient extends ApiClient {
     final url = makeUriFour(
       "/account/$accountObjectId/tv/$list",
       <String, dynamic>{
-        "language": "en-US",
         "page": page.toString(),
+        "language": reqLocale,
       },
     );
 
@@ -297,8 +300,4 @@ class AccountApiClient extends ApiClient {
 
     return json["success"];
   }
-}
-
-enum MediaType {
-  movie, tvShow
 }

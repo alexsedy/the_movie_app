@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 
 
 class PeopleDetailsShimmerSkeletonWidget extends StatelessWidget {
@@ -47,11 +48,11 @@ class PeopleDetailsShimmerSkeletonWidget extends StatelessWidget {
                           ),
                           Column(
                             children: [
-                              const Padding(
-                                padding: EdgeInsets.only(top: 30),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 30),
                                 child: Text(
-                                  "Social Network",
-                                  style: TextStyle(
+                                  context.l10n.socialNetwork,
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     fontStyle: FontStyle.italic,
                                   ),
@@ -180,9 +181,9 @@ class PeopleDetailsShimmerSkeletonWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const Text(
-                        "Biography",
-                        style: TextStyle(
+                      Text(
+                        context.l10n.biography,
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 24,
                         ),
@@ -202,11 +203,11 @@ class PeopleDetailsShimmerSkeletonWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(left: 10, bottom: 10),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, bottom: 10),
                   child: Text(
-                    "Image gallery",
-                    style: TextStyle(
+                    context.l10n.imageGallery,
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 24,
                     ),

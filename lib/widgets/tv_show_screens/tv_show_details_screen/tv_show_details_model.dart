@@ -9,8 +9,10 @@ import 'package:the_movie_app/domain/entity/media/media_details/media_details.da
 import 'package:the_movie_app/domain/entity/media/state/item_state.dart';
 import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
 import 'package:the_movie_app/helpers/snack_bar_helper.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/models/interfaces/i_base_media_details_model.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
+import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -119,10 +121,10 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
         _isRated = !_isRated;
         _rate = 0.0;
         notifyListeners();
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          duration: Duration(seconds: 3),
-          content: Text("The rating was deleted successfully.",
-            style: TextStyle(fontSize: 20),),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          duration: const Duration(seconds: 3),
+          content: Text(context.l10n.theRatingWasDeletedSuccessfully,
+            style: const TextStyle(fontSize: 20),),
         ));
       }
     }
@@ -179,7 +181,9 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         duration: const Duration(seconds: 5),
-        content: Text("This tv show already exists on the \"$name\" list.", style: const TextStyle(fontSize: 20),),)
+        content: Text(
+          context.l10n.tvExistsInListMessage(name),
+          style: const TextStyle(fontSize: 20),),)
       );
     } else {
       await SnackBarHelper.handleErrorWithMessage(

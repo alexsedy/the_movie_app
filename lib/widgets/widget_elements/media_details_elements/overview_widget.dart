@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/models/interfaces/i_base_media_details_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
 
@@ -26,9 +27,16 @@ class _OverviewWidgetState extends State<OverviewWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-          child: Text("Overview", style: TextStyle(fontSize: 21, fontWeight: FontWeight.w700),),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          child: Text(
+            context.l10n.overview,
+            style: const TextStyle(
+                fontSize: 21, 
+                fontWeight: 
+                FontWeight.w700
+            ),
+          ),
         ),
         if(tagline != null && tagline != "") Padding(
           padding: const EdgeInsets.all(10),

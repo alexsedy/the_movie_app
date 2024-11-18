@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/movie_screens/movie_list_screen/movie_list_model.dart';
@@ -30,10 +31,10 @@ class _MovieListWidgetState extends State<MovieListWidget> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const DefaultListsShimmerSkeletonWidget();
           } else {
-            return const Center(
+            return Center(
               child: Text(
-                "No results.",
-                style: TextStyle(
+                context.l10n.noResults,
+                style: const TextStyle(
                   fontSize: 36,
                 ),
               ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
 
 class MediaDetailsHeaderShimmerSkeletonWidget extends StatelessWidget {
@@ -46,17 +47,22 @@ class MediaDetailsBodyShimmerSkeletonWidget extends StatelessWidget {
                       height: 62,
                       child: TextButton(
                           onPressed: (){},
-                          child: const Row(
+                          child: Row(
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                   width: 45,
                                   height: 45,
                                   child: CircleAvatar(
                                     backgroundColor: Colors.white,
                                   )
                               ),
-                              SizedBox(width: 10),
-                              Text("User Score", style: TextStyle(color: Colors.black),),
+                              const SizedBox(width: 10),
+                              Text(
+                                context.l10n.userScore, 
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                ),
+                              ),
                             ],
                           )
                       ),
@@ -66,71 +72,82 @@ class MediaDetailsBodyShimmerSkeletonWidget extends StatelessWidget {
                       height: 62,
                       child: TextButton(
                           onPressed: (){},
-                          child: const Row(
+                          child: Row(
                             children: [
-                              Icon(Icons.play_arrow, color: Colors.black),
-                              Text("Play Trailer", style: TextStyle(color: Colors.black),),
+                              const Icon(Icons.play_arrow, color: Colors.black),
+                              Text(
+                                context.l10n.playTrailer, 
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                ),
+                              ),
                             ],
                           )
                       ),
                     ),
                   ],
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 6),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       SizedBox(
-                        width: 60,
-                        height: 60,
+                        width: 80,
+                        height: 80,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.list),
-                            Text("List"),
+                            const Icon(Icons.list),
+                            Text(context.l10n.list),
                           ],
                         ),
                       ),
                       SizedBox(
-                        width: 60,
-                        height: 60,
+                        width: 80,
+                        height: 80,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.favorite_outline),
-                            Text("Favorite"),
+                            const Icon(Icons.favorite_outline),
+                            Text(context.l10n.favorite),
                           ],
                         ),
                       ),
                       SizedBox(
-                        width: 60,
-                        height: 60,
+                        width: 80,
+                        height: 80,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.bookmark_outline),
-                            Text("Watch"),
+                            const Icon(Icons.bookmark_outline),
+                            Text(context.l10n.watch),
                           ],
                         ),
                       ),
                       SizedBox(
-                        width: 60,
-                        height: 60,
+                        width: 80,
+                        height: 80,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.star_outline),
-                            Text("Rate"),
+                            const Icon(Icons.star_outline),
+                            Text(context.l10n.rate),
                           ],
                         ),
                       ),
                     ],
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                  child: Text("Overview", style: TextStyle(fontSize: 21, fontWeight: FontWeight.w700),),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  child: Text(
+                    context.l10n.overview, 
+                    style: const TextStyle(
+                      fontSize: 21, 
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(10),
@@ -157,7 +174,7 @@ class MediaDetailsBodyShimmerSkeletonWidget extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         child: Text(
                           mediaDetailsElementType == MediaDetailsElementType.movie
-                           ? "Movie Crew" : "TV Show Crew",
+                           ? context.l10n.movieCrew : context.l10n.tvShowCrew,
                           style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold),
@@ -246,76 +263,6 @@ class MediaDetailsBodyShimmerSkeletonWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                    //строки с мув крю
-                    // Row(
-                    //   mainAxisSize: MainAxisSize.max,
-                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //   children: [
-                    //     SizedBox(
-                    //       width: 130,
-                    //       height: 50,
-                    //       child: Column(
-                    //         crossAxisAlignment: CrossAxisAlignment.start,
-                    //         children: [
-                    //           Container(
-                    //             color: Colors.white,
-                    //             width: 120,
-                    //             height: 40,
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //     SizedBox(
-                    //       width: 130,
-                    //       height: 50,
-                    //       child: Column(
-                    //         crossAxisAlignment: CrossAxisAlignment.start,
-                    //         children: [
-                    //           Container(
-                    //             color: Colors.white,
-                    //             width: 120,
-                    //             height: 40,
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                    // const SizedBox(height: 20,),
-                    // Row(
-                    //   mainAxisSize: MainAxisSize.max,
-                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //   children: [
-                    //     SizedBox(
-                    //       width: 130,
-                    //       height: 50,
-                    //       child: Column(
-                    //         crossAxisAlignment: CrossAxisAlignment.start,
-                    //         children: [
-                    //           Container(
-                    //             color: Colors.white,
-                    //             width: 120,
-                    //             height: 40,
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //     SizedBox(
-                    //       width: 130,
-                    //       height: 50,
-                    //       child: Column(
-                    //         crossAxisAlignment: CrossAxisAlignment.start,
-                    //         children: [
-                    //           Container(
-                    //             color: Colors.white,
-                    //             width: 120,
-                    //             height: 40,
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
                   ],
                 ),
                 // const SizedBox(height: 20,),
@@ -328,7 +275,7 @@ class MediaDetailsBodyShimmerSkeletonWidget extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         child: Text(
                           mediaDetailsElementType == MediaDetailsElementType.movie
-                              ? "Movie Cast" : "TV Show Cast",
+                              ? context.l10n.movieCast : context.l10n.tvShowCast,
                           style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold),

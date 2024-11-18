@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:the_movie_app/helpers/snack_bar_helper.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/models/interfaces/i_media_filter_model.dart';
 
 class FilterMoviesButtonWidget extends StatefulWidget {
@@ -164,14 +166,16 @@ class _DateFilterWidgetState extends State<_DateFilterWidget> {
 
     return Column(
       children: [
-        const Text(
-          "Release Dates",
-          style: TextStyle(
+        Text(
+          context.l10n.releaseDates,
+          style: const TextStyle(
             fontSize: 18,
           ),
         ),
         if(_isShowError)
-          const Text("Please enter correct date", style: TextStyle(color: Colors.red)),
+          Text(
+            context.l10n.pleaseEnterCorrectDate, 
+            style: const TextStyle(color: Colors.red)),
         const SizedBox(height: 6,),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -196,7 +200,7 @@ class _DateFilterWidgetState extends State<_DateFilterWidget> {
                   _isShowError = false;
                 });
               },
-              child: const Text("Clear"),
+              child: Text(context.l10n.clear),
             ),
           ],
         ),
@@ -354,7 +358,7 @@ class _AcceptedButtonsWidget extends StatelessWidget {
             model.loadContent();
             Navigator.pop(context);
           },
-          child: const Text("Ok"),
+          child: Text(context.l10n.ok),
         ),
         ElevatedButton(
           onPressed: () {
@@ -364,7 +368,7 @@ class _AcceptedButtonsWidget extends StatelessWidget {
             sortByKey.currentState?._refresh();
             dateKey.currentState?._refresh();
           },
-          child: const Text("Clear all"),
+          child: Text(context.l10n.clearAll),
         ),
       ],
     );

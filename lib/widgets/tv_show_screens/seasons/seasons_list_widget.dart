@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/helpers/converter_helper.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/list_elements/params_vertical_list_widget.dart';
@@ -14,7 +15,7 @@ class SeasonsListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Seasons"),
+        title: Text(context.l10n.seasons),
       ),
       body: const _BodyWidget(),
     );

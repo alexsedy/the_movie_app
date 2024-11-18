@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/helpers/converter_helper.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/list_screens/default_list/default_lists_model.dart';
@@ -29,10 +30,10 @@ class _DefaultListsWidgetState extends State<DefaultListsWidget> {
       child: Scaffold(
         appBar: AppBar(
           title: const _HeaderWidget(),
-          bottom: const TabBar(
+          bottom: TabBar(
             tabs: [
-              Tab(text: "Movies"),
-              Tab(text: "TV Shows"),
+              Tab(text: context.l10n.movies),
+              Tab(text: context.l10n.tvShows),
             ],
           ),
         ),
@@ -64,13 +65,13 @@ class _HeaderWidget extends StatelessWidget {
 
     switch(listType) {
       case ListType.favorites:
-        return const Text("Favorite list");
+        return Text(context.l10n.favorite);
       case ListType.watchlist:
-        return const Text("Watchlist list");
+        return Text(context.l10n.watchlist);
       case ListType.rated:
-        return const Text("Rated list");
+        return Text(context.l10n.rated);
       case ListType.recommendations:
-        return const Text("Recommendation list");
+        return Text(context.l10n.recommendation);
     }
   }
 }
@@ -93,10 +94,10 @@ class _MovieListWidget extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const DefaultListsShimmerSkeletonWidget();
           } else {
-            return const Center(
+            return Center(
               child: Text(
-                "The list is empty.",
-                style: TextStyle(
+                context.l10n.theListIsEmpty,
+                style: const TextStyle(
                   fontSize: 36,
                 ),
               ),
@@ -136,9 +137,9 @@ class _TvShowListWidget extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const DefaultListsShimmerSkeletonWidget();
           } else {
-            return const Center(
+            return Center(
               child: Text(
-                "The list is empty.",
+                context.l10n.theListIsEmpty,
                 style: TextStyle(
                   fontSize: 36,
                 ),

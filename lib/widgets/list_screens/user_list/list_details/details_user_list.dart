@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/list_screens/user_list/list_details/list_details_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/list_shimmer_skeleton_widget.dart';
@@ -44,13 +45,13 @@ class _DetailsUserListState extends State<DetailsUserList> {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: const Text("Delete selected items?"),
+                      title: Text(context.l10n.deleteSelectedItems),
                       content: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           ElevatedButton(
                             onPressed: () => Navigator.pop(context),
-                            child: const Text("Cancel"),
+                            child: Text(context.l10n.cancel),
                           ),
                           ElevatedButton(
                             onPressed: () async {
@@ -67,7 +68,7 @@ class _DetailsUserListState extends State<DetailsUserList> {
                               Navigator.of(context).pop();
                               Navigator.of(context).pop();
                             },
-                            child: const Text("Yes"),
+                            child: Text(context.l10n.yes),
                           ),
                         ],
                       ),
@@ -154,8 +155,12 @@ class _FooterInfoWidget extends StatelessWidget {
           public
               ? Icon(Icons.lock_open, color: Colors.greenAccent[700],)
               : Icon(Icons.lock_outline, color: Colors.redAccent[700],),
-          username != null ? Text("Created by $username.") : const Text(""),
-          itemCount != null ? Text("Items: $itemCount.") : const Text(""),
+          username != null 
+              ? Text(context.l10n.createdByUsername(username))
+              : const Text(""),
+          itemCount != null 
+              ? Text(context.l10n.itemsCount(itemCount))
+              : const Text(""),
         ],
       ),
     );
@@ -220,9 +225,9 @@ class _ListBodyState extends State<_ListBody> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const DefaultListsShimmerSkeletonWidget();
           } else {
-            return const Center(
+            return Center(
               child: Text(
-                "The list is empty.",
+                context.l10n.theListIsEmpty,
                 style: TextStyle(
                   fontSize: 36,
                 ),

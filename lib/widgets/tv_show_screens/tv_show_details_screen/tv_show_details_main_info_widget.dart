@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/helpers/converter_helper.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/list_elements/params_media_details_list_widget.dart';
@@ -74,7 +75,7 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
           paramsModel: ParameterizedWidgetModel(
             list: ConverterHelper.convertCrew(crew),
             action: (BuildContext context, int index) {},
-            additionalText: "TV Show Crew",
+            additionalText: context.l10n.tvShowCrew,
           ),
           secondAction: () => model.onCrewListScreen(context, crew),
         ),
@@ -84,7 +85,7 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
           paramsModel: ParameterizedWidgetModel(
             list: ConverterHelper.convertCasts(cast),
             action: model.onPeopleDetailsScreen,
-            additionalText: "TV Show Cast",
+            additionalText: context.l10n.tvShowCast,
             altImagePath: AppImages.noProfile,
           ),
           secondAction: () => model.onCastListScreen(context, cast),
@@ -95,7 +96,7 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
           paramsModel: ParameterizedWidgetModel(
             list: ConverterHelper.convertSeasonHorizontal(seasons),
             action: model.onSeasonDetailsScreen,
-            additionalText: "Seasons",
+            additionalText: context.l10n.seasons,
             altImagePath: AppImages.noPoster,
           ),
           secondAction: () => model.onSeasonsListScreen(context, seasons),
@@ -106,7 +107,7 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
           paramsModel: ParameterizedWidgetModel(
             list: ConverterHelper.convertNetworks(networks),
             action: model.onPeopleDetailsScreen,
-            additionalText: "Networks",
+            additionalText: context.l10n.networks,
             altImagePath: AppImages.noLogo,
             aspectRatio: 1 / 1,
             boxHeight: 215,
@@ -120,7 +121,7 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
           paramsModel: ParameterizedWidgetModel(
             list: ConverterHelper.convertCompanies(productionCompanies),
             action: model.onPeopleDetailsScreen,
-            additionalText: "Production Companies",
+            additionalText: context.l10n.productionCompanies,
             altImagePath: AppImages.noLogo,
             aspectRatio: 1 / 1,
             boxHeight: 215,
@@ -134,7 +135,7 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
           paramsModel: ParameterizedWidgetModel(
             list: ConverterHelper.convertRecommendation(recommendations),
             action: model.onMediaDetailsScreen,
-            additionalText: "Recommendation TV Shows",
+            additionalText: context.l10n.recommendationTvShows,
             altImagePath: AppImages.noPoster,
           ),
           secondAction: () => {},

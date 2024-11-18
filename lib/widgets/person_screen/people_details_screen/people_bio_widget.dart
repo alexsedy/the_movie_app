@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/person_screen/people_details_screen/people_details_model.dart';
 
@@ -56,7 +57,7 @@ class _GeneralInfoWidget extends StatelessWidget {
     final model = NotifierProvider.watch<PeopleDetailsModel>(context);
     final person = model?.personDetails;
     final birthday = model?.formatDate(person?.birthday);
-    final deathday = model?.formatDate(person?.deathday);
+    final deathDay = model?.formatDate(person?.deathday);
 
     return Column(
       children: [
@@ -68,8 +69,8 @@ class _GeneralInfoWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Known For:"),
-                  Text(person?.knownForDepartment ?? "Unknown"),
+                  Text(context.l10n.knownFor(person?.gender ?? 3)),
+                  Text(person?.knownForDepartment ?? context.l10n.unknown),
                 ],
               ),
             ),
@@ -78,8 +79,8 @@ class _GeneralInfoWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Gender:"),
-                  Text("${person?.gender}"),
+                  Text(context.l10n.gender),
+                  Text(context.l10n.genderType(person?.gender ?? 3)),
                 ],
               ),
             ),
@@ -94,8 +95,10 @@ class _GeneralInfoWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Date of Birth:"),
-                  Text(birthday != null && birthday.isNotEmpty ? birthday : "Unknown"),
+                  Text(context.l10n.dateOfBirth),
+                  Text(birthday != null && birthday.isNotEmpty 
+                          ? birthday 
+                          : context.l10n.unknown),
                 ],
               ),
             ),
@@ -104,8 +107,8 @@ class _GeneralInfoWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Place Of Birth:"),
-                  Text(person?.placeOfBirth ?? "Unknown", softWrap: true,),
+                  Text(context.l10n.placeOfBirth),
+                  Text(person?.placeOfBirth ?? context.l10n.unknown, softWrap: true,),
                 ],
               ),
             ),
@@ -121,8 +124,8 @@ class _GeneralInfoWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (person?.deathday != null) ...[
-                    const Text("Date of death:"),
-                    Text(deathday ?? ""),
+                    Text(context.l10n.dateOfDeath),
+                    Text(deathDay ?? context.l10n.unknown),
                   ],
                 ],
               ),
@@ -153,11 +156,11 @@ class _SocialNetworkWidget extends StatelessWidget {
 
     return Column(
       children: [
-        const Padding(
-          padding: EdgeInsets.only(top: 30),
+        Padding(
+          padding: const EdgeInsets.only(top: 30),
           child: Text(
-            "Social Network",
-            style: TextStyle(
+            context.l10n.socialNetwork,
+            style: const TextStyle(
               fontSize: 18,
               fontStyle: FontStyle.italic,
             ),
@@ -292,9 +295,9 @@ class _BioTextWidgetState extends State<_BioTextWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              "Biography",
-              style: TextStyle(
+            Text(
+              context.l10n.biography,
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 24,
               ),
@@ -304,12 +307,12 @@ class _BioTextWidgetState extends State<_BioTextWidget> {
               duration: const Duration(milliseconds: 300),
               crossFadeState: _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
               firstChild: Text(
-                biography, // показываем только часть описания
+                biography,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 5,
               ),
               secondChild: Text(
-                biography, // показываем полное описание
+                biography,
               ),
             ),
             biography.length <= 300

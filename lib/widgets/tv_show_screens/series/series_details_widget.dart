@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/helpers/converter_helper.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/list_elements/params_media_details_list_widget.dart';
@@ -56,11 +57,11 @@ class _SeriesNameWidget extends StatelessWidget {
         Text(name),
         airDate != null
           ? Text(
-              "Episode: $episodeNumber $releaseText",
+              "${context.l10n.episode}: $episodeNumber $releaseText",
               style: const TextStyle(fontStyle: FontStyle.italic),
             )
           : Text(
-              "Episode: $episodeNumber",
+              "${context.l10n.episode}: $episodeNumber",
               style: const TextStyle(fontStyle: FontStyle.italic),
             )
       ],
@@ -102,7 +103,7 @@ class _BodyDetails extends StatelessWidget {
             paramsModel: ParameterizedWidgetModel(
               list: ConverterHelper.convertCrew(crew),
               action: (BuildContext context, int index) {},
-              additionalText: "Series Crew",
+              additionalText: context.l10n.seriesCrew,
             ),
             secondAction: () => model.onCrewListScreen(context, crew),
           ),
@@ -112,7 +113,7 @@ class _BodyDetails extends StatelessWidget {
             paramsModel: ParameterizedWidgetModel(
               list: ConverterHelper.convertCasts(cast),
               action: model.onPeopleDetailsScreen,
-              additionalText: "Series Cast",
+              additionalText: context.l10n.seriesCast,
               altImagePath: AppImages.noProfile,
             ),
             secondAction: () => model.onCastListScreen(context, cast),
@@ -123,7 +124,7 @@ class _BodyDetails extends StatelessWidget {
             paramsModel: ParameterizedWidgetModel(
               list: ConverterHelper.convertCasts(guestStars),
               action: model.onGuestPeopleDetailsScreen,
-              additionalText: "Series Guest Stars",
+              additionalText: context.l10n.seriesGuestStars,
               altImagePath: AppImages.noProfile,
             ),
             secondAction: () => model.onGuestCastListScreen(context, guestStars),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
 abstract class SnackBarHelper{
@@ -65,19 +66,21 @@ abstract class SnackBarHelper{
             content: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("You are not logged in.", style: TextStyle(fontSize: 20),),
+                Text(context.l10n.youAreNotLoggedIn, style: const TextStyle(fontSize: 20),),
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).pushNamed(MainNavigationRouteNames.mainScreen, arguments: 3),
-                  child: const Text("Login"),
+                  child: Text(context.l10n.login),
                 )
               ],
             ),
           ));
          return false;
         default:
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            duration: Duration(seconds: 5),
-            content: Text("An error has occurred. Try again.", style: TextStyle(fontSize: 20),),
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            duration: const Duration(seconds: 5),
+            content: Text(
+              context.l10n.anErrorHasOccurredTryAgainLater,
+              style: const TextStyle(fontSize: 20),),
           ));
           return false;
       }
@@ -95,10 +98,10 @@ abstract class SnackBarHelper{
             content: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("You are not logged in.", style: TextStyle(fontSize: 20),),
+                Text(context.l10n.youAreNotLoggedIn, style: const TextStyle(fontSize: 20),),
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).pushReplacementNamed(MainNavigationRouteNames.mainScreen, arguments: 3),
-                  child: const Text("Login"),
+                  child: Text(context.l10n.login),
                 )
               ],
             ),
@@ -106,16 +109,20 @@ abstract class SnackBarHelper{
           Navigator.of(context).pop();
 
         case ApiClientExceptionType.notFound:
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            duration: Duration(seconds: 5),
-            content: Text("An error has occurred. Try again later.", style: TextStyle(fontSize: 20),),
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            duration: const Duration(seconds: 5),
+            content: Text(
+              context.l10n.anErrorHasOccurredTryAgainLater,
+              style: const TextStyle(fontSize: 20),),
           ));
 
           Navigator.of(context).pop();
         default:
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            duration: Duration(seconds: 5),
-            content: Text("An error has occurred. Try again.", style: TextStyle(fontSize: 20),),
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            duration: const Duration(seconds: 5),
+            content: Text(
+              context.l10n.anErrorHasOccurredTryAgainLater,
+              style: const TextStyle(fontSize: 20),),
           ));
       }
     }
@@ -131,7 +138,9 @@ abstract class SnackBarHelper{
         case MessageType.listCreated:
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             duration: const Duration(seconds: 5),
-            content: Text("The \"$message\" list has been created.", style: TextStyle(fontSize: 20),),
+            content: Text(
+              context.l10n.listCreatedMessage(message),
+              style: TextStyle(fontSize: 20),),
           ));
           Navigator.of(context).pop();
           return;
@@ -139,7 +148,9 @@ abstract class SnackBarHelper{
         case MessageType.movieAddedToList:
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             duration: const Duration(seconds: 5),
-            content: Text("This movie has been added to the \"$message\" list", style: TextStyle(fontSize: 20),),
+            content: Text(
+              context.l10n.movieAddedToListMessage(message),
+              style: TextStyle(fontSize: 20),),
           ));
           Navigator.of(context).pop();
           return;
@@ -147,7 +158,9 @@ abstract class SnackBarHelper{
         case MessageType.tvShowAddedToList:
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             duration: const Duration(seconds: 5),
-            content: Text("This tv show has been added to the \"$message\" list", style: TextStyle(fontSize: 20),),
+            content: Text(
+              context.l10n.tvAddedToListMessage(message),
+              style: TextStyle(fontSize: 20),),
           ));
           Navigator.of(context).pop();
           return;
@@ -155,7 +168,9 @@ abstract class SnackBarHelper{
         case MessageType.remove:
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             duration: const Duration(seconds: 5),
-            content: Text("The list has been removed", style: TextStyle(fontSize: 20),),
+            content: Text(
+              context.l10n.theListRemovedMessage,
+              style: TextStyle(fontSize: 20),),
           ));
           Navigator.of(context).pop();
           return;
@@ -171,18 +186,22 @@ abstract class SnackBarHelper{
             content: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("You are not logged in.", style: TextStyle(fontSize: 20),),
+                Text(
+                  context.l10n.youAreNotLoggedIn,
+                  style: const TextStyle(fontSize: 20),),
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).pushNamed(MainNavigationRouteNames.mainScreen, arguments: 3),
-                  child: const Text("Login"),
+                  child: Text(context.l10n.login),
                 )
               ],
             ),
           ));
         default:
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            duration: Duration(seconds: 5),
-            content: Text("An error has occurred. Try again.", style: TextStyle(fontSize: 20),),
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            duration: const Duration(seconds: 5),
+            content: Text(
+              context.l10n.anErrorHasOccurredTryAgainLater,
+              style: const TextStyle(fontSize: 20),),
           ));
       }
     }
