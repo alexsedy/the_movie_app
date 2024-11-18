@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/models/interfaces/i_base_user_lists_model.dart';
 
 class CreateListWidget extends StatefulWidget {
@@ -30,9 +31,9 @@ class _CreateListWidgetState extends State<CreateListWidget> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
         children: [
-          const Text(
-            "Create a new list",
-            style: TextStyle(fontSize: 22),
+          Text(
+            context.l10n.createANewList,
+            style: const TextStyle(fontSize: 22),
           ),
           const SizedBox(height: 30,),
           TextField(
@@ -42,10 +43,10 @@ class _CreateListWidgetState extends State<CreateListWidget> {
             onChanged: (_) {
               setState(() {});
             },
-            decoration: const InputDecoration(
-              hintText: "Name",
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            decoration: InputDecoration(
+              hintText: context.l10n.name,
+              border: const OutlineInputBorder(),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
               isCollapsed: true,
             ),
           ),
@@ -57,10 +58,10 @@ class _CreateListWidgetState extends State<CreateListWidget> {
             onChanged: (_) {
               setState(() {});
             },
-            decoration: const InputDecoration(
-              hintText: "Description",
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            decoration: InputDecoration(
+              hintText: context.l10n.description,
+              border: const OutlineInputBorder(),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
               isCollapsed: true,
             ),
           ),
@@ -70,9 +71,9 @@ class _CreateListWidgetState extends State<CreateListWidget> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "Public",
-                  style: TextStyle(
+                Text(
+                  context.l10n.public,
+                  style: const TextStyle(
                     fontSize: 16,
                   ),
                 ),
@@ -98,7 +99,7 @@ class _CreateListWidgetState extends State<CreateListWidget> {
                 public: _isPublic
             )
                 : null,
-            child: const Text("Create"),
+            child: Text(context.l10n.create),
           ),
           const SizedBox(height: 20,),
         ],

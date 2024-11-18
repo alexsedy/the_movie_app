@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/helpers/converter_helper.dart';
 import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
@@ -19,7 +20,8 @@ class _MovieListWidgetState extends State<TvShowListWidget> {
 
   @override
   void initState() {
-    _scrollController = NotifierProvider.read<TvShowListModel>(context)?.scrollController ?? ScrollController();
+    _scrollController = NotifierProvider.read<TvShowListModel>(context)?.scrollController
+        ?? ScrollController();
     super.initState();
   }
 
@@ -36,9 +38,9 @@ class _MovieListWidgetState extends State<TvShowListWidget> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const DefaultListsShimmerSkeletonWidget();
           } else {
-            return const Center(
+            return Center(
               child: Text(
-                "No results.",
+                context.l10n.noResults,
                 style: TextStyle(
                   fontSize: 36,
                 ),

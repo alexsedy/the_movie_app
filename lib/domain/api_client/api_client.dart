@@ -31,6 +31,8 @@ class ApiClient {
   String get hostFour => _hostFour;
   String get accessToken => _accessToken;
   String get reqLocale => "$_languageCode-$_countryCode";
+  String get languageCode => _languageCode;
+  String get countryCode => _countryCode;
 
   static String getImageByUrl(String path) => _imageUrl + path;
 

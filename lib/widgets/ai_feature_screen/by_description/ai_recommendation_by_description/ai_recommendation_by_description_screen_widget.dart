@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/ai_feature_screen/by_description/ai_recommendation_by_description/ai_recommendation_by_description_model.dart';
 
@@ -10,7 +11,7 @@ class AiRecommendationByDescriptionScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("AI Recommendation"),
+        title: Text(context.l10n.aiRecommendation),
       ),
       body: _BodyWidget(),
     );
@@ -57,7 +58,7 @@ class _BodyWidgetState extends State<_BodyWidget> {
           children: [
             SizedBox(height: 20,),
             Text(
-              "Write a description that is as detailed as possible",
+              context.l10n.writeADescriptionAiMessage,
               style: TextStyle(
                 fontSize: 20,
               ),
@@ -81,7 +82,7 @@ class _BodyWidgetState extends State<_BodyWidget> {
             ),
             SizedBox(height: 20,),
             Text(
-              "Select max number of items",
+              context.l10n.selectMaxNumberOfItems,
               style: TextStyle(
                 fontSize: 20,
               ),
@@ -110,7 +111,7 @@ class _BodyWidgetState extends State<_BodyWidget> {
                     _sliderValue.toInt(),
                 )
                     : null,
-                child: Text("Generate"),
+                child: Text(context.l10n.generate),
               ),
             ),
           ],

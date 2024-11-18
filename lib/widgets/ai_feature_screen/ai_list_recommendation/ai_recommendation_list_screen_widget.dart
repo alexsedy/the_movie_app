@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/ai_feature_screen/ai_list_recommendation/ai_recommendation_list_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/list_shimmer_skeleton_widget.dart';
@@ -18,7 +19,7 @@ class AiRecommendationListScreenWidget extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text("AI Recommendation List")),
+      appBar: AppBar(title: Text(context.l10n.aiRecommendationList)),
       body: StreamBuilder<List<MediaList>>(
         stream: model.isGenre ? model.generateAndGetContent() : model.generateAndGetContent2(),
         builder: (context, snapshot) {
@@ -138,7 +139,7 @@ class AiRecommendationListScreenWidget extends StatelessWidget {
                 }
             );
           } else {
-            return Center(child: Text('No date'));
+            return Center(child: Text(context.l10n.noData));
           }
         },
       ),

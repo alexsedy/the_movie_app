@@ -6,6 +6,7 @@ import 'package:the_movie_app/domain/api_client/auth_api_client.dart';
 import 'package:the_movie_app/domain/cache_management/account_management.dart';
 import 'package:the_movie_app/domain/data_providers/session_data_provider.dart';
 import 'package:the_movie_app/domain/entity/account/account_state/account_state.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/widgets/list_screens/default_list/default_lists_model.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
@@ -81,10 +82,11 @@ class AccountModel extends ChangeNotifier {
         }
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        duration: Duration(seconds: 3),
-        content: Text("Unknown error. Please try again later.",
-          style: TextStyle(fontSize: 20),),
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        duration: const Duration(seconds: 3),
+        content: Text(
+          context.l10n.unknownErrorPleaseTryAgainLater,
+          style: const TextStyle(fontSize: 20),),
       ));
     }
   }

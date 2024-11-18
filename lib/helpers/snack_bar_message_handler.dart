@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 
 abstract class SnackBarMessageHandler {
   static void showSuccessSnackBar({required BuildContext context, required String message}) {
@@ -9,9 +10,12 @@ abstract class SnackBarMessageHandler {
   }
 
   static void showErrorSnackBar(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      duration: Duration(seconds: 5),
-      content: Text("An error has occurred. Try again.", style: TextStyle(fontSize: 20),),
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      duration: const Duration(seconds: 5),
+      content: Text(
+        context.l10n.anErrorHasOccurredTryAgainLater,
+        style: const TextStyle(fontSize: 20),
+      ),
     ));
   }
 
@@ -24,9 +28,12 @@ abstract class SnackBarMessageHandler {
   }
 
   static void showErrorSnackBarWithPop(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      duration: Duration(seconds: 5),
-      content: Text("An error has occurred. Try again.", style: TextStyle(fontSize: 20),),
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      duration: const Duration(seconds: 5),
+      content: Text(
+        context.l10n.anErrorHasOccurredTryAgainLater,
+        style: const TextStyle(fontSize: 20),
+      ),
     ));
     Navigator.pop(context);
   }

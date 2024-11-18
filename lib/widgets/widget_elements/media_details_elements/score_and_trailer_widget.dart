@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/models/interfaces/i_base_media_details_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/score_radial_percent_widget.dart';
 
@@ -40,7 +41,12 @@ class ScoreAndTrailerWidget<T extends IBaseMediaDetailsModel> extends StatelessW
                     ),
                   ),
                   const SizedBox(width: 10),
-                  const Text("User Score", style: TextStyle(color: Colors.black),),
+                  Text(
+                    context.l10n.userScore, 
+                    style: const TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
                 ],
               )
           ),
@@ -55,7 +61,7 @@ class ScoreAndTrailerWidget<T extends IBaseMediaDetailsModel> extends StatelessW
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: const Text('Trailers'),
+                      title: Text(context.l10n.trailers),
                       content: Expanded(
                         child: SingleChildScrollView(
                           child: Column(
@@ -72,38 +78,31 @@ class ScoreAndTrailerWidget<T extends IBaseMediaDetailsModel> extends StatelessW
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: const Text('Close'),
+                          child: Text(context.l10n.close),
                         ),
                       ],
                     );
                   },
                 );
               },
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.play_arrow, color: Colors.black),
-                  Text("Play Trailer", style: TextStyle(color: Colors.black),),
+                  const Icon(Icons.play_arrow, color: Colors.black),
+                  Text(context.l10n.playTrailer, style: const TextStyle(color: Colors.black),),
                 ],
               )
           )
-              : const SizedBox(
-            width: 119,
+              : SizedBox(
             height: 62,
             child: Center(
-              child: SizedBox(
-                width: 95,
-                height: 24,
-                child: Center(
-                  child: Row(
-                    children: [
-                      Icon(Icons.play_arrow_outlined),
-                      Text(
-                        "No Trailer",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ],
+              child: Row(
+                children: [
+                  const Icon(Icons.play_arrow_outlined),
+                  Text(
+                    context.l10n.noTrailer,
+                    style: const TextStyle(color: Colors.black),
                   ),
-                ),
+                ],
               ),
             ),
           ),

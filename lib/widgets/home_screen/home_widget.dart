@@ -76,7 +76,7 @@ class _SearchWidget extends StatelessWidget {
           children: [
             const SizedBox(height: 40),
             Text(
-              context.l10n.findAnythingWelcomeText,
+              context.l10n.findAnythingWelcome,
               style: textStyle,
             ),
             const SizedBox(height: 20),
@@ -107,21 +107,6 @@ class _SearchWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // const SizedBox(width: 2),
-                  // Container(
-                  //   decoration: BoxDecoration(
-                  //     border: Border.all(),
-                  //     borderRadius: BorderRadius.circular(8.0),
-                  //   ),
-                  //   child: IconButton(
-                  //     onPressed: () {
-                  //       if(searchController.text.isNotEmpty) {
-                  //         model.onHomeSearchScreen(context);
-                  //       }
-                  //     },
-                  //     icon: const Icon(Icons.search),
-                  //   ),
-                  // ),
                 ],
               ),
             ),
@@ -180,11 +165,11 @@ class _TrendingToggleWidgetState extends State<_TrendingToggleWidget> {
   String _getName() {
     switch(widget.horizontalListElementType){
       case HorizontalListElementType.movie:
-        return context.l10n.trendingMoviesText;
+        return context.l10n.trendingMovies;
       case HorizontalListElementType.tv:
-        return context.l10n.trendingTvText;
+        return context.l10n.trendingTvs;
       case HorizontalListElementType.trendingPerson:
-        return context.l10n.trendingPersonsText;
+        return context.l10n.trendingPersons;
       default:
         return "";
     }
@@ -207,12 +192,16 @@ class _TrendingToggleWidgetState extends State<_TrendingToggleWidget> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                _getName(),
-                style: const TextStyle(
-                  fontSize: 20,
+              Expanded(
+                child: Text(
+                  _getName(),
+                  maxLines: 2,
+                  style: const TextStyle(
+                    fontSize: 20,
+                  ),
                 ),
               ),
+              SizedBox(width: 10,),
               SizedBox(
                 height: 30,
                 child: ToggleButtons(
@@ -240,8 +229,8 @@ class _TrendingToggleWidgetState extends State<_TrendingToggleWidget> {
                     });
                   },
                   children: [
-                    SizedBox(width: 80, child: Center(child: Text(context.l10n.dayToggleText,),),),
-                    SizedBox(width: 80, child: Center(child: Text(context.l10n.weekToggleText,),),),
+                    SizedBox(width: 80, child: Center(child: Text(context.l10n.day,),),),
+                    SizedBox(width: 80, child: Center(child: Text(context.l10n.week,),),),
                   ],
                 ),
               ),

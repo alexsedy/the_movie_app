@@ -45,10 +45,10 @@ class _HomeSearchWidgetState extends State<HomeSearchWidget> {
           ),
           bottom: TabBar(
             tabs: [
-              Tab(text: context.l10n.moviesSearchTabText),
-              Tab(text: context.l10n.tvShowsSearchTabText),
-              Tab(text: context.l10n.personsSearchTabText),
-              Tab(text: context.l10n.collectionsSearchTabText),
+              Tab(text: context.l10n.movies),
+              Tab(text: context.l10n.tvShows),
+              Tab(text: context.l10n.persons),
+              Tab(text: context.l10n.collections),
             ],
           ),
         ),
@@ -124,7 +124,7 @@ class _MovieListWidget extends StatelessWidget {
           } else {
             return Center(
               child: Text(
-                context.l10n.noResultsEmptyListText,
+                context.l10n.noResults,
                 style: const TextStyle(
                   fontSize: 36,
                 ),
@@ -165,7 +165,7 @@ class _TvShowListWidget extends StatelessWidget {
           } else {
             return Center(
               child: Text(
-                context.l10n.noResultsEmptyListText,
+                context.l10n.noResults,
                 style: const TextStyle(
                   fontSize: 36,
                 ),
@@ -207,7 +207,7 @@ class _PersonListWidget extends StatelessWidget {
           } else {
             return Center(
               child: Text(
-                context.l10n.noResultsEmptyListText,
+                context.l10n.noResults,
                 style: const TextStyle(
                   fontSize: 36,
                 ),
@@ -248,7 +248,7 @@ class _MediaCollectionListWidget extends StatelessWidget {
           } else {
             return Center(
               child: Text(
-                context.l10n.noResultsEmptyListText,
+                context.l10n.noResults,
                 style: const TextStyle(
                   fontSize: 36,
                 ),

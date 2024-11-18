@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/list_screens/user_list/user_lists_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/list_shimmer_skeleton_widget.dart';
@@ -22,7 +23,7 @@ class _UserListsWidgetState extends State<UserListsWidget> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("User lists"),
+        title: Text(context.l10n.userLists),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -49,13 +50,12 @@ class _UserListsWidgetState extends State<UserListsWidget> {
                     }
                 );
               },
-              child: const Text("New list"),
+              child: Text(context.l10n.newList),
             ),
           ),
         ],
       ),
       body: const _UserListBody(),
-      // body: MyListView(),
     );
   }
 }
@@ -103,7 +103,7 @@ class _UserListBody extends StatelessWidget {
                     trailing: PopupMenuButton<String>(
                       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                         PopupMenuItem<String>(
-                          child: Text('Edit'),
+                          child: Text(context.l10n.edit),
                           onTap: () {
                             model.listIndex = index;
                             showModalBottomSheet(
@@ -129,23 +129,23 @@ class _UserListBody extends StatelessWidget {
                           },
                         ),
                         PopupMenuItem<String>(
-                          child: Text('Clear'),
+                          child: Text(context.l10n.clear),
                           onTap: () {},
                         ),
                         PopupMenuItem<String>(
-                          child: Text('Delete'),
+                          child: Text(context.l10n.delete),
                           onTap: () {
                             showDialog(
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
-                                  title: Text("Delete the \"$name\" list?"),
+                                  title: Text(context.l10n.deleteTheNameList(name)),
                                   content: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
                                       ElevatedButton(
                                         onPressed: () => Navigator.pop(context),
-                                        child: const Text("Cancel"),
+                                        child: Text(context.l10n.cancel),
                                       ),
                                       ElevatedButton(
                                         onPressed: () {
@@ -154,7 +154,7 @@ class _UserListBody extends StatelessWidget {
                                             index: index,
                                           );
                                         },
-                                        child: const Text("Yes"),
+                                        child: Text(context.l10n.yes),
                                       ),
                                     ],
                                   ),
@@ -198,7 +198,7 @@ class _UserListBody extends StatelessWidget {
                         //   child: Text("|"),
                         // ),
                         Text(
-                          "Item: $numberOfItems",
+                          context.l10n.itemNumberOfItems(numberOfItems),
                           style: const TextStyle(
                             fontStyle: FontStyle.italic,
                           ),
@@ -270,7 +270,7 @@ class _UpdateListWidgetState extends State<_UpdateListWidget> {
       child: Column(
         children: [
           Text(
-            "Update the \"$name\" list",
+            context.l10n.updateTheNameList(name),
             style: TextStyle(fontSize: 22),
           ),
           const SizedBox(height: 30,),
@@ -281,10 +281,10 @@ class _UpdateListWidgetState extends State<_UpdateListWidget> {
             onChanged: (_) {
               setState(() {});
             },
-            decoration: const InputDecoration(
-              hintText: "Name",
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            decoration: InputDecoration(
+              hintText: context.l10n.name,
+              border: const OutlineInputBorder(),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
               isCollapsed: true,
             ),
           ),
@@ -296,10 +296,10 @@ class _UpdateListWidgetState extends State<_UpdateListWidget> {
             onChanged: (_) {
               setState(() {});
             },
-            decoration: const InputDecoration(
-              hintText: "Description",
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            decoration: InputDecoration(
+              hintText: context.l10n.description,
+              border: const OutlineInputBorder(),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
               isCollapsed: true,
             ),
           ),
@@ -309,9 +309,9 @@ class _UpdateListWidgetState extends State<_UpdateListWidget> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "Public",
-                  style: TextStyle(
+                Text(
+                  context.l10n.public,
+                  style: const TextStyle(
                     fontSize: 16,
                   ),
                 ),
@@ -332,7 +332,7 @@ class _UpdateListWidgetState extends State<_UpdateListWidget> {
             children: [
               ElevatedButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text("Cancel"),
+                child: Text(context.l10n.cancel),
               ),
               ElevatedButton(
                 statesController: _createButtonController,
@@ -345,7 +345,7 @@ class _UpdateListWidgetState extends State<_UpdateListWidget> {
                     index: widget.model.listIndex,
                 )
                     : null,
-                child: const Text("Update"),
+                child: Text(context.l10n.update),
               ),
             ],
           ),
@@ -353,67 +353,5 @@ class _UpdateListWidgetState extends State<_UpdateListWidget> {
         ],
       ),
     );
-  }
-}
-
-class MyListView extends StatefulWidget {
-  const MyListView({super.key});
-
-  @override
-  State<MyListView> createState() => _MyListViewState();
-}
-
-class _MyListViewState extends State<MyListView> {
-  List<String> _items = List.generate(20, (index) => 'Item $index');
-  List<bool> _selected = List.generate(20, (index) => false);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('List View with Selection'),
-        actions: [
-          if(_selected.firstWhere((e) => e == true,) == true)
-          IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: _deleteSelectedItems,
-          ),
-        ],
-      ),
-      body: ListView.builder(
-        itemCount: _items.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListTile(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              selectedTileColor: Colors.red[200],
-              tileColor: Colors.grey[200],
-              title: Text(_items[index]),
-              selected: _selected[index],
-              selectedColor: Colors.blue,
-              onLongPress: () {
-                setState(() {
-                  _selected[index] = !_selected[index];
-                });
-              },
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  void _deleteSelectedItems() {
-    setState(() {
-      for (int i = _items.length - 1; i >= 0; i--) {
-        if (_selected[i]) {
-          _items.removeAt(i);
-          _selected.removeAt(i);
-        }
-      }
-    });
   }
 }

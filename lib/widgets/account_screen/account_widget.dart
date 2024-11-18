@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/account_screen/account_model.dart';
 
@@ -50,8 +51,8 @@ class _AccountWidgetState extends State<AccountWidget> {
         ),
       );
     } else {
-      return const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -60,19 +61,19 @@ class _AccountWidgetState extends State<AccountWidget> {
                 children: [
                   Row(
                     children: [
-                      _ColorPaletteWidget(),
-                      SizedBox(width: 10,),
+                      const _ColorPaletteWidget(),
+                      const SizedBox(width: 10,),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Hello,",
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                              context.l10n.hello,
+                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              "Guest",
+                              context.l10n.guest,
                               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -80,18 +81,18 @@ class _AccountWidgetState extends State<AccountWidget> {
                       ),
                     ],
                   ),
-                  _LoginButtonWidget(),
+                  const _LoginButtonWidget(),
                 ],
               ),
-              SizedBox(height: 70,),
+              const SizedBox(height: 70,),
               Center(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(height: 80,),
+                    const SizedBox(height: 80,),
                     Text(
-                      "Lists not available. Please login.",
-                      style: TextStyle(
+                      context.l10n.noLoginAccountMessage,
+                      style: const TextStyle(
                           fontSize: 24
                       ),
                     ),
@@ -119,7 +120,7 @@ class _LoginButtonWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child:  ElevatedButton(
         onPressed: () => model?.makeLogin(context),
-        child: const Text("Login"),
+        child: Text(context.l10n.login),
       ),
     );
   }
@@ -141,8 +142,8 @@ class _WelcomeTextWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Hello,",
+          Text(
+            context.l10n.hello,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           Text(
@@ -175,13 +176,13 @@ class _LogoutButtonWidget extends StatelessWidget {
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: const Text("Do you really want to leave?"),
+              title: Text(context.l10n.confirmLeaveMessage),
               content: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text("Cancel"),
+                    child: Text(context.l10n.cancel),
                   ),
                   ElevatedButton(
                     onPressed: () async {
@@ -198,7 +199,7 @@ class _LogoutButtonWidget extends StatelessWidget {
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
                     },
-                    child: const Text("Yes"),
+                    child: Text(context.l10n.yes),
                   ),
                 ],
               ),
@@ -210,7 +211,7 @@ class _LogoutButtonWidget extends StatelessWidget {
       style: ButtonStyle(
         backgroundColor: WidgetStatePropertyAll(Colors.redAccent.shade100),
       ),
-      child: const Text("Logout"),
+      child: Text(context.l10n.logout),
     );
 
   }
@@ -250,24 +251,24 @@ class _AccountBodyWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               width: double.infinity,
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.list, size: 40,),
-                        SizedBox(width: 15,),
+                        const Icon(Icons.list, size: 40,),
+                        const SizedBox(width: 15,),
                         Text(
-                          "Lists",
-                          style: TextStyle(
+                          context.l10n.userLists,
+                          style: const TextStyle(
                               fontSize: 24
                           ),
                         ),
                       ],
                     ),
-                    Icon(Icons.arrow_forward_ios),
+                    const Icon(Icons.arrow_forward_ios),
                   ],
                 ),
               ),
@@ -285,24 +286,24 @@ class _AccountBodyWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               width: double.infinity,
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.favorite, size: 40,),
-                        SizedBox(width: 15,),
+                        const Icon(Icons.favorite, size: 40,),
+                        const SizedBox(width: 15,),
                         Text(
-                          "Favorite",
-                          style: TextStyle(
+                          context.l10n.favorite,
+                          style: const TextStyle(
                               fontSize: 24
                           ),
                         ),
                       ],
                     ),
-                    Icon(Icons.arrow_forward_ios),
+                    const Icon(Icons.arrow_forward_ios),
                   ],
                 ),
               ),
@@ -320,24 +321,24 @@ class _AccountBodyWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               width: double.infinity,
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.bookmark, size: 40,),
-                        SizedBox(width: 15,),
+                        const Icon(Icons.bookmark, size: 40,),
+                        const SizedBox(width: 15,),
                         Text(
-                          "Watchlist",
-                          style: TextStyle(
+                          context.l10n.watchlist,
+                          style: const TextStyle(
                               fontSize: 24
                           ),
                         ),
                       ],
                     ),
-                    Icon(Icons.arrow_forward_ios),
+                    const Icon(Icons.arrow_forward_ios),
                   ],
                 ),
               ),
@@ -355,24 +356,24 @@ class _AccountBodyWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               width: double.infinity,
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.star, size: 40,),
-                        SizedBox(width: 15,),
+                        const Icon(Icons.star, size: 40,),
+                        const SizedBox(width: 15,),
                         Text(
-                          "Rated",
-                          style: TextStyle(
+                          context.l10n.rated,
+                          style: const TextStyle(
                               fontSize: 24
                           ),
                         ),
                       ],
                     ),
-                    Icon(Icons.arrow_forward_ios),
+                    const Icon(Icons.arrow_forward_ios),
                   ],
                 ),
               ),
@@ -390,24 +391,24 @@ class _AccountBodyWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               width: double.infinity,
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.recommend, size: 40,),
-                        SizedBox(width: 15,),
+                        const Icon(Icons.recommend, size: 40,),
+                        const SizedBox(width: 15,),
                         Text(
-                          "Recommendation",
-                          style: TextStyle(
+                          context.l10n.recommendation,
+                          style: const TextStyle(
                               fontSize: 24
                           ),
                         ),
                       ],
                     ),
-                    Icon(Icons.arrow_forward_ios),
+                    const Icon(Icons.arrow_forward_ios),
                   ],
                 ),
               ),
@@ -425,24 +426,24 @@ class _AccountBodyWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               width: double.infinity,
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.try_sms_star_outlined, size: 40,),
-                        SizedBox(width: 15,),
+                        const Icon(Icons.try_sms_star_outlined, size: 40,),
+                        const SizedBox(width: 15,),
                         Text(
-                          "AI Recommendation",
-                          style: TextStyle(
+                          context.l10n.aiRecommendation,
+                          style: const TextStyle(
                               fontSize: 24
                           ),
                         ),
                       ],
                     ),
-                    Icon(Icons.arrow_forward_ios),
+                    const Icon(Icons.arrow_forward_ios),
                   ],
                 ),
               ),
@@ -453,323 +454,3 @@ class _AccountBodyWidget extends StatelessWidget {
     );
   }
 }
-
-
-// class AccountWidget extends StatefulWidget {
-//   const AccountWidget({super.key});
-//
-//   @override
-//   State<AccountWidget> createState() => _AccountWidgetState();
-// }
-//
-// class _AccountWidgetState extends State<AccountWidget> {
-//   @override
-//   void initState() {
-//     super.initState();
-//     NotifierProvider.read<AccountModel>(context)?.checkLoginStatus();
-//   }
-//
-//   @override
-//   void didChangeDependencies() {
-//     super.didChangeDependencies();
-//     NotifierProvider.read<AccountModel>(context)?.checkLoginStatus();
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Padding(
-//       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-//       child: SingleChildScrollView(
-//         child: Column(
-//           children: [
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: [
-//                 Row(
-//                   children: [
-//                     _ColorPaletteWidget(),
-//                     SizedBox(width: 10,),
-//                     _WelcomeTextWidget(),
-//                   ],
-//                 ),
-//                 Padding(
-//                   padding: EdgeInsets.symmetric(horizontal: 10),
-//                   child: _LoginButtonWidget(),
-//                 ),
-//               ],
-//             ),
-//             SizedBox(height: 70,),
-//             _AccountBodyWidget(),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-//
-// class _WelcomeTextWidget extends StatelessWidget {
-//   const _WelcomeTextWidget({
-//     super.key,
-//   });
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final model = NotifierProvider.watch<AccountModel>(context);
-//     final accountSate = model?.accountSate;
-//     final username = accountSate?.username;
-//     final isLoggedIn = model?.isLoggedIn;
-//
-//     if (isLoggedIn != null && isLoggedIn) {
-//       return Padding(
-//         padding: const EdgeInsets.symmetric(horizontal: 10),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             const Text(
-//               "Hello,",
-//               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-//             ),
-//             Text(
-//               username ?? "",
-//               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-//             ),
-//           ],
-//         ),
-//       );
-//     } else {
-//       return const Padding(
-//         padding: EdgeInsets.symmetric(horizontal: 10),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text(
-//               "Hello,",
-//               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-//             ),
-//             Text(
-//               "Guest",
-//               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-//             ),
-//           ],
-//         ),
-//       );
-//     }
-//   }
-// }
-//
-// class _LoginButtonWidget extends StatelessWidget {
-//   const _LoginButtonWidget({
-//     super.key,
-//   });
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final model = NotifierProvider.watch<AccountModel>(context);
-//     final isLoggedIn = model?.isLoggedIn;
-//
-//     if(isLoggedIn == null) {
-//       return const SizedBox.shrink();
-//     }
-//
-//     if(isLoggedIn) {
-//       return ElevatedButton(
-//         onPressed: () => model?.makeLogout(context),
-//         style: ButtonStyle(
-//           backgroundColor: MaterialStatePropertyAll(Colors.redAccent.shade100),
-//         ),
-//         child: const Text("Logout"),
-//       );
-//     } else {
-//       return ElevatedButton(
-//         onPressed: () => model?.makeLogin(context),
-//         child: const Text("Login"),
-//       );
-//     }
-//   }
-// }
-//
-// class _ColorPaletteWidget extends StatelessWidget {
-//   const _ColorPaletteWidget({
-//     super.key,
-//   });
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return const CircleAvatar(
-//       radius: 50,
-//       backgroundColor: Colors.greenAccent,
-//     );
-//   }
-// }
-//
-// class _AccountBodyWidget extends StatelessWidget {
-//   const _AccountBodyWidget({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final model = NotifierProvider.watch<AccountModel>(context);
-//     final isLoggedIn = model?.isLoggedIn;
-//
-//     if(isLoggedIn == null || isLoggedIn == false) {
-//       return const Center(
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.center,
-//           children: [
-//             SizedBox(height: 80,),
-//             Text(
-//               "Lists not available. Please login.",
-//               style: TextStyle(
-//                 fontSize: 24
-//               ),
-//             ),
-//           ],
-//         ),
-//       );
-//     }
-//
-//     return Column(
-//       children: [
-//         Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-//           child: InkWell(
-//             onTap: (){},
-//             borderRadius: BorderRadius.circular(12),
-//             child: Container(
-//               decoration: BoxDecoration(
-//                 border: Border.all(),
-//                 borderRadius: BorderRadius.circular(12),
-//               ),
-//               width: double.infinity,
-//               child: const Padding(
-//                 padding: EdgeInsets.all(8.0),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                   children: [
-//                     Row(
-//                       children: [
-//                         Icon(Icons.list, size: 40,),
-//                         SizedBox(width: 15,),
-//                         Text(
-//                           "Lists",
-//                           style: TextStyle(
-//                             fontSize: 24
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                     Icon(Icons.arrow_forward_ios),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ),
-//         Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-//           child: InkWell(
-//             onTap: (){},
-//             borderRadius: BorderRadius.circular(12),
-//             child: Container(
-//               decoration: BoxDecoration(
-//                 border: Border.all(),
-//                 borderRadius: BorderRadius.circular(12),
-//               ),
-//               width: double.infinity,
-//               child: const Padding(
-//                 padding: EdgeInsets.all(8.0),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                   children: [
-//                     Row(
-//                       children: [
-//                         Icon(Icons.favorite, size: 40,),
-//                         SizedBox(width: 15,),
-//                         Text(
-//                           "Favorite",
-//                           style: TextStyle(
-//                               fontSize: 24
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                     Icon(Icons.arrow_forward_ios),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ),
-//         Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-//           child: InkWell(
-//             onTap: (){},
-//             borderRadius: BorderRadius.circular(12),
-//             child: Container(
-//               decoration: BoxDecoration(
-//                 border: Border.all(),
-//                 borderRadius: BorderRadius.circular(12),
-//               ),
-//               width: double.infinity,
-//               child: const Padding(
-//                 padding: EdgeInsets.all(8.0),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                   children: [
-//                     Row(
-//                       children: [
-//                         Icon(Icons.bookmark, size: 40,),
-//                         SizedBox(width: 15,),
-//                         Text(
-//                           "Watchlist",
-//                           style: TextStyle(
-//                               fontSize: 24
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                     Icon(Icons.arrow_forward_ios),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ),
-//         Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-//           child: InkWell(
-//             onTap: (){},
-//             borderRadius: BorderRadius.circular(12),
-//             child: Container(
-//               decoration: BoxDecoration(
-//                 border: Border.all(),
-//                 borderRadius: BorderRadius.circular(12),
-//               ),
-//               width: double.infinity,
-//               child: const Padding(
-//                 padding: EdgeInsets.all(8.0),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                   children: [
-//                     Row(
-//                       children: [
-//                         Icon(Icons.star, size: 40,),
-//                         SizedBox(width: 15,),
-//                         Text(
-//                           "Rated",
-//                           style: TextStyle(
-//                               fontSize: 24
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                     Icon(Icons.arrow_forward_ios),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }

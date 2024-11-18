@@ -51,9 +51,7 @@ class MovieApiClient extends ApiClient {
           "release_date.lte": releaseDateEnd,
         if(sortBy != null && sortBy.isNotEmpty)
           "sort_by": sortBy,
-        // if(voteStart != null)
           "vote_average.gte": voteStart.toString(),
-        // if(voteEnd != null)
           "vote_average.lte": voteEnd.toString(),
         if(genres != null && genres.isNotEmpty)
           "with_genres": genres,
@@ -262,7 +260,7 @@ class MovieApiClient extends ApiClient {
       <String, dynamic>{
         "api_key": apiKey,
         // "page": page.toString(),
-        "language": "en-US"
+        "language": reqLocale,
       },
     );
     final request = await client.getUrl(url);

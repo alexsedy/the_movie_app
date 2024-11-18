@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/ai_feature_screen/by_genre/ai_recommendation_by_genre/ai_recommendation_by_genre_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/animation_element/running_color_border.dart';
@@ -10,7 +11,7 @@ class AiRecommendationByGenreScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
        return Scaffold(
       appBar: AppBar(
-        title: Text("AI Recommendation"),
+        title: Text(context.l10n.aiRecommendation),
       ),
       body: _GenerateMovieByGenreWidget(),
     );
@@ -46,7 +47,7 @@ class _GenerateMovieByGenreWidgetState extends State<_GenerateMovieByGenreWidget
       child: Column(
         children: [
           Text(
-            "Select Movie or TV",
+            context.l10n.selectMovieOrTv,
             style: TextStyle(
               fontSize: 20,
             ),
@@ -64,13 +65,13 @@ class _GenerateMovieByGenreWidgetState extends State<_GenerateMovieByGenreWidget
             borderRadius: BorderRadius.circular(10.0),
             isSelected: _isSelected,
             children: [
-              SizedBox(width: 80, child: Center(child: Text("Movie"),),),
-              SizedBox(width: 80, child: Center(child: Text("TV Show",),),),
+              SizedBox(width: 80, child: Center(child: Text(context.l10n.movies),),),
+              SizedBox(width: 80, child: Center(child: Text(context.l10n.tvShows,),),),
             ],
           ),
           SizedBox(height: 20,),
           Text(
-            "Select one or more genres",
+            context.l10n.selectOneOrMoreGenres,
             style: TextStyle(
               fontSize: 20,
             ),
@@ -120,7 +121,7 @@ class _GenerateMovieByGenreWidgetState extends State<_GenerateMovieByGenreWidget
             ),
           SizedBox(height: 20,),
           Text(
-            "Select max number of items",
+            context.l10n.selectMaxNumberOfItems,
             style: TextStyle(
               fontSize: 20,
             ),
@@ -146,7 +147,7 @@ class _GenerateMovieByGenreWidgetState extends State<_GenerateMovieByGenreWidget
               onPressed: isReadyToGenerate ? () =>
                 model.onGenerateContent(context, _sliderValue.toInt(), _isSelected.first)
                 : null,
-              child: Text("Generate"),
+              child: Text(context.l10n.generate),
             ),
           ),
         ],
