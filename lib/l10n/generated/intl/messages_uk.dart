@@ -136,7 +136,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "ok": MessageLookupByLibrary.simpleMessage("Ок"),
         "otherProjects": MessageLookupByLibrary.simpleMessage("Інші проєкти"),
         "overview": MessageLookupByLibrary.simpleMessage("Огляд"),
-        "persons": MessageLookupByLibrary.simpleMessage("Особи"),
+        "persons": MessageLookupByLibrary.simpleMessage("Знаменитості"),
         "placeOfBirth":
             MessageLookupByLibrary.simpleMessage("Місце народження:"),
         "playTrailer":
@@ -158,7 +158,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "releaseDates": MessageLookupByLibrary.simpleMessage("Дати виходу"),
         "search": MessageLookupByLibrary.simpleMessage("Пошук"),
         "searchGlobalSearchHint": MessageLookupByLibrary.simpleMessage(
-            "Пошук фільмів, серіалів, особ"),
+            "Пошук фільмів, серіалів, знаменитостей"),
         "seasons": MessageLookupByLibrary.simpleMessage("Сезони"),
         "selectMaxNumberOfItems": MessageLookupByLibrary.simpleMessage(
             "Виберіть максимальну кількість елементів"),
@@ -184,7 +184,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "trendingMovies":
             MessageLookupByLibrary.simpleMessage("Популярні фільми"),
         "trendingPersons":
-            MessageLookupByLibrary.simpleMessage("Популярні особи"),
+            MessageLookupByLibrary.simpleMessage("Популярні знаменитості"),
         "trendingTvs":
             MessageLookupByLibrary.simpleMessage("Популярні серіали"),
         "tvAddedToListMessage": m11,

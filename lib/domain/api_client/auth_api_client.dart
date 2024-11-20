@@ -2,13 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:the_movie_app/domain/api_client/api_client.dart';
+import 'package:the_movie_app/domain/data_providers/session_data_provider.dart';
 import 'package:the_movie_app/domain/entity/auth/auth.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class AuthApiClient extends ApiClient {
+  static const _apiAccessToken = String.fromEnvironment('ACCESS_TOKEN');
 
   Future<void> deleteSession() async {
-    final sessionId = await sessionDataProvider.getSessionId();
+    final sessionId = await SessionDataProvider.getSessionId();
 
     final url = makeUri(
       "/authentication/session",
@@ -28,11 +29,27 @@ class AuthApiClient extends ApiClient {
     validateError(response, json);
   }
 
-  Future<String> auth() async {
-    final requestToken = await _createRequestToken();
-    await _launchAuthPage(requestToken: requestToken);
+  Future<void> logout() async {
+    final accessToken = await SessionDataProvider.getAccessToken();
 
-    return requestToken;
+    final url = makeUriFour(
+      "/auth/access_token",
+      <String, dynamic>{
+        "api_key": apiKey,
+      },
+    );
+    final parameters = <String, dynamic>{
+      "access_token": accessToken
+    };
+
+    final request = await client.deleteUrl(url);
+    request.headers.contentType = ContentType.json;
+    request.headers.add("Authorization", "Bearer $accessToken");
+    request.write(jsonEncode(parameters));
+    final response = await request.close();
+    final json = (await response.jsonDecode()) as Map<String, dynamic>;
+
+    validateError(response, json);
   }
 
   Future<String> createSession(String accessToken) async {
@@ -59,7 +76,7 @@ class AuthApiClient extends ApiClient {
     return sessionId;
   }
 
-  Future<String> _createRequestToken() async {
+  Future<String> createRequestToken() async {
     final url = makeUriFour(
       "/auth/request_token",
       <String, dynamic>{
@@ -73,7 +90,7 @@ class AuthApiClient extends ApiClient {
 
     final request = await client.postUrl(url);
     request.headers.contentType = ContentType.json;
-    request.headers.add("Authorization", accessToken);
+    request.headers.add("Authorization", "Bearer $_apiAccessToken");
     request.write(jsonEncode(parameters));
 
     final response = await request.close();
@@ -82,13 +99,6 @@ class AuthApiClient extends ApiClient {
 
     final requestToken = json["request_token"] as String;
     return requestToken;
-  }
-
-  Future<void> _launchAuthPage({required String requestToken}) async {
-    final Uri url = Uri.parse('https://www.themoviedb.org/auth/access?request_token=$requestToken');
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
-    }
   }
 
   Future<AuthData> createAccessToken({required String requestToken}) async {
@@ -104,7 +114,7 @@ class AuthApiClient extends ApiClient {
 
     final request = await client.postUrl(url);
     request.headers.contentType = ContentType.json;
-    request.headers.add("Authorization", accessToken);
+    request.headers.add("Authorization", "Bearer $_apiAccessToken");
     request.write(jsonEncode(parameters));
 
     final response = await request.close();

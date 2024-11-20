@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/domain/cache_management/account_management.dart';
+import 'package:the_movie_app/domain/data_providers/session_data_provider.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
 import 'package:the_movie_app/domain/entity/media/media_collections/media_collections.dart';
 import 'package:the_movie_app/domain/entity/media/media_details/media_details.dart';
@@ -109,7 +110,7 @@ class MovieApiClient extends ApiClient {
   }
 
   Future<ItemState?> getMovieState(int movieId) async {
-    final sessionId = await sessionDataProvider.getSessionId();
+    final sessionId = await SessionDataProvider.getSessionId();
 
     if(sessionId == null) {
       return null;
@@ -136,7 +137,7 @@ class MovieApiClient extends ApiClient {
     final accountSate = await AccountManager.getAccountData();
     final accountId = accountSate.id;
 
-    final sessionId = await sessionDataProvider.getSessionId();
+    final sessionId = await SessionDataProvider.getSessionId();
 
     final url = makeUri(
       "/account/$accountId/favorite",
@@ -185,7 +186,7 @@ class MovieApiClient extends ApiClient {
     final accountSate = await AccountManager.getAccountData();
     final accountId = accountSate.id;
 
-    final sessionId = await sessionDataProvider.getSessionId();
+    final sessionId = await SessionDataProvider.getSessionId();
 
     final url = makeUri(
       "/account/$accountId/watchlist",
@@ -211,7 +212,7 @@ class MovieApiClient extends ApiClient {
   }
 
   Future<void> addRating({required int movieId, required double rate}) async {
-    final sessionId = await sessionDataProvider.getSessionId();
+    final sessionId = await SessionDataProvider.getSessionId();
 
     final url = makeUri(
       "/movie/$movieId/rating",
@@ -235,7 +236,7 @@ class MovieApiClient extends ApiClient {
   }
 
   Future<void> deleteRating({required int movieId}) async {
-    final sessionId = await sessionDataProvider.getSessionId();
+    final sessionId = await SessionDataProvider.getSessionId();
 
     final url = makeUri(
       "/movie/$movieId/rating",

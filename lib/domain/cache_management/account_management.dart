@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_movie_app/domain/api_client/account_api_client.dart';
 import 'package:the_movie_app/domain/entity/account/account_state/account_state.dart';
 
-class AccountManager {
+abstract class AccountManager {
   static const String _cachedAccountKey = 'cached_account';
   static const String _accountIdKey = 'account_id';
   static const String _languageCodeKey = 'language';
