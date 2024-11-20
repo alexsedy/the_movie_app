@@ -23,13 +23,16 @@ class MyApp extends StatelessWidget {
       ],
       supportedLocales: const [
         Locale("en", "US"),
+        Locale("en", "UA"),
         Locale("uk", "UA"),
+        Locale("uk", "US"),
         Locale("ru", "UA"),
         Locale("ru", "US"),
       ],
       localeResolutionCallback: (locale, supportedLocales) {
         final userLocale = model?.locale;
         if (userLocale != null) {
+          //todo uncommit this line
           // return userLocale;
         }
 
