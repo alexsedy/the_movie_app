@@ -1,5 +1,5 @@
 // DO NOT EDIT. This is code generated via package:intl/generate_localized.dart
-// This is a library that provides messages for a ua locale. All the
+// This is a library that provides messages for a uk locale. All the
 // messages from the main program should be duplicated here with the same
 // function name.
 
@@ -18,7 +18,7 @@ final messages = new MessageLookup();
 typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 
 class MessageLookup extends MessageLookupByLibrary {
-  String get localeName => 'ua';
+  String get localeName => 'uk';
 
   static String m0(count) =>
       "${Intl.plural(count, one: '(${count} епізод)', other: '(${count} епізодів)')}";
