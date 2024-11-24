@@ -13,5 +13,4 @@ class AuthData {
       _$AuthDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$AuthDataToJson(this);
-
 }
