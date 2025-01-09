@@ -41,7 +41,7 @@ dependencies:
   grouped_list: ^6.0.0
   font_awesome_flutter: ^10.8.0
   webview_flutter: ^4.10.0
-  app_links: ^6.3.2
+  app_links: ^6.3.3
   event_bus: ^2.0.1
   google_generative_ai: ^0.4.6
   flutter_animated_icons: ^1.0.1
@@ -59,9 +59,10 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  json_serializable: ^6.9.0
-  build_runner: ^2.4.13
+  json_serializable: ^6.9.2
+  build_runner: ^2.4.14
   intl_utils: ^2.8.7
+#  flutter_gen_runner: ^5.8.0
 
 flutter_intl:
   enabled: true

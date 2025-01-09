@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/account_api_client.dart';
 import 'package:the_movie_app/domain/api_client/movie_api_client.dart';
+import 'package:the_movie_app/domain/cache_management/account_management.dart';
 import 'package:the_movie_app/domain/entity/account/user_lists/user_lists.dart';
-import 'package:the_movie_app/domain/entity/media/list/list.dart';
 import 'package:the_movie_app/domain/entity/media/media_details/media_details.dart';
 import 'package:the_movie_app/domain/entity/media/state/item_state.dart';
 import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
+import 'package:the_movie_app/domain/firebase/firebase_media_tracking_service.dart';
 import 'package:the_movie_app/helpers/snack_bar_helper.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/models/interfaces/i_base_media_details_model.dart';
@@ -25,13 +26,21 @@ class MovieDetailsModel extends ChangeNotifier implements IBaseMediaDetailsModel
   bool _isFavorite = false;
   bool _isWatched = false;
   bool _isRated = false;
+  bool _isFBLinked = false;
   double _rate = 0;
   late int _currentPage;
   late int _totalPage;
+  final _statuses = [1, 3, 5, 99];
+  int? _currentStatus;
+  final _firebaseMediaTrackingService = FirebaseMediaTrackingService();
 
   @override
   MediaDetails? get mediaDetails => _movieDetails;
+
   ItemState? get movieState => _movieState;
+
+  @override
+  List<int> get statuses => _statuses;
 
   @override
   List<Lists> get lists => List.unmodifiable(_lists);
@@ -51,6 +60,11 @@ class MovieDetailsModel extends ChangeNotifier implements IBaseMediaDetailsModel
   @override
   set rate(value) => _rate = value;
 
+  bool get isFBlinked => _isFBLinked;
+
+  @override
+  int? get currentStatus => _currentStatus;
+
   MovieDetailsModel(this._movieId);
 
   Future<void> loadMovieDetails() async {
@@ -67,8 +81,16 @@ class MovieDetailsModel extends ChangeNotifier implements IBaseMediaDetailsModel
         _isRated = true;
       }
     }
-
+    if(_isFBLinked) {
+      final firebaseMovie = await _firebaseMediaTrackingService.getMovieById(
+          _movieId);
+      _currentStatus = firebaseMovie?.status;
+    }
     notifyListeners();
+  }
+
+  Future<void> getFBStatus() async {
+    _isFBLinked = await AccountManager.getFBLinkStatus();
   }
 
   @override
@@ -83,15 +105,57 @@ class MovieDetailsModel extends ChangeNotifier implements IBaseMediaDetailsModel
     }
   }
 
+  // @override
+  // Future<void> toggleWatchlist(BuildContext context) async {
+  //   final result = await SnackBarHelper.handleErrorDefaultLists(
+  //     apiReq: () => _apiClient.addToWatchlist(movieId: _movieId, isWatched: !_isWatched,),
+  //     context: context,
+  //   );
+  //   if(result) {
+  //     _isWatched = !_isWatched;
+  //     notifyListeners();
+  //   }
+  // }
+
   @override
-  Future<void> toggleWatchlist(BuildContext context) async {
-    final result = await SnackBarHelper.handleErrorDefaultLists(
-      apiReq: () => _apiClient.addToWatchlist(movieId: _movieId, isWatched: !_isWatched,),
-      context: context,
-    );
-    if(result) {
-      _isWatched = !_isWatched;
-      notifyListeners();
+  Future<void> toggleWatchlist(BuildContext context, [int? status]) async {
+    if(status != null) {
+      final result = await SnackBarHelper.handleErrorDefaultLists(
+        apiReq: () => _apiClient.addToWatchlist(movieId: _movieId, isWatched: true,),
+        context: context,
+      );
+
+      var fbResult = await _firebaseMediaTrackingService.updateMovieStatus(
+            movieId: _movieId,
+            title: _movieDetails?.title,
+            releaseDate: _movieDetails?.releaseDate,
+            status: status
+      );
+
+      if(result && fbResult) {
+        _isWatched = true;
+        _currentStatus = status;
+        notifyListeners();
+      } else {
+        await _apiClient.addToWatchlist(movieId: _movieId, isWatched: false,);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          duration: const Duration(seconds: 5),
+          content: Text(
+            context.l10n.anErrorHasOccurredTryAgainLater,
+            style: const TextStyle(fontSize: 20),),
+        ));
+      }
+    } else {
+      final result = await SnackBarHelper.handleErrorDefaultLists(
+        apiReq: () =>
+            _apiClient.addToWatchlist(
+              movieId: _movieId, isWatched: !_isWatched,),
+        context: context,
+      );
+      if (result) {
+        _isWatched = !_isWatched;
+        notifyListeners();
+      }
     }
   }
 

@@ -111,5 +111,6 @@
   "clearAll": "Очистить все",
   "theRatingWasDeletedSuccessfully": "Оценка была успешно удалена.",
   "movieExistsInListMessage": "Этот фильм уже есть в списке \"{name}\".",
-  "tvExistsInListMessage": "Этот сериал уже есть в списке \"{name}\"."
+  "tvExistsInListMessage": "Этот сериал уже есть в списке \"{name}\".",
+  "mediaStatus": "{count, select, =1 {Watched} =2 {Watching} =3 {Going to Watch} =4 {Stopped Watching} =5 {Won't Watch} other {No status}}"
 }

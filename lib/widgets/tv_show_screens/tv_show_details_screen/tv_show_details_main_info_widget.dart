@@ -7,6 +7,7 @@ import 'package:the_movie_app/models/models/parameterized_horizontal_widget_mode
 import 'package:the_movie_app/widgets/widget_elements/list_elements/params_media_details_list_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/list_elements/parameterized_media_crew_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
+import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/fb_watchlist_button_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/belongs_to_collection_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/favorite_button_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/list_button_widget.dart';
@@ -48,10 +49,16 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
               mediaDetailsElementType: MediaDetailsElementType.tv,
               model: model,
             ),
-            WatchlistButtonWidget<TvShowDetailsModel>(
+
+            model.isFBlinked
+                ? FbWatchlistButtonWidget<TvShowDetailsModel>(
+              model: model,
+            )
+                : WatchlistButtonWidget<TvShowDetailsModel>(
               mediaDetailsElementType: MediaDetailsElementType.tv,
               model: model,
             ),
+
             RateButtonWidget<TvShowDetailsModel>(
               mediaDetailsElementType: MediaDetailsElementType.tv,
               model: model,

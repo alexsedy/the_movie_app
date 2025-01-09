@@ -32,8 +32,7 @@ class MyApp extends StatelessWidget {
       localeResolutionCallback: (locale, supportedLocales) {
         final userLocale = model?.locale;
         if (userLocale != null) {
-          //todo uncommit this line
-          // return userLocale;
+          return userLocale;
         }
 
         for (var supportedLocale in supportedLocales) {

@@ -111,5 +111,6 @@
   "clearAll": "Clear all",
   "theRatingWasDeletedSuccessfully": "The rating was deleted successfully.",
   "movieExistsInListMessage": "This movie already exists on the \"{name}\" list.",
-  "tvExistsInListMessage": "This TV show already exists on the \"{name}\" list."
+  "tvExistsInListMessage": "This TV show already exists on the \"{name}\" list.",
+  "mediaStatus": "{status, select, status_0 {No status} status_1 {Watched} status_2 {Watching} status_3 {Going to Watch} status_4 {Stopped Watching} status_5 {Won't Watch}}"
 }

@@ -20,6 +20,7 @@ class SeriesDetailsWidget extends StatefulWidget {
 class _SeriesDetailsWidgetState extends State<SeriesDetailsWidget> {
   @override
   void initState() {
+    NotifierProvider.read<SeriesDetailsModel>(context)?.getFBStatus();
     NotifierProvider.read<SeriesDetailsModel>(context)?.loadSeriesDetails();
     super.initState();
   }
@@ -81,6 +82,7 @@ class _BodyDetails extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
+    final isFBLinked = model.isFBLinked;
     final overview = mediaDetails.overview;
     final cast = mediaDetails.credits.cast;
     final crew = mediaDetails.credits.crew;
@@ -90,6 +92,12 @@ class _BodyDetails extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if(isFBLinked)
+          const SizedBox(height: 20,),
+          if(isFBLinked)
+          _WatchListButton(),
+
+          if(overview != null && overview.isNotEmpty)
           const SizedBox(height: 20,),
 
           if(overview != null && overview.isNotEmpty)
@@ -132,6 +140,39 @@ class _BodyDetails extends StatelessWidget {
 
           const SizedBox(height: 20,),
         ],
+      ),
+    );
+  }
+}
+
+class _WatchListButton extends StatelessWidget {
+  const _WatchListButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final model = NotifierProvider.watch<SeriesDetailsModel>(context);
+    final currentStatus = model?.currentStatus;
+
+    if(currentStatus == null) {
+      return SizedBox.shrink();
+    }
+
+    return Center(
+      child: ElevatedButton(
+        onPressed: () {
+            model?.updateStatus(
+                context,
+                currentStatus == 1
+                    ? 0
+                    : 1
+            );
+        },
+        child: Text(context.l10n.mediaStatus("status_$currentStatus")),
+        style: ButtonStyle(
+          backgroundColor: currentStatus == 1
+              ? WidgetStatePropertyAll(Colors.green.withAlpha(150),)
+              : null,
+        ),
       ),
     );
   }

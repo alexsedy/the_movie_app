@@ -41,19 +41,28 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m8(message) => "The \"${message}\" list has been created.";
 
-  static String m9(message) =>
+  static String m9(status) => "${Intl.select(status, {
+            'status_0': 'No status',
+            'status_1': 'Watched',
+            'status_2': 'Watching',
+            'status_3': 'Going to Watch',
+            'status_4': 'Stopped Watching',
+            'status_5': 'Won\'t Watch',
+          })}";
+
+  static String m10(message) =>
       "This movie has been added to the \"${message}\" list";
 
-  static String m10(name) =>
+  static String m11(name) =>
       "This movie already exists on the \"${name}\" list.";
 
-  static String m11(message) =>
+  static String m12(message) =>
       "This tv show has been added to the \"${message}\" list";
 
-  static String m12(name) =>
+  static String m13(name) =>
       "This TV show already exists on the \"${name}\" list.";
 
-  static String m13(name) => "Update the \"${name}\" list";
+  static String m14(name) => "Update the \"${name}\" list";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -115,11 +124,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("List View with Selection"),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
         "logout": MessageLookupByLibrary.simpleMessage("Logout"),
+        "mediaStatus": m9,
         "min": MessageLookupByLibrary.simpleMessage("min"),
-        "movieAddedToListMessage": m9,
+        "movieAddedToListMessage": m10,
         "movieCast": MessageLookupByLibrary.simpleMessage("Movie Cast"),
         "movieCrew": MessageLookupByLibrary.simpleMessage("Movie Crew"),
-        "movieExistsInListMessage": m10,
+        "movieExistsInListMessage": m11,
         "movies": MessageLookupByLibrary.simpleMessage("Movies"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
         "networks": MessageLookupByLibrary.simpleMessage("Networks"),
@@ -182,8 +192,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "trendingPersons":
             MessageLookupByLibrary.simpleMessage("Trending persons"),
         "trendingTvs": MessageLookupByLibrary.simpleMessage("Trending TVs"),
-        "tvAddedToListMessage": m11,
-        "tvExistsInListMessage": m12,
+        "tvAddedToListMessage": m12,
+        "tvExistsInListMessage": m13,
         "tvShowCast": MessageLookupByLibrary.simpleMessage("TV Show Cast"),
         "tvShowCrew": MessageLookupByLibrary.simpleMessage("TV Show Crew"),
         "tvShows": MessageLookupByLibrary.simpleMessage("TV Shows"),
@@ -191,7 +201,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "unknownErrorPleaseTryAgainLater": MessageLookupByLibrary.simpleMessage(
             "Unknown error. Please try again later."),
         "update": MessageLookupByLibrary.simpleMessage("Update"),
-        "updateTheNameList": m13,
+        "updateTheNameList": m14,
         "userLists": MessageLookupByLibrary.simpleMessage("User lists"),
         "userScore": MessageLookupByLibrary.simpleMessage("User Score"),
         "watch": MessageLookupByLibrary.simpleMessage("Watch"),

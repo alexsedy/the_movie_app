@@ -41,15 +41,18 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m8(message) => "Список \"${message}\" создан.";
 
-  static String m9(message) => "Этот фильм добавлен в список \"${message}\"";
+  static String m9(Watched, Watching) =>
+      "{count, select, =1 ${Watched} =2 ${Watching} =3 {Going to Watch} =4 {Stopped Watching} =5 {Won\'t Watch} other {No status}}";
 
-  static String m10(name) => "Этот фильм уже есть в списке \"${name}\".";
+  static String m10(message) => "Этот фильм добавлен в список \"${message}\"";
 
-  static String m11(message) => "Этот сериал добавлен в список \"${message}\"";
+  static String m11(name) => "Этот фильм уже есть в списке \"${name}\".";
 
-  static String m12(name) => "Этот сериал уже есть в списке \"${name}\".";
+  static String m12(message) => "Этот сериал добавлен в список \"${message}\"";
 
-  static String m13(name) => "Обновить список \"${name}\"";
+  static String m13(name) => "Этот сериал уже есть в списке \"${name}\".";
+
+  static String m14(name) => "Обновить список \"${name}\"";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -113,13 +116,14 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Список с выбором"),
         "login": MessageLookupByLibrary.simpleMessage("Войти"),
         "logout": MessageLookupByLibrary.simpleMessage("Выйти"),
+        "mediaStatus": m9,
         "min": MessageLookupByLibrary.simpleMessage("мин"),
-        "movieAddedToListMessage": m9,
+        "movieAddedToListMessage": m10,
         "movieCast":
             MessageLookupByLibrary.simpleMessage("Актерский состав фильма"),
         "movieCrew":
             MessageLookupByLibrary.simpleMessage("Съемочная группа фильма"),
-        "movieExistsInListMessage": m10,
+        "movieExistsInListMessage": m11,
         "movies": MessageLookupByLibrary.simpleMessage("Фильмы"),
         "name": MessageLookupByLibrary.simpleMessage("Название"),
         "networks": MessageLookupByLibrary.simpleMessage("Телемережі"),
@@ -185,8 +189,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Популярные знаменитости"),
         "trendingTvs":
             MessageLookupByLibrary.simpleMessage("Популярные сериалы"),
-        "tvAddedToListMessage": m11,
-        "tvExistsInListMessage": m12,
+        "tvAddedToListMessage": m12,
+        "tvExistsInListMessage": m13,
         "tvShowCast":
             MessageLookupByLibrary.simpleMessage("Актерский состав сериала"),
         "tvShowCrew":
@@ -196,7 +200,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "unknownErrorPleaseTryAgainLater": MessageLookupByLibrary.simpleMessage(
             "Неизвестная ошибка. Пожалуйста, попробуйте позже."),
         "update": MessageLookupByLibrary.simpleMessage("Обновить"),
-        "updateTheNameList": m13,
+        "updateTheNameList": m14,
         "userLists":
             MessageLookupByLibrary.simpleMessage("Списки пользователя"),
         "userScore": MessageLookupByLibrary.simpleMessage("Оценка"),

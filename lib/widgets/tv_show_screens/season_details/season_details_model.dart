@@ -9,7 +9,6 @@ class SeasonDetailsModel extends ChangeNotifier {
   final int seasonNumber;
   final _apiClient = TvShowApiClient();
   Season? _season;
-  final _dateFormat = DateFormat.yMMMd();
 
   SeasonDetailsModel(this.tvShowId, this.seasonNumber);
 
