@@ -13,6 +13,9 @@ FirebaseMovies _$FirebaseMoviesFromJson(Map<String, dynamic> json) =>
       releaseDate: json['release_date'] as String?,
       status: (json['status'] as num).toInt(),
       updatedAt: DateTime.parse(json['updated_at'] as String),
+      addedAt: json['added_at'] == null
+          ? null
+          : DateTime.parse(json['added_at'] as String),
     );
 
 Map<String, dynamic> _$FirebaseMoviesToJson(FirebaseMovies instance) =>
@@ -22,4 +25,5 @@ Map<String, dynamic> _$FirebaseMoviesToJson(FirebaseMovies instance) =>
       'release_date': instance.releaseDate,
       'status': instance.status,
       'updated_at': instance.updatedAt.toIso8601String(),
+      'added_at': instance.addedAt?.toIso8601String(),
     };

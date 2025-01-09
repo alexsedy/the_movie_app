@@ -9,13 +9,16 @@ class FirebaseMovies {
   final String? releaseDate;
   final int status;
   final DateTime updatedAt;
+  final DateTime? addedAt;
 
   FirebaseMovies({
     required this.movieId,
     this.movieTitle,
     this.releaseDate,
     required this.status,
-    required this.updatedAt});
+    required this.updatedAt,
+    this.addedAt,
+  });
 
   factory FirebaseMovies.fromJson(Map<String, dynamic> json) => _$FirebaseMoviesFromJson(json);
 

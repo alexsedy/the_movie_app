@@ -4,6 +4,7 @@ import 'package:the_movie_app/domain/api_client/account_api_client.dart';
 import 'package:the_movie_app/domain/api_client/movie_api_client.dart';
 import 'package:the_movie_app/domain/cache_management/account_management.dart';
 import 'package:the_movie_app/domain/entity/account/user_lists/user_lists.dart';
+import 'package:the_movie_app/domain/entity/firebase_entity/movies/firebase_movies.dart';
 import 'package:the_movie_app/domain/entity/media/media_details/media_details.dart';
 import 'package:the_movie_app/domain/entity/media/state/item_state.dart';
 import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
@@ -120,30 +121,53 @@ class MovieDetailsModel extends ChangeNotifier implements IBaseMediaDetailsModel
   @override
   Future<void> toggleWatchlist(BuildContext context, [int? status]) async {
     if(status != null) {
-      final result = await SnackBarHelper.handleErrorDefaultLists(
-        apiReq: () => _apiClient.addToWatchlist(movieId: _movieId, isWatched: true,),
-        context: context,
-      );
+      bool result;
+      if(_isWatched) {
+        result = true;
+      } else {
+        result = await SnackBarHelper.handleErrorDefaultLists(
+          apiReq: () =>
+              _apiClient.addToWatchlist(movieId: _movieId, isWatched: true,),
+          context: context,
+        );
+      }
 
-      var fbResult = await _firebaseMediaTrackingService.updateMovieStatus(
-            movieId: _movieId,
-            title: _movieDetails?.title,
-            releaseDate: _movieDetails?.releaseDate,
-            status: status
-      );
+      final date =  DateTime.now();
+
+      bool fbResult;
+      if(_currentStatus == null || _currentStatus == 0) {
+        final movie = FirebaseMovies(
+          movieId: _movieId,
+          movieTitle: _movieDetails?.title,
+          releaseDate: _movieDetails?.releaseDate,
+          status: status,
+          updatedAt: date,
+          addedAt: date,
+        );
+
+        fbResult = await _firebaseMediaTrackingService
+            .addMovieAndStatus(movie);
+      } else {
+        fbResult = await _firebaseMediaTrackingService.updateMovieStatus(
+          movieId: _movieId,
+          status: status,
+          updatedAt: date.toString());
+      }
 
       if(result && fbResult) {
         _isWatched = true;
         _currentStatus = status;
         notifyListeners();
       } else {
-        await _apiClient.addToWatchlist(movieId: _movieId, isWatched: false,);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           duration: const Duration(seconds: 5),
           content: Text(
             context.l10n.anErrorHasOccurredTryAgainLater,
             style: const TextStyle(fontSize: 20),),
         ));
+        await _apiClient.addToWatchlist(movieId: _movieId, isWatched: false,);
+        _isWatched = false;
+        notifyListeners();
       }
     } else {
       final result = await SnackBarHelper.handleErrorDefaultLists(

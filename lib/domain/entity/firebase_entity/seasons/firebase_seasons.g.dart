@@ -9,8 +9,6 @@ part of 'firebase_seasons.dart';
 FirebaseSeasons _$FirebaseSeasonsFromJson(Map<String, dynamic> json) =>
     FirebaseSeasons(
       seasonId: (json['season_id'] as num).toInt(),
-      tvShowId: (json['tv_show_id'] as num).toInt(),
-      seasonNumber: (json['season_number'] as num).toInt(),
       airDate: json['air_date'] as String?,
       status: (json['status'] as num).toInt(),
       updatedAt: DateTime.parse(json['updated_at'] as String),
@@ -24,8 +22,6 @@ FirebaseSeasons _$FirebaseSeasonsFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$FirebaseSeasonsToJson(FirebaseSeasons instance) =>
     <String, dynamic>{
       'season_id': instance.seasonId,
-      'tv_show_id': instance.tvShowId,
-      'season_number': instance.seasonNumber,
       'air_date': instance.airDate,
       'status': instance.status,
       'updated_at': instance.updatedAt.toIso8601String(),

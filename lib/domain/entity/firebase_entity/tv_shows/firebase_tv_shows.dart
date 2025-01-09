@@ -24,7 +24,7 @@ class FirebaseTvShow {
       this.seasons
   });
 
-  factory FirebaseTvShow.fromJson(Map<String, dynamic> json) => _$FirebaseTvShowsFromJson(json);
+  factory FirebaseTvShow.fromJson(Map<String, dynamic> json) => _$FirebaseTvShowFromJson(json);
 
-  Map<String, dynamic> toJson() => _$FirebaseTvShowsToJson(this);
+  Map<String, dynamic> toJson() => _$FirebaseTvShowToJson(this);
 }

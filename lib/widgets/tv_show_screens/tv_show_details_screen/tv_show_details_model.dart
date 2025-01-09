@@ -130,36 +130,40 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
 
   @override
   Future<void> toggleWatchlist(BuildContext context, [int? status]) async {
-    print("Start 'toggleWatchlist': " + DateTime.now().toString());
     if(status != null) {
-      final result = await SnackBarHelper.handleErrorDefaultLists(
-        apiReq: () => _apiClient.addToWatchlist(tvShowId: _seriesId, isWatched: true,),
-        context: context,
-      );
+      bool result;
+      if(_isWatched) {
+        result = true;
+      } else {
+        result = await SnackBarHelper.handleErrorDefaultLists(
+          apiReq: () => _apiClient.addToWatchlist(tvShowId: _seriesId, isWatched: true,),
+          context: context,
+        );
+      }
+
+      final date = DateTime.now();
 
       bool fbResultTvShow;
       try {
         if (_currentStatus == null || _currentStatus == 0 || status == 1) {
-          final date = DateTime.now();
-          final fbSeasons = _seasonsList.map((season) {
-            final episodesMap = {
-              for (var episode in season.episodes)
-                episode.episodeNumber: FirebaseEpisodes(
-                  episodeId: episode.id,
-                  airDate: episode.airDate,
-                  status: status == 1 ? status : 0,
-                ),
-            };
-
-            return FirebaseSeasons(
-              seasonId: season.id,
-              airDate: season.airDate,
-              status: status == 1 ? status : 0,
-              updatedAt: date,
-              episodeCount: season.episodes.length,
-              episodes: episodesMap,
-            );
-          }).toList();
+          final fbSeasons = {
+            for (var season in _seasonsList)
+              season.seasonNumber: FirebaseSeasons(
+                seasonId: season.id,
+                airDate: season.airDate,
+                status: status == 1 ? status : 0,
+                updatedAt: date,
+                episodeCount: season.episodes.length,
+                episodes: {
+                  for (var episode in season.episodes)
+                    episode.episodeNumber: FirebaseEpisodes(
+                      episodeId: episode.id,
+                      airDate: episode.airDate,
+                      status: status == 1 ? status : 0,
+                    ),
+                },
+              ),
+          };
 
           final fbTvShow = FirebaseTvShow(
             tvShowId: _seriesId,
@@ -171,22 +175,15 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
             seasons: fbSeasons,
           );
 
-          print("Finish 'toggleWatchlist': " + DateTime.now().toString());
-
           // Сохранение всех данных в Firebase
-          fbResultTvShow = await _firebaseMediaTrackingService.firstSyncTVShowData(
-            tvShowId: _seriesId,
-            tvShowName: _tvShowDetails?.name,
-            firstAirDate: _tvShowDetails?.firstAirDate,
-            status: status,
-            updatedAt: date,
-            seasons: fbSeasons,);
+          fbResultTvShow = await _firebaseMediaTrackingService
+              .addTVShowDataAndStatus(fbTvShow);
         } else {
+
           fbResultTvShow = await _firebaseMediaTrackingService.updateTVShowStatus(
             status: status,
             tvShowId: _seriesId,
-            title: _tvShowDetails?.name,
-            firstAirDate: _tvShowDetails?.firstAirDate,
+            updatedAt: date.toString(),
           );
         }
       } catch (e) {

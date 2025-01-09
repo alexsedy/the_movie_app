@@ -6,8 +6,6 @@ part 'firebase_seasons.g.dart';
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class FirebaseSeasons {
   final int seasonId;
-  // final int tvShowId;
-  // final int seasonNumber;
   final String? airDate;
   final int status;
   final DateTime updatedAt;
@@ -17,8 +15,6 @@ class FirebaseSeasons {
 
   FirebaseSeasons({
       required this.seasonId,
-      // required this.tvShowId,
-      // required this.seasonNumber,
       this.airDate,
       required this.status,
       required this.updatedAt,
