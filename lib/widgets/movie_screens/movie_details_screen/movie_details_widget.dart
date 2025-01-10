@@ -20,7 +20,6 @@ class _MovieDetailsWidgetState extends State<MovieDetailsWidget> {
   @override
   void initState() {
     NotifierProvider.read<MovieDetailsModel>(context)?.loadMovieDetails();
-    NotifierProvider.read<MovieDetailsModel>(context)?.getFBStatus();
     super.initState();
   }
 

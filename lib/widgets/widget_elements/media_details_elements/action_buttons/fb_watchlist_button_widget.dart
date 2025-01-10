@@ -1,12 +1,13 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/models/interfaces/i_base_media_details_model.dart';
+import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
 
 class FbWatchlistButtonWidget<T extends IBaseMediaDetailsModel> extends StatelessWidget {
   final T model;
+  final MediaDetailsElementType mediaDetailsElementType;
   const FbWatchlistButtonWidget({
-    super.key, required this.model,
+    super.key, required this.model, required this.mediaDetailsElementType
   });
 
   @override
@@ -67,7 +68,8 @@ class FbWatchlistButtonWidget<T extends IBaseMediaDetailsModel> extends Stateles
                 onTap: () {
                   if(value == currentStatus) {
                     return;
-                  } else if (value == 1) {
+                  } else if (value == 1
+                      && mediaDetailsElementType == MediaDetailsElementType.tv) {
                     showDialog(
                       context: context,
                       builder: (context) {

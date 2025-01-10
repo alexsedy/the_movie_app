@@ -3,17 +3,16 @@ import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/account_api_client.dart';
 import 'package:the_movie_app/domain/api_client/tv_show_api_client.dart';
 import 'package:the_movie_app/domain/cache_management/account_management.dart';
+import 'package:the_movie_app/domain/cache_management/local_media_tracking_service.dart';
 import 'package:the_movie_app/domain/entity/account/account_state/account_state.dart';
 import 'package:the_movie_app/domain/entity/account/user_lists/user_lists.dart';
-import 'package:the_movie_app/domain/entity/firebase_entity/episodes/firebase_episodes.dart';
-import 'package:the_movie_app/domain/entity/firebase_entity/seasons/firebase_seasons.dart';
-import 'package:the_movie_app/domain/entity/firebase_entity/tv_shows/firebase_tv_shows.dart';
-import 'package:the_movie_app/domain/entity/media/list/list.dart';
+import 'package:the_movie_app/domain/entity/hive/hive_episodes/hive_episodes.dart';
+import 'package:the_movie_app/domain/entity/hive/hive_seasons/hive_seasons.dart';
+import 'package:the_movie_app/domain/entity/hive/hive_tv_show/hive_tv_show.dart';
 import 'package:the_movie_app/domain/entity/media/media_details/media_details.dart';
 import 'package:the_movie_app/domain/entity/media/season/season.dart';
 import 'package:the_movie_app/domain/entity/media/state/item_state.dart';
 import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
-import 'package:the_movie_app/domain/firebase/firebase_media_tracking_service.dart';
 import 'package:the_movie_app/helpers/snack_bar_helper.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/models/interfaces/i_base_media_details_model.dart';
@@ -35,13 +34,13 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
   bool _isFavorite = false;
   bool _isWatched = false;
   bool _isRated = false;
-  bool _isFBLinked = false;
+  // bool _isFBLinked = false;
   double _rate = 0;
   late int _currentPage;
   late int _totalPage;
   final _statuses = [1, 2, 3, 4, 5, 99];
   int? _currentStatus;
-  final _firebaseMediaTrackingService = FirebaseMediaTrackingService();
+  final _localMediaTrackingService = LocalMediaTrackingService();
 
   @override
   List<int> get statuses => _statuses;
@@ -69,7 +68,7 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
   @override
   set rate(value) => _rate = value;
 
-  bool get isFBlinked => _isFBLinked;
+  // bool get isFBlinked => _isFBLinked;
 
   @override
   int? get currentStatus => _currentStatus;
@@ -91,29 +90,31 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
       }
     }
 
-    await _getFBStatus();
+    final seasons = await _tvShowDetails?.seasons;
+    if (seasons != null) {
+      final futures = seasons.map((s) {
+        return _apiClient.getSeason(_seriesId, s.seasonNumber);
+      }).toList();
+
+      final seasonDetails = await Future.wait(futures);
+      _seasonsList.addAll(seasonDetails);
+    }
+
+    await _getTvShowStatus();
+
+    // await _getFBStatus();
 
     notifyListeners();
   }
 
-  Future<void> _getFBStatus() async {
-    _isFBLinked = await AccountManager.getFBLinkStatus();
+  // Future<void> _getFBStatus() async {
+  //   _isFBLinked = await AccountManager.getFBLinkStatus();
+  // }
 
-    if(_isFBLinked) {
-      final seasons = await _tvShowDetails?.seasons;
-      if (seasons != null) {
-        final futures = seasons.map((s) {
-          return _apiClient.getSeason(_seriesId, s.seasonNumber);
-        }).toList();
-
-        final seasonDetails = await Future.wait(futures);
-        _seasonsList.addAll(seasonDetails);
-      }
-
-      final firebaseTvShow = await _firebaseMediaTrackingService
-          .getTVShowById(_seriesId);
-      _currentStatus = firebaseTvShow?.status;
-    }
+  Future<void> _getTvShowStatus() async {
+    final cachedTvShow = await _localMediaTrackingService
+        .getTVShowById(_seriesId);
+    _currentStatus = cachedTvShow?.status;
   }
 
   @override
@@ -130,6 +131,8 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
 
   @override
   Future<void> toggleWatchlist(BuildContext context, [int? status]) async {
+    print("Start 'toggleWatchlist': " + DateTime.now().toString());
+
     if(status != null) {
       bool result;
       if(_isWatched) {
@@ -143,12 +146,12 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
 
       final date = DateTime.now();
 
-      bool fbResultTvShow;
+      bool hiveResultTvShow;
       try {
         if (_currentStatus == null || _currentStatus == 0 || status == 1) {
-          final fbSeasons = {
+          final hiveSeasons = {
             for (var season in _seasonsList)
-              season.seasonNumber: FirebaseSeasons(
+              season.seasonNumber: HiveSeasons(
                 seasonId: season.id,
                 airDate: season.airDate,
                 status: status == 1 ? status : 0,
@@ -156,7 +159,7 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
                 episodeCount: season.episodes.length,
                 episodes: {
                   for (var episode in season.episodes)
-                    episode.episodeNumber: FirebaseEpisodes(
+                    episode.episodeNumber: HiveEpisodes(
                       episodeId: episode.id,
                       airDate: episode.airDate,
                       status: status == 1 ? status : 0,
@@ -165,32 +168,32 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
               ),
           };
 
-          final fbTvShow = FirebaseTvShow(
+          final hiveTvShow = HiveTvShow(
             tvShowId: _seriesId,
             status: status,
             updatedAt: date,
             addedAt: date,
             tvShowName: _tvShowDetails?.name,
             firstAirDate: _tvShowDetails?.firstAirDate,
-            seasons: fbSeasons,
+            seasons: hiveSeasons,
           );
 
           // Сохранение всех данных в Firebase
-          fbResultTvShow = await _firebaseMediaTrackingService
-              .addTVShowDataAndStatus(fbTvShow);
+          hiveResultTvShow = await _localMediaTrackingService
+              .addTVShowDataAndStatus(hiveTvShow);
         } else {
 
-          fbResultTvShow = await _firebaseMediaTrackingService.updateTVShowStatus(
+          hiveResultTvShow = await _localMediaTrackingService.updateTVShowStatus(
             status: status,
             tvShowId: _seriesId,
             updatedAt: date.toString(),
           );
         }
       } catch (e) {
-        fbResultTvShow = false;
+        hiveResultTvShow = false;
       }
 
-      if(result && fbResultTvShow) {
+      if(result && hiveResultTvShow) {
         _isWatched = true;
         _currentStatus = status;
         notifyListeners();
@@ -213,6 +216,8 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
         notifyListeners();
       }
     }
+
+    print("Finish 'toggleWatchlist': " + DateTime.now().toString());
   }
   // Future<void> toggleWatchlist(BuildContext context, [int? status]) async {
   //   if(status != null) {

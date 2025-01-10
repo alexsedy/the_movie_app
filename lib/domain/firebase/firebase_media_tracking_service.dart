@@ -8,6 +8,8 @@ class FirebaseMediaTrackingService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  FirebaseAuth get auth => _auth;
+
   static const _users = "users";
   static const _movies = "movies";
   static const _tvShows = "tv_shows";
@@ -219,6 +221,26 @@ class FirebaseMediaTrackingService {
     }
   }
 
+  Future<bool> deleteTvShowStatus(int tvShowId) async {
+    if (_auth.currentUser?.uid == null) {
+      throw Exception("User not authorized");
+    }
+
+    try {
+      final docRef = _firestore
+          .collection(_users)
+          .doc(_auth.currentUser?.uid)
+          .collection(_tvShows)
+          .doc(tvShowId.toString());
+
+      await docRef.delete();
+
+      return true;
+    } catch (e) {
+      print("Error deleting TV show: $e");
+      return false;
+    }
+  }
 
   //Seasons
   Future<FirebaseSeasons?> getSeason(int tvShowId, int seasonNumber) async {
@@ -253,6 +275,39 @@ class FirebaseMediaTrackingService {
       return null;
     } catch (e) {
       print("Error getting season: $e");
+      return null;
+    }
+  }
+
+  Future<List<FirebaseSeasons>?> getAllSeasons(int tvShowId) async {
+    if (_auth.currentUser?.uid == null) {
+      throw Exception("User not authorized");
+    }
+
+    try {
+      final userId = _auth.currentUser!.uid;
+      final tvShowDocRef = _firestore
+          .collection(_users)
+          .doc(userId)
+          .collection(_tvShows)
+          .doc(tvShowId.toString());
+
+      final tvShowSnapshot = await tvShowDocRef.get();
+
+      if (tvShowSnapshot.exists) {
+        final tvShowData = FirebaseTvShow.fromJson(tvShowSnapshot.data()!);
+        final seasons = tvShowData.seasons;
+
+        if (seasons != null) {
+          return seasons.values.toList(); // Возвращаем список всех сезонов
+        } else {
+          return null; // Сезоны не найдены
+        }
+      } else {
+        return null; // Сериал не найден
+      }
+    } catch (e) {
+      print("Error getting all seasons: $e");
       return null;
     }
   }

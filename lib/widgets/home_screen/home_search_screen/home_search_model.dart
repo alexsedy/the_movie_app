@@ -14,7 +14,6 @@ class HomeSearchModel extends ChangeNotifier with HomeSearchMovieModelMixin, Hom
   final _searchApiClient = SearchApiClient();
   bool _isDisposed = false;
   Timer? _searchDebounce;
-  late String _locale;
   int index;
 
   HomeSearchModel(this._searchController, this.index);

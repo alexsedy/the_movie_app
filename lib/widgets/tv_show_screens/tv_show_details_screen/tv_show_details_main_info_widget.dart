@@ -49,15 +49,18 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
               mediaDetailsElementType: MediaDetailsElementType.tv,
               model: model,
             ),
-
-            model.isFBlinked
-                ? FbWatchlistButtonWidget<TvShowDetailsModel>(
+            FbWatchlistButtonWidget<TvShowDetailsModel>(
               model: model,
-            )
-                : WatchlistButtonWidget<TvShowDetailsModel>(
               mediaDetailsElementType: MediaDetailsElementType.tv,
-              model: model,
             ),
+            // model.isFBlinked
+            //     ? FbWatchlistButtonWidget<TvShowDetailsModel>(
+            //   model: model,
+            // )
+            //     : WatchlistButtonWidget<TvShowDetailsModel>(
+            //   mediaDetailsElementType: MediaDetailsElementType.tv,
+            //   model: model,
+            // ),
 
             RateButtonWidget<TvShowDetailsModel>(
               mediaDetailsElementType: MediaDetailsElementType.tv,

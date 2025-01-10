@@ -59,16 +59,18 @@ class _MovieDetailsWidget extends StatelessWidget {
               mediaDetailsElementType: MediaDetailsElementType.movie,
               model: model,
             ),
-
-            model.isFBlinked
-              ? FbWatchlistButtonWidget<MovieDetailsModel>(
-                  model: model,
-                )
-              : WatchlistButtonWidget<MovieDetailsModel>(
-                  mediaDetailsElementType: MediaDetailsElementType.movie,
-                  model: model,
-                ),
-
+            FbWatchlistButtonWidget<MovieDetailsModel>(
+              model: model,
+              mediaDetailsElementType: MediaDetailsElementType.movie,
+            ),
+            // model.isFBlinked
+            //   ? FbWatchlistButtonWidget<MovieDetailsModel>(
+            //       model: model,
+            //     )
+            //   : WatchlistButtonWidget<MovieDetailsModel>(
+            //       mediaDetailsElementType: MediaDetailsElementType.movie,
+            //       model: model,
+            //     ),
             RateButtonWidget<MovieDetailsModel>(
               mediaDetailsElementType: MediaDetailsElementType.movie,
               model: model,

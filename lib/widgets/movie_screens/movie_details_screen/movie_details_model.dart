@@ -3,12 +3,12 @@ import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/account_api_client.dart';
 import 'package:the_movie_app/domain/api_client/movie_api_client.dart';
 import 'package:the_movie_app/domain/cache_management/account_management.dart';
+import 'package:the_movie_app/domain/cache_management/local_media_tracking_service.dart';
 import 'package:the_movie_app/domain/entity/account/user_lists/user_lists.dart';
-import 'package:the_movie_app/domain/entity/firebase_entity/movies/firebase_movies.dart';
+import 'package:the_movie_app/domain/entity/hive/hive_movies/hive_movies.dart';
 import 'package:the_movie_app/domain/entity/media/media_details/media_details.dart';
 import 'package:the_movie_app/domain/entity/media/state/item_state.dart';
 import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
-import 'package:the_movie_app/domain/firebase/firebase_media_tracking_service.dart';
 import 'package:the_movie_app/helpers/snack_bar_helper.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/models/interfaces/i_base_media_details_model.dart';
@@ -27,13 +27,13 @@ class MovieDetailsModel extends ChangeNotifier implements IBaseMediaDetailsModel
   bool _isFavorite = false;
   bool _isWatched = false;
   bool _isRated = false;
-  bool _isFBLinked = false;
+  // bool _isFBLinked = false;
   double _rate = 0;
   late int _currentPage;
   late int _totalPage;
   final _statuses = [1, 3, 5, 99];
   int? _currentStatus;
-  final _firebaseMediaTrackingService = FirebaseMediaTrackingService();
+  final _localMediaTrackingService = LocalMediaTrackingService();
 
   @override
   MediaDetails? get mediaDetails => _movieDetails;
@@ -61,7 +61,7 @@ class MovieDetailsModel extends ChangeNotifier implements IBaseMediaDetailsModel
   @override
   set rate(value) => _rate = value;
 
-  bool get isFBlinked => _isFBLinked;
+  // bool get isFBlinked => _isFBLinked;
 
   @override
   int? get currentStatus => _currentStatus;
@@ -82,16 +82,22 @@ class MovieDetailsModel extends ChangeNotifier implements IBaseMediaDetailsModel
         _isRated = true;
       }
     }
-    if(_isFBLinked) {
-      final firebaseMovie = await _firebaseMediaTrackingService.getMovieById(
-          _movieId);
-      _currentStatus = firebaseMovie?.status;
-    }
+
+    await _getMovieStatus();
+
+    // await _getFBStatus();
+
     notifyListeners();
   }
 
-  Future<void> getFBStatus() async {
-    _isFBLinked = await AccountManager.getFBLinkStatus();
+  // Future<void> _getFBStatus() async {
+  //   _isFBLinked = await AccountManager.getFBLinkStatus();
+  // }
+
+  Future<void> _getMovieStatus() async {
+    final cachedMovie = await _localMediaTrackingService.getMovieById(
+        _movieId);
+    _currentStatus = cachedMovie?.status;
   }
 
   @override
@@ -134,9 +140,9 @@ class MovieDetailsModel extends ChangeNotifier implements IBaseMediaDetailsModel
 
       final date =  DateTime.now();
 
-      bool fbResult;
+      bool hiveResult;
       if(_currentStatus == null || _currentStatus == 0) {
-        final movie = FirebaseMovies(
+        final movie = HiveMovies(
           movieId: _movieId,
           movieTitle: _movieDetails?.title,
           releaseDate: _movieDetails?.releaseDate,
@@ -145,16 +151,16 @@ class MovieDetailsModel extends ChangeNotifier implements IBaseMediaDetailsModel
           addedAt: date,
         );
 
-        fbResult = await _firebaseMediaTrackingService
+        hiveResult = await _localMediaTrackingService
             .addMovieAndStatus(movie);
       } else {
-        fbResult = await _firebaseMediaTrackingService.updateMovieStatus(
+        hiveResult = await _localMediaTrackingService.updateMovieStatus(
           movieId: _movieId,
           status: status,
           updatedAt: date.toString());
       }
 
-      if(result && fbResult) {
+      if(result && hiveResult) {
         _isWatched = true;
         _currentStatus = status;
         notifyListeners();

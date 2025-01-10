@@ -20,7 +20,6 @@ class SeriesDetailsWidget extends StatefulWidget {
 class _SeriesDetailsWidgetState extends State<SeriesDetailsWidget> {
   @override
   void initState() {
-    NotifierProvider.read<SeriesDetailsModel>(context)?.getFBStatus();
     NotifierProvider.read<SeriesDetailsModel>(context)?.loadSeriesDetails();
     super.initState();
   }
@@ -82,7 +81,7 @@ class _BodyDetails extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    final isFBLinked = model.isFBLinked;
+    // final isFBLinked = model.isFBLinked;
     final overview = mediaDetails.overview;
     final cast = mediaDetails.credits.cast;
     final crew = mediaDetails.credits.crew;
@@ -92,9 +91,9 @@ class _BodyDetails extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if(isFBLinked)
+          // if(isFBLinked)
           const SizedBox(height: 20,),
-          if(isFBLinked)
+          // if(isFBLinked)
           _WatchListButton(),
 
           if(overview != null && overview.isNotEmpty)

@@ -4,7 +4,7 @@ import 'package:the_movie_app/domain/entity/media/media_details/media_details.da
 import 'package:the_movie_app/models/interfaces/i_base_user_lists_model.dart';
 import 'package:the_movie_app/models/interfaces/i_firebase_statuses.dart';
 
-abstract class IBaseMediaDetailsModel implements IBaseUserListsModel, IFirebaseStatuses {
+abstract class IBaseMediaDetailsModel implements IBaseUserListsModel, IStatuses {
   MediaDetails? get mediaDetails;
   List<Lists> get lists;
   bool get isFavorite;
