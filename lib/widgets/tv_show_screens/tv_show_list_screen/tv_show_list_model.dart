@@ -12,7 +12,6 @@ class TvShowListModel extends ChangeNotifier with FilterTvShowListModelMixin {
   final _tvs = <MediaList>[];
   int _currentPage = 0;
   int _totalPage = 1;
-  late String _locale;
   var _isTvsLoadingInProgress = false;
 
   ScrollController get scrollController => _scrollController;
@@ -124,10 +123,6 @@ class TvShowListModel extends ChangeNotifier with FilterTvShowListModelMixin {
     scrollToTop();
     resetList();
   }
-
-// void setupLocale(BuildContext context) {
-  //   final locale = Localizations.localeOf(context);
-  // }
 }
 
 mixin FilterTvShowListModelMixin implements IMediaFilter {
