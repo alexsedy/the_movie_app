@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/account_api_client.dart';
+import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/domain/api_client/tv_show_api_client.dart';
-import 'package:the_movie_app/domain/cache_management/account_management.dart';
 import 'package:the_movie_app/domain/cache_management/local_media_tracking_service.dart';
 import 'package:the_movie_app/domain/entity/account/account_state/account_state.dart';
 import 'package:the_movie_app/domain/entity/account/user_lists/user_lists.dart';
@@ -13,7 +15,9 @@ import 'package:the_movie_app/domain/entity/media/media_details/media_details.da
 import 'package:the_movie_app/domain/entity/media/season/season.dart';
 import 'package:the_movie_app/domain/entity/media/state/item_state.dart';
 import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
+import 'package:the_movie_app/helpers/event_helper.dart';
 import 'package:the_movie_app/helpers/snack_bar_helper.dart';
+import 'package:the_movie_app/helpers/snack_bar_message_handler.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/models/interfaces/i_base_media_details_model.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
@@ -41,6 +45,8 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
   final _statuses = [1, 2, 3, 4, 5, 99];
   int? _currentStatus;
   final _localMediaTrackingService = LocalMediaTrackingService();
+  final _seasonWatchStatuses = <int, int>{};
+  StreamSubscription? _subscription;
 
   @override
   List<int> get statuses => _statuses;
@@ -73,7 +79,16 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
   @override
   int? get currentStatus => _currentStatus;
 
-  TvShowDetailsModel(this._seriesId);
+  Map<int, int> get seasonWatchStatuses => _seasonWatchStatuses;
+
+  TvShowDetailsModel(this._seriesId){
+    _subscription = EventHelper.eventBus.on<bool>().listen((event) async {
+      if(event) {
+        await _getTvShowStatus();
+        notifyListeners();
+      }
+    });
+  }
 
   Future<void> loadTvShowDetails() async {
     _tvShowDetails = await _apiClient.getTvShowById(_seriesId);
@@ -114,41 +129,59 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
   Future<void> _getTvShowStatus() async {
     final cachedTvShow = await _localMediaTrackingService
         .getTVShowById(_seriesId);
+
+    cachedTvShow?.seasons?.values.forEach((s) {
+      _seasonWatchStatuses[s.seasonId] = s.status;
+    });
+    
     _currentStatus = cachedTvShow?.status;
   }
 
   @override
   Future<void> toggleFavorite(BuildContext context) async {
-    final result = await SnackBarHelper.handleErrorDefaultLists(
-      apiReq: () => _apiClient.makeFavorite(tvShowId: _seriesId, isFavorite: !_isFavorite,),
-      context: context,
-    );
-    if(result) {
+
+    try {
+      await _apiClient.makeFavorite(tvShowId: _seriesId, isFavorite: !_isFavorite,);
       _isFavorite = !_isFavorite;
       notifyListeners();
+      SnackBarMessageHandler.showSuccessSnackBar(
+          context: context,
+          message: _isFavorite
+              ? "The TV show has been added to the favorite list."
+              : "The TV show has been removed from the favorite list."
+      );
+    } on ApiClientException catch (e) {
+      if(e.type == ApiClientExceptionType.sessionExpired) {
+        SnackBarMessageHandler.showErrorSnackBarWithLoginButton(context);
+        return;
+      } else {
+        SnackBarMessageHandler.showErrorSnackBar(context);
+        return;
+      }
     }
   }
 
   @override
-  Future<void> toggleWatchlist(BuildContext context, [int? status]) async {
-    print("Start 'toggleWatchlist': " + DateTime.now().toString());
-
-    if(status != null) {
-      bool result;
-      if(_isWatched) {
-        result = true;
-      } else {
-        result = await SnackBarHelper.handleErrorDefaultLists(
-          apiReq: () => _apiClient.addToWatchlist(tvShowId: _seriesId, isWatched: true,),
-          context: context,
-        );
+  Future<void> toggleWatchlist(BuildContext context, int status) async {
+    if(status != -1) {
+      if(!_isWatched) {
+        try{
+          await _apiClient.addToWatchlist(tvShowId: _seriesId, isWatched: true);
+        } on ApiClientException catch (e) {
+          if(e.type == ApiClientExceptionType.sessionExpired) {
+            SnackBarMessageHandler.showErrorSnackBarWithLoginButton(context);
+            return;
+          } else {
+            SnackBarMessageHandler.showErrorSnackBar(context);
+            return;
+          }
+        }
       }
 
       final date = DateTime.now();
 
-      bool hiveResultTvShow;
-      try {
-        if (_currentStatus == null || _currentStatus == 0 || status == 1) {
+      if (_currentStatus == null || _currentStatus == 0 || status == 1) {
+        try {
           final hiveSeasons = {
             for (var season in _seasonsList)
               season.seasonNumber: HiveSeasons(
@@ -178,169 +211,114 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
             seasons: hiveSeasons,
           );
 
-          // Сохранение всех данных в Firebase
-          hiveResultTvShow = await _localMediaTrackingService
-              .addTVShowDataAndStatus(hiveTvShow);
-        } else {
-
-          hiveResultTvShow = await _localMediaTrackingService.updateTVShowStatus(
+          await _localMediaTrackingService.addTVShowDataAndStatus(hiveTvShow);
+        } on Exception catch (e) {
+          SnackBarMessageHandler.showErrorSnackBar(context);
+          await _apiClient.addToWatchlist(tvShowId: _seriesId, isWatched: false,);
+          return;
+        }
+      } else {
+        try {
+          await _localMediaTrackingService.updateTVShowStatus(
             status: status,
             tvShowId: _seriesId,
             updatedAt: date.toString(),
           );
+          _currentStatus = status;
+          SnackBarMessageHandler.showSuccessSnackBar(
+            context: context,
+            message: "The TV show status has been updated.",
+          );
+          notifyListeners();
+          return;
+        } on Exception catch (e) {
+          SnackBarMessageHandler.showErrorSnackBar(context);
+          return;
         }
-      } catch (e) {
-        hiveResultTvShow = false;
       }
-
-      if(result && hiveResultTvShow) {
-        _isWatched = true;
-        _currentStatus = status;
-        notifyListeners();
-      } else {
-        await _apiClient.addToWatchlist(tvShowId: _seriesId, isWatched: false);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          duration: const Duration(seconds: 5),
-          content: Text(
-            context.l10n.anErrorHasOccurredTryAgainLater,
-            style: const TextStyle(fontSize: 20),),
-        ));
-      }
-    } else {
-      final result = await SnackBarHelper.handleErrorDefaultLists(
-        apiReq: () => _apiClient.addToWatchlist(tvShowId: _seriesId, isWatched: !_isWatched,),
+      _isWatched = true;
+      _currentStatus = status;
+      notifyListeners();
+      SnackBarMessageHandler.showSuccessSnackBar(
         context: context,
+        message: "The TV show has been added to the watchlist.",
       );
-      if (result) {
-        _isWatched = !_isWatched;
-        notifyListeners();
+      EventHelper.eventBus.fire(true);
+    } else {
+      try {
+        await _apiClient.addToWatchlist(tvShowId: _seriesId, isWatched: false,);
+      } on ApiClientException catch (e) {
+        if(e == ApiClientExceptionType.sessionExpired) {
+          SnackBarMessageHandler.showErrorSnackBarWithLoginButton(context);
+          return;
+        } else {
+          SnackBarMessageHandler.showErrorSnackBar(context);
+          return;
+        }
       }
+      try {
+        await _localMediaTrackingService.deleteTVShowStatus(_seriesId);
+      }
+      catch (e) {
+        await _apiClient.addToWatchlist(tvShowId: _seriesId, isWatched: true,);
+        SnackBarMessageHandler.showErrorSnackBar(context);
+        return;
+      }
+
+      _isWatched = false;
+      _currentStatus = null;
+      notifyListeners();
+      SnackBarMessageHandler.showSuccessSnackBar(
+        context: context,
+        message: "The TV show has been removed from the watchlist.",
+      );
+      EventHelper.eventBus.fire(true);
     }
-
-    print("Finish 'toggleWatchlist': " + DateTime.now().toString());
   }
-  // Future<void> toggleWatchlist(BuildContext context, [int? status]) async {
-  //   if(status != null) {
-  //     final result = await SnackBarHelper.handleErrorDefaultLists(
-  //       apiReq: () => _apiClient.addToWatchlist(tvShowId: _seriesId, isWatched: true,),
-  //       context: context,
-  //     );
-  //
-  //     final fbResultTvShow = await _firebaseMediaTrackingService.updateTVShowStatus(
-  //         tvShowId: _seriesId,
-  //         tvShowName: _tvShowDetails?.name,
-  //         firstAirDate: _tvShowDetails?.firstAirDate,
-  //         status: status
-  //     );
-  //
-  //     final seasons = await _tvShowDetails?.seasons;
-  //
-  //     if (seasons != null) {
-  //       for (var s in seasons) {
-  //         try {
-  //           await _firebaseMediaTrackingService.updateSeasonStatus(
-  //             status: 0,
-  //             tvShowId: _seriesId,
-  //             seasonNumber: s.seasonNumber,
-  //             seasonId: s.id,
-  //             tvShowName: _tvShowDetails?.name,
-  //             tvShowAirDate: _tvShowDetails?.firstAirDate,
-  //             seasonAirDate: s.airDate,
-  //             episodeCount: s.episodeCount,
-  //           );
-  //         } catch (e) {
-  //         }
-  //       }
-  //     }
-  //
-  //     if(seasons != null) {
-  //       for (var s in seasons) {
-  //         final seasonDetail = await _apiClient.getSeason(_seriesId, s.seasonNumber);
-  //         for (var e in seasonDetail.episodes) {
-  //           try {
-  //             await _firebaseMediaTrackingService.updateSeriesStatus(
-  //                 tvShowId: _seriesId,
-  //                 tvShowName: _tvShowDetails?.name,
-  //                 tvShowAirDate: _tvShowDetails?.firstAirDate,
-  //                 seasonNumber: s.seasonNumber,
-  //                 seasonId: s.id,
-  //                 seasonAirDate: s.airDate,
-  //                 episodeNumber: e.episodeNumber,
-  //                 episodeId: e.id,
-  //                 episodeAirDate: e.airDate,
-  //                 status: 0,
-  //                 episodeCount: s.episodeCount);
-  //           } catch (e) {
-  //           }
-  //         }
-  //       }
-  //     }
-  //
-  //     if(result && fbResultTvShow) {
-  //       _isWatched = true;
-  //       _currentStatus = status;
-  //       notifyListeners();
-  //     } else {
-  //       await _apiClient.addToWatchlist(tvShowId: _seriesId, isWatched: false);
-  //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //         duration: const Duration(seconds: 5),
-  //         content: Text(
-  //           context.l10n.anErrorHasOccurredTryAgainLater,
-  //           style: const TextStyle(fontSize: 20),),
-  //       ));
-  //     }
-  //   } else {
-  //     final result = await SnackBarHelper.handleErrorDefaultLists(
-  //       apiReq: () => _apiClient.addToWatchlist(tvShowId: _seriesId, isWatched: !_isWatched,),
-  //       context: context,
-  //     );
-  //     if (result) {
-  //       _isWatched = !_isWatched;
-  //       notifyListeners();
-  //     }
-  //   }
-  // }
-
-  // @override
-  // Future<void> toggleWatchlist(BuildContext context, [int? status]) async {
-  //   final result = await SnackBarHelper.handleErrorDefaultLists(
-  //     apiReq: () => _apiClient.addToWatchlist(tvShowId: _seriesId, isWatched: !_isWatched,),
-  //     context: context,
-  //   );
-  //   if(result) {
-  //     _isWatched = !_isWatched;
-  //     notifyListeners();
-  //   }
-  // }
 
   @override
   Future<void> toggleAddRating(BuildContext context, double rate) async {
-    final result = await SnackBarHelper.handleErrorDefaultLists(
-      apiReq: () => _apiClient.addRating(tvShowId: _seriesId, rate: rate),
-      context: context,
-    );
-    if(result && _isRated == false) {
-      _isRated = !_isRated;
+    try {
+      await _apiClient.addRating(tvShowId: _seriesId, rate: rate);
+      if (_isRated == false) {
+        _isRated = !_isRated;
+      }
       notifyListeners();
+      SnackBarMessageHandler.showSuccessSnackBar(
+          context: context,
+          message: "The TV show rating has been added."
+      );
+    } on ApiClientException catch (e) {
+      if(e.type == ApiClientExceptionType.sessionExpired) {
+        SnackBarMessageHandler.showErrorSnackBarWithLoginButton(context);
+        return;
+      } else {
+        SnackBarMessageHandler.showErrorSnackBar(context);
+        return;
+      }
     }
   }
 
   @override
   Future<void> toggleDeleteRating(BuildContext context) async {
     if(_isRated) {
-      final result = await SnackBarHelper.handleErrorDefaultLists(
-        apiReq: () => _apiClient.deleteRating(tvShowId: _seriesId),
-        context: context,
-      );
-      if (result) {
+      try {
+        await _apiClient.deleteRating(tvShowId: _seriesId);
         _isRated = !_isRated;
         _rate = 0.0;
         notifyListeners();
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          duration: const Duration(seconds: 3),
-          content: Text(context.l10n.theRatingWasDeletedSuccessfully,
-            style: const TextStyle(fontSize: 20),),
-        ));
+        SnackBarMessageHandler.showSuccessSnackBar(
+          context: context,
+          message: context.l10n.theRatingWasDeletedSuccessfully,
+        );
+      } on ApiClientException catch (e) {
+        if (e.type == ApiClientExceptionType.sessionExpired) {
+          SnackBarMessageHandler.showErrorSnackBarWithLoginButton(context);
+          return;
+        } else {
+          SnackBarMessageHandler.showErrorSnackBar(context);
+          return;
+        }
       }
     }
   }
@@ -432,7 +410,11 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
     seasons?.forEach((element) {
       element.tvShowId = _seriesId;
     });
-    Navigator.of(context).pushNamed(MainNavigationRouteNames.seasonsList, arguments: seasons);
+    final argument = {
+      "seasons": seasons,
+      "tvShowId": _seriesId
+    };
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.seasonsList, arguments: argument);
   }
 
   void onSeasonDetailsScreen(BuildContext context, int index) {
@@ -460,5 +442,11 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
   @override
   void onCollectionScreen(BuildContext context) {
     // TODO: implement onCollectionScreen
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
   }
 }

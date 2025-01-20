@@ -2,9 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/domain/api_client/search_api_client.dart';
+import 'package:the_movie_app/domain/cache_management/local_media_tracking_service.dart';
+import 'package:the_movie_app/domain/entity/hive/hive_movies/hive_movies.dart';
+import 'package:the_movie_app/domain/entity/hive/hive_tv_show/hive_tv_show.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
 import 'package:the_movie_app/domain/entity/media/media_collections/media_collections.dart';
 import 'package:the_movie_app/domain/entity/person/trending_person/trending_person.dart';
+import 'package:the_movie_app/helpers/event_helper.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
 class HomeSearchModel extends ChangeNotifier with HomeSearchMovieModelMixin, HomeSearchTVModelMixin,
@@ -15,20 +19,37 @@ class HomeSearchModel extends ChangeNotifier with HomeSearchMovieModelMixin, Hom
   bool _isDisposed = false;
   Timer? _searchDebounce;
   int index;
+  final _localMediaTrackingService = LocalMediaTrackingService();
+  final _movieStatuses = <HiveMovies>[];
+  final _tvShowStatuses = <HiveTvShow>[];
+  StreamSubscription? _subscription;
 
-  HomeSearchModel(this._searchController, this.index);
+  HomeSearchModel(this._searchController, this.index) {
+    if(!_isDisposed) {
+      _subscription = EventHelper.eventBus.on<bool>().listen((event) async {
+        if (event) {
+          await _getTvShowStatuses();
+          await _getMovieStatuses();
+        }
+      });
+    }
+  }
 
   TextEditingController get searchController => _searchController;
   List<MediaCollections> get collections => _collections;
   FocusNode get searchFocusNode => _searchFocusNode;
 
-  List<MediaList> get tvs => _tvs;
-  List<MediaList> get movies => _movies;
+  List<MediaList> get tvs => List.unmodifiable(_tvs);
+  List<MediaList> get movies => List.unmodifiable(_movies);
   List<TrendingPersonList> get persons => _persons;
   bool get isPersonLoadingInProgress => _isPersonLoadingInProgress;
   bool get isCollectionLoadingInProgress => _isCollectionLoadingInProgress;
+  List<HiveMovies> get movieStatuses => List.unmodifiable(_movieStatuses);
+  List<HiveTvShow> get tvShowStatuses => List.unmodifiable(_tvShowStatuses);
 
   Future<void> firstLoadAll() async {
+    if (!_isDisposed) await _getTvShowStatuses();
+    if (!_isDisposed) await _getMovieStatuses();
     if (!_isDisposed) await loadMovies();
     if (!_isDisposed) await loadTvShows();
     if (!_isDisposed) await loadPersons();
@@ -39,6 +60,8 @@ class HomeSearchModel extends ChangeNotifier with HomeSearchMovieModelMixin, Hom
     _searchDebounce?.cancel();
     _searchDebounce = Timer(const Duration(milliseconds: 500), () async {
       if (!_isDisposed) clearAll();
+      if (!_isDisposed) await _getTvShowStatuses();
+      if (!_isDisposed) await _getMovieStatuses();
       if (!_isDisposed) await loadMovies();
       if (!_isDisposed) await loadTvShows();
       if (!_isDisposed) await loadPersons();
@@ -170,10 +193,23 @@ class HomeSearchModel extends ChangeNotifier with HomeSearchMovieModelMixin, Hom
     loadCollections();
   }
 
+  Future<void> _getMovieStatuses() async {
+    _movieStatuses.clear();
+    final movies = await _localMediaTrackingService.getAllMovies();
+    _movieStatuses.addAll(movies);
+  }
+
+  Future<void> _getTvShowStatuses() async {
+    _tvShowStatuses.clear();
+    final tvShows = await _localMediaTrackingService.getAllTVShows();
+    _tvShowStatuses.addAll(tvShows);
+  }
+
   @override
   void dispose() {
     _isDisposed = true;
     // _searchController.dispose();
+    _subscription?.cancel();
     _searchFocusNode.dispose();
     super.dispose();
   }

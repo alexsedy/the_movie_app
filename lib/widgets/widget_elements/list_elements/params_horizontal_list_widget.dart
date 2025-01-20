@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
+import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
 
 class ParameterizedHorizontalListWidget extends StatelessWidget {
@@ -9,6 +10,8 @@ class ParameterizedHorizontalListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final statuses = paramModel.statuses;
+
     return SizedBox(
       height: paramModel.boxHeight,
       child: ListView.builder(
@@ -134,7 +137,38 @@ class ParameterizedHorizontalListWidget extends StatelessWidget {
                         paramModel.action(context, index);
                       },
                     ),
-                  )
+                  ),
+                  if(statuses != null && statuses[index].id == paramModel.list[index].id)
+                  Container(
+                    height: 24,
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 2),
+                        child: Container(
+                          clipBehavior: Clip.hardEdge,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24),
+                            color: statuses[index].status == 1
+                                ? Colors.green.withValues(alpha: 0.9)
+                                : statuses[index].status == 2
+                                  ? Colors.blue.withValues(alpha: 0.9)
+                                  : Colors.black.withValues(alpha: 0.9),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 6),
+                            child: Text(
+                              textAlign: TextAlign.center,
+                              context.l10n.mediaStatus("status_${statuses[index].status}"),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             );

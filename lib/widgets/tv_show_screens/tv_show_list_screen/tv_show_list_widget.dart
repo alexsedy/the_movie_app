@@ -16,15 +16,6 @@ class TvShowListWidget extends StatefulWidget {
 }
 
 class _MovieListWidgetState extends State<TvShowListWidget> {
-  late ScrollController _scrollController;
-
-  @override
-  void initState() {
-    _scrollController = NotifierProvider.read<TvShowListModel>(context)?.scrollController
-        ?? ScrollController();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<TvShowListModel>(context);
@@ -57,6 +48,7 @@ class _MovieListWidgetState extends State<TvShowListWidget> {
         altImagePath: AppImages.noPoster,
         scrollController: model.scrollController,
         list: ConverterHelper.convertTVShowsForVerticalWidget(model.tvs),
+        statuses: ConverterHelper.convertTvShowStatuses(model.tvShowStatuses)
       ), loadMoreItems: model.loadContent,
     );
   }

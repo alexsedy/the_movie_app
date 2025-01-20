@@ -89,8 +89,18 @@ class _RateDialogWidgetState extends State<_RateDialogWidget> {
           // onChangeEnd: (value) =>  widget.model.toggleAddRating(context, value),
         ),
         TextButton(
-          onPressed: () {
-            widget.model.toggleAddRating(context, rate);
+          onPressed: () async {
+            showDialog (
+              context: context,
+              barrierDismissible: false,
+              builder: (context) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
+            );
+            await widget.model.toggleAddRating(context, rate);
+            Navigator.pop(context);
             Navigator.pop(context);
           },
           child: Text(context.l10n.ok),),

@@ -50,6 +50,7 @@ class _MoviesButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<PeopleDetailsModel>(context);
     final movieCreditList = model?.movieCreditList;
+    final movieStatuses = model?.movieStatuses;
 
     if(movieCreditList == null) {
       return const SizedBox.shrink();
@@ -224,6 +225,18 @@ class _MoviesButtonWidget extends StatelessWidget {
                                         ),
                                       ),
                                     ),
+                                    if(movieStatuses != null
+                                        && movieStatuses.any((e)
+                                        => movieCreditList[index].id == e.movieId
+                                            && e.status != 0))
+                                      Positioned(
+                                        top: 15,
+                                        right: 15,
+                                        child: Icon(
+                                          Icons.bookmark,
+                                          color: Colors.blueAccent.withAlpha(180),
+                                        ),
+                                      ),
                                   ],
                                 ),
                               ),
@@ -270,6 +283,7 @@ class _TvShowButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<PeopleDetailsModel>(context);
     final tvShowCreditList = model?.tvShowCreditList;
+    final tvShowStatuses = model?.tvShowStatuses;
 
     if(tvShowCreditList == null) {
       return const SizedBox.shrink();
@@ -450,6 +464,18 @@ class _TvShowButtonWidget extends StatelessWidget {
                                         ),
                                       ),
                                     ),
+                                    if(tvShowStatuses != null
+                                        && tvShowStatuses.any((e)
+                                        => tvShowCreditList[index].id == e.tvShowId
+                                            && e.status != 0))
+                                      Positioned(
+                                        top: 15,
+                                        right: 15,
+                                        child: Icon(
+                                          Icons.bookmark,
+                                          color: Colors.blueAccent.withAlpha(180),
+                                        ),
+                                      ),
                                   ],
                                 ),
                               ),

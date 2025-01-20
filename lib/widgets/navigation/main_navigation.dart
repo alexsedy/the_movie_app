@@ -19,7 +19,7 @@ import 'package:the_movie_app/widgets/home_screen/home_search_screen/home_search
 import 'package:the_movie_app/widgets/list_screens/default_list/default_lists_model.dart';
 import 'package:the_movie_app/widgets/list_screens/default_list/default_lists_widget.dart';
 import 'package:the_movie_app/widgets/list_screens/user_list/list_details/details_user_list.dart';
-import 'package:the_movie_app/widgets/list_screens/user_list/list_details/list_details_model.dart';
+import 'package:the_movie_app/widgets/list_screens/user_list/list_details/details_user_list_model.dart';
 import 'package:the_movie_app/widgets/list_screens/user_list/user_lists_model.dart';
 import 'package:the_movie_app/widgets/list_screens/user_list/user_lists_widget.dart';
 import 'package:the_movie_app/widgets/main_screen/main_screen_widget.dart';
@@ -96,10 +96,15 @@ class MainNavigation {
 
       case MainNavigationRouteNames.seasonsList:
         final arguments = settings.arguments;
-        final seasons = arguments is List<Seasons> ? arguments : null;
+        final args = arguments is Map ? arguments : {};
+        final seasons = args["seasons"];
+        final tvShowId = args["tvShowId"];
         return MaterialPageRoute(
           builder: (context) => NotifierProvider(
-              create: () => SeasonsListModel(seasons ?? []),
+              create: () => SeasonsListModel(
+                seasons: seasons,
+                tvShowId: tvShowId,
+              ),
               child: const SeasonsListWidget()),
         );
 
@@ -170,7 +175,7 @@ class MainNavigation {
         final listId = arguments is int ? arguments : 0;
         return MaterialPageRoute(
           builder: (context) => NotifierProvider(
-              create: () => ListDetailsModel(listId: listId),
+              create: () => DetailsUserListsModel(listId: listId),
               // model: MovieDetailsModel(movieId),
               child: const DetailsUserList()),
         );

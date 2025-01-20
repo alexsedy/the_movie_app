@@ -208,8 +208,11 @@ class _TrendingToggleWidgetState extends State<_TrendingToggleWidget> {
                   borderRadius: BorderRadius.circular(10.0), // Rou
                   isSelected: _isSelected,
                   onPressed: (int index) {
+                    if (_isSelected[index]) return;
+                    
                     setState(() {
                       for (int i = 0; i < _isSelected.length; i++) {
+
                         _isSelected[i] = i == index;
 
                         switch(widget.horizontalListElementType){

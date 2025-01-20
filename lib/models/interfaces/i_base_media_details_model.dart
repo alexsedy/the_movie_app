@@ -15,7 +15,7 @@ abstract class IBaseMediaDetailsModel implements IBaseUserListsModel, IStatuses 
   set rate(value);
 
   Future<void> toggleFavorite(BuildContext context);
-  Future<void> toggleWatchlist(BuildContext context, [int? status]);
+  Future<void> toggleWatchlist(BuildContext context, int status);
   Future<void> toggleAddRating(BuildContext context, double rate);
   Future<void> toggleDeleteRating(BuildContext context);
   Future<void> launchYouTubeVideo(String videoKey);

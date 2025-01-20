@@ -8,6 +8,8 @@ class ParameterizedVerticalListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final statuses = paramModel.statuses;
+
     return ListView.builder(
         itemCount: paramModel.list.length,
         itemExtent: 163,
@@ -104,7 +106,26 @@ class ParameterizedVerticalListWidget extends StatelessWidget {
                       paramModel.action(context, index);
                     },
                   ),
-                )
+                ),
+                if(statuses != null)
+                  Positioned(
+                    right: 3,
+                    top: 0,
+                    child: IconButton(
+                      onPressed: () {
+                        if(paramModel.additionAction != null) {
+                          paramModel.additionAction!(context, index, statuses[index].number);
+                        }
+                      },
+                      icon: Icon(statuses[index].status == 1
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined
+                      ),
+                      color: statuses[index].status == 1
+                          ? Colors.green
+                          : Colors.red
+                    ),
+                  ),
               ],
             ),
           );

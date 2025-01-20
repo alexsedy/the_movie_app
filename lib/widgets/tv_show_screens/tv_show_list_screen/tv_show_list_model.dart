@@ -2,7 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/domain/api_client/tv_show_api_client.dart';
+import 'package:the_movie_app/domain/cache_management/local_media_tracking_service.dart';
+import 'package:the_movie_app/domain/entity/hive/hive_tv_show/hive_tv_show.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
+import 'package:the_movie_app/helpers/event_helper.dart';
 import 'package:the_movie_app/models/interfaces/i_media_filter_model.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
@@ -13,9 +16,13 @@ class TvShowListModel extends ChangeNotifier with FilterTvShowListModelMixin {
   int _currentPage = 0;
   int _totalPage = 1;
   var _isTvsLoadingInProgress = false;
+  final _tvShowStatuses = <HiveTvShow>[];
+  late final Future<void> _initTvShowStatuses = _getTvShowStatuses();
+  StreamSubscription? _subscription;
 
   ScrollController get scrollController => _scrollController;
   List<MediaList> get tvs => List.unmodifiable(_tvs);
+  List<HiveTvShow> get tvShowStatuses => List.unmodifiable(_tvShowStatuses);
 
   @override
   Future<void> loadContent() async {
@@ -25,6 +32,8 @@ class TvShowListModel extends ChangeNotifier with FilterTvShowListModelMixin {
     } else {
       await _loadTvShows();
     }
+
+    await _initTvShowStatuses;
   }
 
   Future<void> _loadTvShows() async {
@@ -80,6 +89,21 @@ class TvShowListModel extends ChangeNotifier with FilterTvShowListModelMixin {
     }
   }
 
+  Future<void> _getTvShowStatuses() async {
+    final localMediaTrackingService = LocalMediaTrackingService();
+    final tvShows = await localMediaTrackingService.getAllTVShows();
+    _tvShowStatuses.addAll(tvShows);
+
+    _subscription = EventHelper.eventBus.on<bool>().listen((event) async {
+      if(event) {
+        _tvShowStatuses.clear();
+        final tvShows = await localMediaTrackingService.getAllTVShows();
+        _tvShowStatuses.addAll(tvShows);
+        notifyListeners();
+      }
+    });
+  }
+
   @override
   void clearAllFilters() {
     clearFilterValue();
@@ -122,6 +146,12 @@ class TvShowListModel extends ChangeNotifier with FilterTvShowListModelMixin {
   void applyFilter() {
     scrollToTop();
     resetList();
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
   }
 }
 

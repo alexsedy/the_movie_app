@@ -4,7 +4,7 @@ import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/provider/provider.dart';
-import 'package:the_movie_app/widgets/list_screens/user_list/list_details/list_details_model.dart';
+import 'package:the_movie_app/widgets/list_screens/user_list/list_details/details_user_list_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/list_shimmer_skeleton_widget.dart';
 
 class DetailsUserList extends StatefulWidget {
@@ -18,12 +18,12 @@ class _DetailsUserListState extends State<DetailsUserList> {
   @override
   void initState() {
     super.initState();
-    NotifierProvider.read<ListDetailsModel>(context)?.loadContent();
+    NotifierProvider.read<DetailsUserListsModel>(context)?.loadContent();
   }
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<ListDetailsModel>(context);
+    final model = NotifierProvider.watch<DetailsUserListsModel>(context);
 
     if(model == null){
       return SizedBox.shrink();
@@ -98,7 +98,7 @@ class _ListNameWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<ListDetailsModel>(context);
+    final model = NotifierProvider.watch<DetailsUserListsModel>(context);
     final userListDetails = model?.userListDetails;
 
     if(model == null){
@@ -127,7 +127,7 @@ class _FooterInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<ListDetailsModel>(context);
+    final model = NotifierProvider.watch<DetailsUserListsModel>(context);
     final userListDetails = model?.userListDetails;
     final username = userListDetails?.createdBy.username;
     final itemCount = userListDetails?.itemCount;
@@ -183,7 +183,7 @@ class _ListBodyState extends State<_ListBody> {
   @override
   void initState() {
     super.initState();
-    final model = NotifierProvider.read<ListDetailsModel>(context);
+    final model = NotifierProvider.read<DetailsUserListsModel>(context);
     final scrollController = model?.scrollController;
 
     if(scrollController != null) {
@@ -204,7 +204,7 @@ class _ListBodyState extends State<_ListBody> {
         _isLoading = true;
       });
 
-      NotifierProvider.read<ListDetailsModel>(context)?.loadContent().then((_) {
+      NotifierProvider.read<DetailsUserListsModel>(context)?.loadContent().then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -214,7 +214,7 @@ class _ListBodyState extends State<_ListBody> {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<ListDetailsModel>(context);
+    final model = NotifierProvider.watch<DetailsUserListsModel>(context);
 
     if(model == null){
       return const SizedBox.shrink();

@@ -5,7 +5,9 @@ import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/list_screens/default_list/default_lists_model.dart';
+import 'package:the_movie_app/widgets/widget_elements/list_elements/params_horizontal_list_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/list_elements/params_pagination_vertical_list_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/list_elements/params_vertical_list_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/shimmer_skeleton_elements/list_shimmer_skeleton_widget.dart';
 
 class DefaultListsWidget extends StatefulWidget {
@@ -19,8 +21,12 @@ class _DefaultListsWidgetState extends State<DefaultListsWidget> {
   @override
   void initState() {
     super.initState();
-    NotifierProvider.read<DefaultListsModel>(context)?.loadMovies();
-    NotifierProvider.read<DefaultListsModel>(context)?.loadTvShows();
+    if(NotifierProvider.read<DefaultListsModel>(context)?.listType == ListType.watchlist) {
+      NotifierProvider.read<DefaultListsModel>(context)?.fetchAllMediaData();
+    } else {
+      NotifierProvider.read<DefaultListsModel>(context)?.loadMovies();
+      NotifierProvider.read<DefaultListsModel>(context)?.loadTvShows();
+    }
   }
 
   @override
@@ -67,7 +73,16 @@ class _HeaderWidget extends StatelessWidget {
       case ListType.favorites:
         return Text(context.l10n.favorite);
       case ListType.watchlist:
-        return Text(context.l10n.watchlist);
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(context.l10n.watchlist),
+            IconButton(
+              onPressed: (){},
+              icon: Icon(Icons.sort),
+            ),
+          ],
+        );
       case ListType.rated:
         return Text(context.l10n.rated);
       case ListType.recommendations:
@@ -107,15 +122,26 @@ class _MovieListWidget extends StatelessWidget {
       );
     }
 
-    return ParameterizedPaginationVerticalListWidget(
-      paramModel: ParameterizedWidgetModel(
-        action: model.onMovieScreen,
-        altImagePath: AppImages.noPoster,
-        scrollController: model.scrollController,
-        list: ConverterHelper.convertMoviesForVerticalWidget(model.movies),
-      ),
-      loadMoreItems: model.loadMovies,
-    );
+    if(model.listType == ListType.watchlist) {
+      return ParameterizedVerticalListWidget(
+        paramModel: ParameterizedWidgetModel(
+          action: model.onMovieScreen,
+          altImagePath: AppImages.noPoster,
+          scrollController: model.scrollController,
+          list: ConverterHelper.convertMoviesForVerticalWidget(model.movies),
+        ),
+      );
+    } else {
+      return ParameterizedPaginationVerticalListWidget(
+        paramModel: ParameterizedWidgetModel(
+          action: model.onMovieScreen,
+          altImagePath: AppImages.noPoster,
+          scrollController: model.scrollController,
+          list: ConverterHelper.convertMoviesForVerticalWidget(model.movies),
+        ),
+        loadMoreItems: model.loadMovies,
+      );
+    }
   }
 }
 
@@ -150,14 +176,25 @@ class _TvShowListWidget extends StatelessWidget {
       );
     }
 
-    return ParameterizedPaginationVerticalListWidget(
-      paramModel: ParameterizedWidgetModel(
-        action: model.onTvShowScreen,
-        altImagePath: AppImages.noPoster,
-        scrollController: model.scrollController,
-        list: ConverterHelper.convertTVShowsForVerticalWidget(model.tvs),
-      ),
-      loadMoreItems: model.loadTvShows,
-    );
+    if(model.listType == ListType.watchlist) {
+      return ParameterizedVerticalListWidget(
+        paramModel: ParameterizedWidgetModel(
+          action: model.onTvShowScreen,
+          altImagePath: AppImages.noPoster,
+          scrollController: model.scrollController,
+          list: ConverterHelper.convertTVShowsForVerticalWidget(model.tvs),
+        ),
+      );
+    } else {
+      return ParameterizedPaginationVerticalListWidget(
+        paramModel: ParameterizedWidgetModel(
+          action: model.onTvShowScreen,
+          altImagePath: AppImages.noPoster,
+          scrollController: model.scrollController,
+          list: ConverterHelper.convertTVShowsForVerticalWidget(model.tvs),
+        ),
+        loadMoreItems: model.loadTvShows,
+      );
+    }
   }
 }

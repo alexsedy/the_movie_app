@@ -93,6 +93,8 @@ class _BodySeason extends StatelessWidget {
         altImagePath: AppImages.noPoster,
         list: ConverterHelper.convertEpisodes(season),
         action: model.onSeriesDetailsScreen,
+        statuses: ConverterHelper.convertEpisodeStatuses(model.episodesStatuses),
+        additionAction: model.updateStatus
       ),
     );
   }

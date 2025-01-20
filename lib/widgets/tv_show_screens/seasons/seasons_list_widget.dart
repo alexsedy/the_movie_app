@@ -45,6 +45,8 @@ class _BodyWidget extends StatelessWidget {
         altImagePath: AppImages.noPoster,
         action: model.onSeasonDetailsScreen,
         list: ConverterHelper.convertSeason(seasons),
+        statuses: ConverterHelper.convertSeasonStatuses(model.seasonsStatuses),
+        additionAction: model.updateStatus,
       ),
     );
   }

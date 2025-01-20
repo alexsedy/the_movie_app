@@ -43,6 +43,10 @@ class MediaList {
   final String? originalName;
   final String? mediaType;
 
+  // int? status;
+  // DateTime? updatedAt;
+  // DateTime? addedAt;
+
 
   MediaList(
       this.adult,
@@ -63,7 +67,12 @@ class MediaList {
       this.name,
       this.originCountry,
       this.originalName,
-      this.mediaType);
+      this.mediaType,
+      // this.status,
+      // this.updatedAt,
+      // this.addedAt
+      );
+
 
   factory MediaList.fromJson(Map<String, dynamic> json) => _$MediaListFromJson(json);
 

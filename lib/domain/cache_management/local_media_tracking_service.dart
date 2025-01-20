@@ -21,18 +21,16 @@ class LocalMediaTrackingService {
   }
 
   // MOVIES METHODS
-  Future<bool> addMovieAndStatus(HiveMovies movie) async {
+  Future<void> addMovieAndStatus(HiveMovies movie) async {
     try {
       final box = await Hive.openBox<HiveMovies>(moviesBoxName);
       await box.put(movie.movieId.toString(), movie);
-      return true;
     } catch (e) {
-      print("Error adding movie to local storage: $e");
-      return false;
+      throw Exception("Error adding movie to local storage: $e");
     }
   }
 
-  Future<bool> updateMovieStatus({
+  Future<void> updateMovieStatus({
     required int movieId,
     required int status,
     required String updatedAt,
@@ -41,33 +39,29 @@ class LocalMediaTrackingService {
       final box = await Hive.openBox<HiveMovies>(moviesBoxName);
       final movie = box.get(movieId.toString());
 
-      if (movie != null) {
-        final updatedMovie = HiveMovies(
-          movieId: movie.movieId,
-          movieTitle: movie.movieTitle,
-          releaseDate: movie.releaseDate,
-          status: status,
-          updatedAt: DateTime.parse(updatedAt),
-          addedAt: movie.addedAt,
-        );
-        await box.put(movieId.toString(), updatedMovie);
-        return true;
+      if (movie == null) {
+        throw Exception("Error updating movie status in local storage");
       }
-      return false;
+      final updatedMovie = HiveMovies(
+        movieId: movie.movieId,
+        movieTitle: movie.movieTitle,
+        releaseDate: movie.releaseDate,
+        status: status,
+        updatedAt: DateTime.parse(updatedAt),
+        addedAt: movie.addedAt,
+      );
+      await box.put(movieId.toString(), updatedMovie);
     } catch (e) {
-      print("Error updating movie status in local storage: $e");
-      return false;
+      throw Exception("Error updating movie status in local storage: $e");
     }
   }
 
-  Future<bool> deleteMovieStatus(int movieId) async {
+  Future<void> deleteMovieStatus(int movieId) async {
     try {
       final box = await Hive.openBox<HiveMovies>(moviesBoxName);
       await box.delete(movieId.toString());
-      return true;
     } catch (e) {
-      print("Error deleting movie from local storage: $e");
-      return false;
+      throw Exception("Error deleting movie from local storage: $e");
     }
   }
 
@@ -92,18 +86,16 @@ class LocalMediaTrackingService {
   }
 
   // TV SHOWS METHODS
-  Future<bool> addTVShowDataAndStatus(HiveTvShow tvShow) async {
+  Future<void> addTVShowDataAndStatus(HiveTvShow tvShow) async {
     try {
       final box = await Hive.openBox<HiveTvShow>(tvShowsBoxName);
       await box.put(tvShow.tvShowId.toString(), tvShow);
-      return true;
     } catch (e) {
-      print("Error adding TV show to local storage: $e");
-      return false;
+      throw Exception("Error adding TV show to local storage: $e");
     }
   }
 
-  Future<bool> updateTVShowStatus({
+  Future<void> updateTVShowStatus({
     required int tvShowId,
     required int status,
     required String updatedAt,
@@ -112,23 +104,22 @@ class LocalMediaTrackingService {
       final box = await Hive.openBox<HiveTvShow>(tvShowsBoxName);
       final tvShow = box.get(tvShowId.toString());
 
-      if (tvShow != null) {
-        final updatedTvShow = HiveTvShow(
-          tvShowId: tvShow.tvShowId,
-          tvShowName: tvShow.tvShowName,
-          firstAirDate: tvShow.firstAirDate,
-          status: status,
-          updatedAt: DateTime.parse(updatedAt),
-          addedAt: tvShow.addedAt,
-          seasons: tvShow.seasons,
-        );
-        await box.put(tvShowId.toString(), updatedTvShow);
-        return true;
+      if (tvShow == null) {
+        throw Exception("Error updating TV show status in local storage");
       }
-      return false;
+
+      final updatedTvShow = HiveTvShow(
+        tvShowId: tvShow.tvShowId,
+        tvShowName: tvShow.tvShowName,
+        firstAirDate: tvShow.firstAirDate,
+        status: status,
+        updatedAt: DateTime.parse(updatedAt),
+        addedAt: tvShow.addedAt,
+        seasons: tvShow.seasons,
+      );
+      await box.put(tvShowId.toString(), updatedTvShow);
     } catch (e) {
-      print("Error updating TV show status in local storage: $e");
-      return false;
+      throw Exception("Error updating TV show status in local storage: $e");
     }
   }
 
@@ -152,6 +143,15 @@ class LocalMediaTrackingService {
     }
   }
 
+  Future<void> deleteTVShowStatus(int tvShowId) async {
+    try {
+      final box = await Hive.openBox<HiveTvShow>(tvShowsBoxName);
+      await box.delete(tvShowId.toString());
+    } catch (e) {
+      throw Exception("Error deleting TV show from local storage: $e");
+    }
+  }
+
   // SEASONS METHODS
   Future<HiveSeasons?> getSeason(int tvShowId, int seasonNumber) async {
     try {
@@ -168,8 +168,58 @@ class LocalMediaTrackingService {
     }
   }
 
+  Future<void> updateSeasonAndEpisodesStatus({
+    required int tvShowId,
+    required int seasonNumber,
+    required int status,
+  }) async {
+    try {
+      final box = await Hive.openBox<HiveTvShow>(tvShowsBoxName);
+      final tvShow = box.get(tvShowId.toString());
+
+      if (tvShow == null || tvShow.seasons == null) {
+        throw Exception("TV show or seasons not found");
+      }
+
+      final season = tvShow.seasons?[seasonNumber];
+      if (season == null) {
+        throw Exception("Season not found");
+      }
+
+      // Обновляем статусы всех эпизодов
+      final updatedEpisodes = season.episodes?.map((key, episode) {
+        return MapEntry(
+          key,
+          HiveEpisodes(
+            episodeId: episode.episodeId,
+            airDate: episode.airDate,
+            status: status, // Устанавливаем новый статус
+          ),
+        );
+      });
+
+      // Создаем обновленный сезон
+      final updatedSeason = HiveSeasons(
+        seasonId: season.seasonId,
+        airDate: season.airDate,
+        status: status, // Устанавливаем новый статус для сезона
+        updatedAt: DateTime.now(), // Обновляем дату изменения
+        episodeCount: season.episodeCount,
+        episodes: updatedEpisodes,
+      );
+
+      // Обновляем данные сериала
+      tvShow.seasons?[seasonNumber] = updatedSeason;
+
+      // Сохраняем изменения
+      await box.put(tvShowId.toString(), tvShow);
+    } catch (e) {
+      throw Exception("Error updating season and episodes status: $e");
+    }
+  }
+
   // EPISODES METHODS
-  Future<bool> updateEpisodeStatus({
+  Future<void> updateEpisodeStatus({
     required int tvShowId,
     required int seasonNumber,
     required int episodeNumber,
@@ -179,60 +229,55 @@ class LocalMediaTrackingService {
       final box = await Hive.openBox<HiveTvShow>(tvShowsBoxName);
       final tvShow = box.get(tvShowId.toString());
 
-      if (tvShow != null && tvShow.seasons != null) {
-        final season = tvShow.seasons![seasonNumber];
-        if (season != null && season.episodes != null) {
-          final episode = season.episodes![episodeNumber];
-          if (episode != null) {
-            // Создаем обновленный эпизод
-            final updatedEpisode = HiveEpisodes(
-              episodeId: episode.episodeId,
-              airDate: episode.airDate,
-              status: status,
-            );
-
-            // Создаем обновленную карту эпизодов
-            final updatedEpisodes = Map<int, HiveEpisodes>.from(season.episodes!);
-            updatedEpisodes[episodeNumber] = updatedEpisode;
-
-            // Создаем обновленный сезон
-            final updatedSeason = HiveSeasons(
-              seasonId: season.seasonId,
-              airDate: season.airDate,
-              status: season.status,
-              updatedAt: season.updatedAt,
-              episodeCount: season.episodeCount,
-              episodes: updatedEpisodes,
-            );
-
-            // Создаем обновленную карту сезонов
-            final updatedSeasons = Map<int, HiveSeasons>.from(tvShow.seasons!);
-            updatedSeasons[seasonNumber] = updatedSeason;
-
-            // Создаем обновленный сериал
-            final updatedTvShow = HiveTvShow(
-              tvShowId: tvShow.tvShowId,
-              tvShowName: tvShow.tvShowName,
-              firstAirDate: tvShow.firstAirDate,
-              status: tvShow.status,
-              updatedAt: tvShow.updatedAt,
-              addedAt: tvShow.addedAt,
-              seasons: updatedSeasons,
-            );
-
-            await box.put(tvShowId.toString(), updatedTvShow);
-            return true;
-          }
-        }
+      if (tvShow == null || tvShow.seasons == null) {
+        throw Exception("TV Show or seasons not found");
       }
-      return false;
+
+      final season = tvShow.seasons?[seasonNumber];
+      if (season == null || season.episodes == null) {
+        throw Exception("Season or episodes not found");
+      }
+
+      final episode = season.episodes?[episodeNumber];
+      if (episode == null) {
+        throw Exception("Episode not found");
+      }
+
+      // Обновляем эпизод
+      season.episodes![episodeNumber] = HiveEpisodes(
+        episodeId: episode.episodeId,
+        airDate: episode.airDate,
+        status: status,
+      );
+
+      // Подсчитываем количество эпизодов со статусом 1
+      final completedEpisodes = season.episodes!.values.where((e) => e.status == 1).length;
+      final totalEpisodes = season.episodeCount;
+
+      // Определяем новый статус сезона
+      final newSeasonStatus = completedEpisodes == totalEpisodes
+          ? 1
+          : (completedEpisodes > 0 ? 2 : 0);
+
+      // Обновляем сезон
+      tvShow.seasons![seasonNumber] = HiveSeasons(
+        seasonId: season.seasonId,
+        airDate: season.airDate,
+        status: newSeasonStatus,
+        updatedAt: DateTime.now(),
+        episodeCount: season.episodeCount,
+        episodes: season.episodes,
+      );
+
+      // Сохраняем обновления
+      await box.put(tvShowId.toString(), tvShow);
     } catch (e) {
-      print("Error updating episode status in local storage: $e");
-      return false;
+      throw Exception("Error updating episode status: $e");
     }
   }
 
-  // Utility methods
+
+// Utility methods
   // Future<void> clearAll() async {
   //   await Hive.deleteBoxFromDisk(moviesBoxName);
   //   await Hive.deleteBoxFromDisk(tvShowsBoxName);
