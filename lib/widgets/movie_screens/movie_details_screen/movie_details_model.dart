@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/account_api_client.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/domain/api_client/movie_api_client.dart';
+import 'package:the_movie_app/domain/background_services/background_sync_with_local.dart';
 import 'package:the_movie_app/domain/cache_management/local_media_tracking_service.dart';
 import 'package:the_movie_app/domain/entity/account/user_lists/user_lists.dart';
 import 'package:the_movie_app/domain/entity/hive/hive_movies/hive_movies.dart';
@@ -104,25 +105,27 @@ class MovieDetailsModel extends ChangeNotifier implements IBaseMediaDetailsModel
 
   @override
   Future<void> toggleFavorite(BuildContext context) async {
-    try {
-      await _apiClient.addToFavorite(movieId: _movieId, isFavorite: !_isFavorite,);
-      _isFavorite = !_isFavorite;
-      notifyListeners();
-      SnackBarMessageHandler.showSuccessSnackBar(
-        context: context,
-        message: _isFavorite
-            ? "The movie has been added to the favorite list."
-            : "The movie has been removed from the favorite list."
-      );
-    } on ApiClientException catch (e) {
-      if(e.type == ApiClientExceptionType.sessionExpired) {
-        SnackBarMessageHandler.showErrorSnackBarWithLoginButton(context);
-        return;
-      } else {
-        SnackBarMessageHandler.showErrorSnackBar(context);
-        return;
-      }
-    }
+    final a = BackgroundSyncWithLocal();
+    await a.syncLocalData();
+    // try {
+    //   await _apiClient.addToFavorite(movieId: _movieId, isFavorite: !_isFavorite,);
+    //   _isFavorite = !_isFavorite;
+    //   notifyListeners();
+    //   SnackBarMessageHandler.showSuccessSnackBar(
+    //     context: context,
+    //     message: _isFavorite
+    //         ? "The movie has been added to the favorite list."
+    //         : "The movie has been removed from the favorite list."
+    //   );
+    // } on ApiClientException catch (e) {
+    //   if(e.type == ApiClientExceptionType.sessionExpired) {
+    //     SnackBarMessageHandler.showErrorSnackBarWithLoginButton(context);
+    //     return;
+    //   } else {
+    //     SnackBarMessageHandler.showErrorSnackBar(context);
+    //     return;
+    //   }
+    // }
   }
 
   @override
@@ -152,6 +155,7 @@ class MovieDetailsModel extends ChangeNotifier implements IBaseMediaDetailsModel
             status: status,
             updatedAt: date,
             addedAt: date,
+            autoSyncDate: date,
           );
 
           await _localMediaTrackingService.addMovieAndStatus(movie);
@@ -165,7 +169,7 @@ class MovieDetailsModel extends ChangeNotifier implements IBaseMediaDetailsModel
           await _localMediaTrackingService.updateMovieStatus(
             movieId: _movieId,
             status: status,
-            updatedAt: date.toString()
+            updatedAt: date
           );
           _currentStatus = status;
           SnackBarMessageHandler.showSuccessSnackBar(

@@ -1,14 +1,11 @@
 import 'dart:async';
 
 import 'package:app_links/app_links.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/domain/api_client/auth_api_client.dart';
 import 'package:the_movie_app/domain/cache_management/account_management.dart';
 import 'package:the_movie_app/domain/data_providers/session_data_provider.dart';
 import 'package:the_movie_app/domain/entity/account/account_state/account_state.dart';
-import 'package:the_movie_app/domain/entity/firebase_entity/user_profile/firebase_user_profile.dart';
 import 'package:the_movie_app/domain/firebase/firebase_auth_service.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/widgets/list_screens/default_list/default_lists_model.dart';

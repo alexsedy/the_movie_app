@@ -139,7 +139,6 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
 
   @override
   Future<void> toggleFavorite(BuildContext context) async {
-
     try {
       await _apiClient.makeFavorite(tvShowId: _seriesId, isFavorite: !_isFavorite,);
       _isFavorite = !_isFavorite;
@@ -182,12 +181,12 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
 
       if (_currentStatus == null || _currentStatus == 0 || status == 1) {
         try {
-          final hiveSeasons = {
+          var hiveSeasons = {
             for (var season in _seasonsList)
               season.seasonNumber: HiveSeasons(
                 seasonId: season.id,
                 airDate: season.airDate,
-                status: status == 1 ? status : 0,
+                status: _determineStatus(status, season.airDate, date),
                 updatedAt: date,
                 episodeCount: season.episodes.length,
                 episodes: {
@@ -195,11 +194,36 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
                     episode.episodeNumber: HiveEpisodes(
                       episodeId: episode.id,
                       airDate: episode.airDate,
-                      status: status == 1 ? status : 0,
+                      status: _determineStatus(status, episode.airDate, date),
                     ),
                 },
               ),
           };
+
+          if(status == 1) {
+            hiveSeasons = {
+              for (var entry in hiveSeasons.entries)
+                entry.key: entry.value.episodes!.values.every((episode) => episode.status == 0)
+                    ? HiveSeasons(
+                  seasonId: entry.value.seasonId,
+                  airDate: entry.value.airDate,
+                  status: 0,
+                  updatedAt: entry.value.updatedAt,
+                  episodeCount: entry.value.episodeCount,
+                  episodes: entry.value.episodes,
+                )
+                    : entry.value.episodes!.values.any((episode) => episode.status == 0)
+                    ? HiveSeasons(
+                  seasonId: entry.value.seasonId,
+                  airDate: entry.value.airDate,
+                  status: 2,
+                  updatedAt: entry.value.updatedAt,
+                  episodeCount: entry.value.episodeCount,
+                  episodes: entry.value.episodes,
+                )
+                    : entry.value,
+            };
+          }
 
           final hiveTvShow = HiveTvShow(
             tvShowId: _seriesId,
@@ -209,6 +233,7 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
             tvShowName: _tvShowDetails?.name,
             firstAirDate: _tvShowDetails?.firstAirDate,
             seasons: hiveSeasons,
+            autoSyncDate: date,
           );
 
           await _localMediaTrackingService.addTVShowDataAndStatus(hiveTvShow);
@@ -222,7 +247,7 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
           await _localMediaTrackingService.updateTVShowStatus(
             status: status,
             tvShowId: _seriesId,
-            updatedAt: date.toString(),
+            updatedAt: date,
           );
           _currentStatus = status;
           SnackBarMessageHandler.showSuccessSnackBar(
@@ -275,6 +300,175 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
       EventHelper.eventBus.fire(true);
     }
   }
+
+  // Future<void> toggleWatchlist(BuildContext context, int status) async {
+  //   if (status != -1) {
+  //     await _handleWatchlistAddition(context, status);
+  //   } else {
+  //     await _handleWatchlistRemoval(context);
+  //   }
+  // }
+  //
+  // Future<void> _handleWatchlistAddition(BuildContext context, int status) async {
+  //   if (!_isWatched) {
+  //     if (!await _addToWatchlist(context)) return;
+  //   }
+  //
+  //   final date = DateTime.now();
+  //
+  //   if (_currentStatus == null || _currentStatus == 0 || _currentStatus == 1) {
+  //     if (!await _addTVShowData(context, date, status)) return;
+  //   } else {
+  //     if (!await _updateTVShowStatus(context, date)) return;
+  //   }
+  //
+  //   _isWatched = true;
+  //   _currentStatus = 1;
+  //   notifyListeners();
+  //   SnackBarMessageHandler.showSuccessSnackBar(
+  //     context: context,
+  //     message: "The TV show has been added to the watchlist.",
+  //   );
+  //   EventHelper.eventBus.fire(true);
+  // }
+  //
+  // Future<void> _handleWatchlistRemoval(BuildContext context) async {
+  //   if (!await _removeFromWatchlist(context)) return;
+  //   if (!await _deleteTVShowStatus(context)) return;
+  //
+  //   _isWatched = false;
+  //   _currentStatus = null;
+  //   notifyListeners();
+  //   SnackBarMessageHandler.showSuccessSnackBar(
+  //     context: context,
+  //     message: "The TV show has been removed from the watchlist.",
+  //   );
+  //   EventHelper.eventBus.fire(true);
+  // }
+  //
+  // Future<bool> _addToWatchlist(BuildContext context) async {
+  //   try {
+  //     await _apiClient.addToWatchlist(tvShowId: _seriesId, isWatched: true);
+  //     return true;
+  //   } on ApiClientException catch (e) {
+  //     if (e.type == ApiClientExceptionType.sessionExpired) {
+  //       SnackBarMessageHandler.showErrorSnackBarWithLoginButton(context);
+  //     } else {
+  //       SnackBarMessageHandler.showErrorSnackBar(context);
+  //     }
+  //     return false;
+  //   }
+  // }
+  //
+  // Future<bool> _addTVShowData(BuildContext context, DateTime date, int status) async {
+  //   try {
+  //     var hiveSeasons = {
+  //       for (var season in _seasonsList)
+  //         season.seasonNumber: HiveSeasons(
+  //           seasonId: season.id,
+  //           airDate: season.airDate,
+  //           status: _determineStatus(status, season.airDate, date),
+  //           updatedAt: date,
+  //           episodeCount: season.episodes.length,
+  //           episodes: {
+  //             for (var episode in season.episodes)
+  //               episode.episodeNumber: HiveEpisodes(
+  //                 episodeId: episode.id,
+  //                 airDate: episode.airDate,
+  //                 status: _determineStatus(status, episode.airDate, date),
+  //               ),
+  //           },
+  //         ),
+  //     };
+  //
+  //     if(status == 1) {
+  //       hiveSeasons = {
+  //         for (var entry in hiveSeasons.entries)
+  //           entry.key: entry.value.episodes!.values.every((episode) => episode.status == 0)
+  //               ? HiveSeasons(
+  //             seasonId: entry.value.seasonId,
+  //             airDate: entry.value.airDate,
+  //             status: 0,
+  //             updatedAt: entry.value.updatedAt,
+  //             episodeCount: entry.value.episodeCount,
+  //             episodes: entry.value.episodes,
+  //           )
+  //               : entry.value.episodes!.values.any((episode) => episode.status == 0)
+  //               ? HiveSeasons(
+  //             seasonId: entry.value.seasonId,
+  //             airDate: entry.value.airDate,
+  //             status: 2,
+  //             updatedAt: entry.value.updatedAt,
+  //             episodeCount: entry.value.episodeCount,
+  //             episodes: entry.value.episodes,
+  //           )
+  //               : entry.value,
+  //       };
+  //     }
+  //
+  //     final hiveTvShow = HiveTvShow(
+  //       tvShowId: _seriesId,
+  //       status: 1,
+  //       updatedAt: date,
+  //       addedAt: date,
+  //       tvShowName: _tvShowDetails?.name,
+  //       firstAirDate: _tvShowDetails?.firstAirDate,
+  //       seasons: hiveSeasons,
+  //     );
+  //
+  //     await _localMediaTrackingService.addTVShowDataAndStatus(hiveTvShow);
+  //     return true;
+  //   } on Exception catch (e) {
+  //     SnackBarMessageHandler.showErrorSnackBar(context);
+  //     await _apiClient.addToWatchlist(tvShowId: _seriesId, isWatched: false);
+  //     return false;
+  //   }
+  // }
+  //
+  // Future<bool> _updateTVShowStatus(BuildContext context, DateTime date) async {
+  //   try {
+  //     await _localMediaTrackingService.updateTVShowStatus(
+  //       status: 1,
+  //       tvShowId: _seriesId,
+  //       updatedAt: date.toString(),
+  //     );
+  //     _currentStatus = 1;
+  //     SnackBarMessageHandler.showSuccessSnackBar(
+  //       context: context,
+  //       message: "The TV show status has been updated.",
+  //     );
+  //     notifyListeners();
+  //     return true;
+  //   } on Exception catch (e) {
+  //     SnackBarMessageHandler.showErrorSnackBar(context);
+  //     return false;
+  //   }
+  // }
+  //
+  // Future<bool> _removeFromWatchlist(BuildContext context) async {
+  //   try {
+  //     await _apiClient.addToWatchlist(tvShowId: _seriesId, isWatched: false);
+  //     return true;
+  //   } on ApiClientException catch (e) {
+  //     if (e.type == ApiClientExceptionType.sessionExpired) {
+  //       SnackBarMessageHandler.showErrorSnackBarWithLoginButton(context);
+  //     } else {
+  //       SnackBarMessageHandler.showErrorSnackBar(context);
+  //     }
+  //     return false;
+  //   }
+  // }
+  //
+  // Future<bool> _deleteTVShowStatus(BuildContext context) async {
+  //   try {
+  //     await _localMediaTrackingService.deleteTVShowStatus(_seriesId);
+  //     return true;
+  //   } catch (e) {
+  //     await _apiClient.addToWatchlist(tvShowId: _seriesId, isWatched: true);
+  //     SnackBarMessageHandler.showErrorSnackBar(context);
+  //     return false;
+  //   }
+  // }
 
   @override
   Future<void> toggleAddRating(BuildContext context, double rate) async {
@@ -442,6 +636,20 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
   @override
   void onCollectionScreen(BuildContext context) {
     // TODO: implement onCollectionScreen
+  }
+
+  int _determineStatus( int status, String? airDate, DateTime date) {
+    if(status == 1) {
+      if ((airDate == null ||
+          airDate.isEmpty ||
+          DateTime.tryParse(airDate)?.isAfter(date) == true)) {
+        return 0;
+      } else {
+        return 1;
+      }
+    } else {
+      return 0;
+    }
   }
 
   @override

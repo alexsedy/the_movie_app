@@ -22,15 +22,16 @@ class HiveTvShowAdapter extends TypeAdapter<HiveTvShow> {
       firstAirDate: fields[2] as String?,
       status: fields[3] as int,
       updatedAt: fields[4] as DateTime,
+      autoSyncDate: fields[6] as DateTime,
       addedAt: fields[5] as DateTime?,
-      seasons: (fields[6] as Map?)?.cast<int, HiveSeasons>(),
+      seasons: (fields[7] as Map?)?.cast<int, HiveSeasons>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, HiveTvShow obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.tvShowId)
       ..writeByte(1)
@@ -44,6 +45,8 @@ class HiveTvShowAdapter extends TypeAdapter<HiveTvShow> {
       ..writeByte(5)
       ..write(obj.addedAt)
       ..writeByte(6)
+      ..write(obj.autoSyncDate)
+      ..writeByte(7)
       ..write(obj.seasons);
   }
 

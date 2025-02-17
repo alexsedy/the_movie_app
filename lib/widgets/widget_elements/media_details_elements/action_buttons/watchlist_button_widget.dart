@@ -56,7 +56,7 @@ class WatchlistButtonWidget<T extends IBaseMediaDetailsModel> extends StatelessW
           children: [
             if (currentStatus == null || currentStatus == 0)
               ListTile(
-                title: Text("Status undefined"),
+                title: Text("Status not selected"),
                 textColor: Colors.red,
                 trailing: Icon(Icons.done),
                 selected: true,

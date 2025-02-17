@@ -23,6 +23,9 @@ class HiveMovies extends HiveObject {
   @HiveField(5)
   final DateTime? addedAt;
 
+  @HiveField(6)
+  final DateTime autoSyncDate;
+
   HiveMovies({
     required this.movieId,
     this.movieTitle,
@@ -30,6 +33,7 @@ class HiveMovies extends HiveObject {
     required this.status,
     required this.updatedAt,
     this.addedAt,
+    required this.autoSyncDate,
   });
 
   FirebaseMovies toFirebaseMovie() {

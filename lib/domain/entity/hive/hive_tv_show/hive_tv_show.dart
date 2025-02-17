@@ -25,6 +25,9 @@ class HiveTvShow extends HiveObject {
   final DateTime? addedAt;
 
   @HiveField(6)
+  final DateTime autoSyncDate;
+
+  @HiveField(7)
   final Map<int, HiveSeasons>? seasons;
 
   HiveTvShow({
@@ -33,6 +36,7 @@ class HiveTvShow extends HiveObject {
     this.firstAirDate,
     required this.status,
     required this.updatedAt,
+    required this.autoSyncDate,
     this.addedAt,
     this.seasons,
   });

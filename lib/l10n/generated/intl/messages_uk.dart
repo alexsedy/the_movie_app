@@ -41,8 +41,14 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m8(message) => "Список \"${message}\" створено.";
 
-  static String m9(Watched, Watching) =>
-      "{count, select, =1 ${Watched} =2 ${Watching} =3 {Going to Watch} =4 {Stopped Watching} =5 {Won\'t Watch} other {No status}}";
+  static String m9(status) => "${Intl.select(status, {
+            'status_0': 'Без статусу',
+            'status_1': 'Подивився',
+            'status_2': 'Дивлюсь',
+            'status_3': 'Дивитимуся',
+            'status_4': 'Перестав',
+            'status_5': 'Не дивитимусь',
+          })}";
 
   static String m10(message) => "Цей фільм додано до списку \"${message}\"";
 

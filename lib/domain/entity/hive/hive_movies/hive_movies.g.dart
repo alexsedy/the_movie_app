@@ -23,13 +23,14 @@ class HiveMoviesAdapter extends TypeAdapter<HiveMovies> {
       status: fields[3] as int,
       updatedAt: fields[4] as DateTime,
       addedAt: fields[5] as DateTime?,
+      autoSyncDate: fields[6] as DateTime,
     );
   }
 
   @override
   void write(BinaryWriter writer, HiveMovies obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.movieId)
       ..writeByte(1)
@@ -41,7 +42,9 @@ class HiveMoviesAdapter extends TypeAdapter<HiveMovies> {
       ..writeByte(4)
       ..write(obj.updatedAt)
       ..writeByte(5)
-      ..write(obj.addedAt);
+      ..write(obj.addedAt)
+      ..writeByte(6)
+      ..write(obj.autoSyncDate);
   }
 
   @override

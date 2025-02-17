@@ -41,8 +41,14 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m8(message) => "Список \"${message}\" создан.";
 
-  static String m9(Watched, Watching) =>
-      "{count, select, =1 ${Watched} =2 ${Watching} =3 {Going to Watch} =4 {Stopped Watching} =5 {Won\'t Watch} other {No status}}";
+  static String m9(status) => "${Intl.select(status, {
+            'status_0': 'Нет статуса',
+            'status_1': 'Посмотрел',
+            'status_2': 'Смотрю',
+            'status_3': 'Буду смотреть',
+            'status_4': 'Перестал',
+            'status_5': 'Не буду смотреть',
+          })}";
 
   static String m10(message) => "Этот фильм добавлен в список \"${message}\"";
 
@@ -126,7 +132,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "movieExistsInListMessage": m11,
         "movies": MessageLookupByLibrary.simpleMessage("Фильмы"),
         "name": MessageLookupByLibrary.simpleMessage("Название"),
-        "networks": MessageLookupByLibrary.simpleMessage("Телемережі"),
+        "networks": MessageLookupByLibrary.simpleMessage("Телесети"),
         "newList": MessageLookupByLibrary.simpleMessage("Новый список"),
         "noData": MessageLookupByLibrary.simpleMessage("Нет данных"),
         "noLoginAccountMessage": MessageLookupByLibrary.simpleMessage(

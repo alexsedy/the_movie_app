@@ -8,7 +8,6 @@ class LocalMediaTrackingService {
   static const String moviesBoxName = 'movies';
   static const String tvShowsBoxName = 'tv_shows';
 
-  // Инициализация Hive
   static Future<void> init() async {
     await Hive.initFlutter();
     Hive.registerAdapter(HiveMoviesAdapter());
@@ -33,7 +32,7 @@ class LocalMediaTrackingService {
   Future<void> updateMovieStatus({
     required int movieId,
     required int status,
-    required String updatedAt,
+    required DateTime updatedAt,
   }) async {
     try {
       final box = await Hive.openBox<HiveMovies>(moviesBoxName);
@@ -47,8 +46,9 @@ class LocalMediaTrackingService {
         movieTitle: movie.movieTitle,
         releaseDate: movie.releaseDate,
         status: status,
-        updatedAt: DateTime.parse(updatedAt),
+        updatedAt: updatedAt,
         addedAt: movie.addedAt,
+        autoSyncDate: movie.autoSyncDate,
       );
       await box.put(movieId.toString(), updatedMovie);
     } catch (e) {
@@ -98,7 +98,7 @@ class LocalMediaTrackingService {
   Future<void> updateTVShowStatus({
     required int tvShowId,
     required int status,
-    required String updatedAt,
+    required DateTime updatedAt,
   }) async {
     try {
       final box = await Hive.openBox<HiveTvShow>(tvShowsBoxName);
@@ -113,9 +113,10 @@ class LocalMediaTrackingService {
         tvShowName: tvShow.tvShowName,
         firstAirDate: tvShow.firstAirDate,
         status: status,
-        updatedAt: DateTime.parse(updatedAt),
+        updatedAt: updatedAt,
         addedAt: tvShow.addedAt,
         seasons: tvShow.seasons,
+        autoSyncDate: tvShow.autoSyncDate,
       );
       await box.put(tvShowId.toString(), updatedTvShow);
     } catch (e) {
@@ -186,39 +187,97 @@ class LocalMediaTrackingService {
         throw Exception("Season not found");
       }
 
-      // Обновляем статусы всех эпизодов
       final updatedEpisodes = season.episodes?.map((key, episode) {
         return MapEntry(
           key,
           HiveEpisodes(
             episodeId: episode.episodeId,
             airDate: episode.airDate,
-            status: status, // Устанавливаем новый статус
+            status: status,
           ),
         );
       });
 
-      // Создаем обновленный сезон
       final updatedSeason = HiveSeasons(
         seasonId: season.seasonId,
         airDate: season.airDate,
-        status: status, // Устанавливаем новый статус для сезона
-        updatedAt: DateTime.now(), // Обновляем дату изменения
+        status: status,
+        updatedAt: DateTime.now(),
         episodeCount: season.episodeCount,
         episodes: updatedEpisodes,
       );
 
-      // Обновляем данные сериала
       tvShow.seasons?[seasonNumber] = updatedSeason;
 
-      // Сохраняем изменения
-      await box.put(tvShowId.toString(), tvShow);
+      final seasonStatuses = tvShow.seasons!.values.map((s) => s.status).toList();
+      final newTvShowStatus = seasonStatuses.every((status) => status == 1) ? 1 : 2;
+
+      final updatedTvShow = HiveTvShow(
+        tvShowId: tvShow.tvShowId,
+        tvShowName: tvShow.tvShowName,
+        firstAirDate: tvShow.firstAirDate,
+        status: newTvShowStatus,
+        updatedAt: DateTime.now(),
+        addedAt: tvShow.addedAt,
+        seasons: tvShow.seasons,
+        autoSyncDate: tvShow.autoSyncDate,
+      );
+
+      await box.put(tvShowId.toString(), updatedTvShow);
     } catch (e) {
       throw Exception("Error updating season and episodes status: $e");
     }
   }
 
+  //this method don't update TV show status
+  // Future<void> updateSeasonAndEpisodesStatus({
+  //   required int tvShowId,
+  //   required int seasonNumber,
+  //   required int status,
+  // }) async {
+  //   try {
+  //     final box = await Hive.openBox<HiveTvShow>(tvShowsBoxName);
+  //     final tvShow = box.get(tvShowId.toString());
+  //
+  //     if (tvShow == null || tvShow.seasons == null) {
+  //       throw Exception("TV show or seasons not found");
+  //     }
+  //
+  //     final season = tvShow.seasons?[seasonNumber];
+  //     if (season == null) {
+  //       throw Exception("Season not found");
+  //     }
+  //
+  //     final updatedEpisodes = season.episodes?.map((key, episode) {
+  //       return MapEntry(
+  //         key,
+  //         HiveEpisodes(
+  //           episodeId: episode.episodeId,
+  //           airDate: episode.airDate,
+  //           status: status,
+  //         ),
+  //       );
+  //     });
+  //
+  //     final updatedSeason = HiveSeasons(
+  //       seasonId: season.seasonId,
+  //       airDate: season.airDate,
+  //       status: status,
+  //       updatedAt: DateTime.now(),
+  //       episodeCount: season.episodeCount,
+  //       episodes: updatedEpisodes,
+  //     );
+  //
+  //     tvShow.seasons?[seasonNumber] = updatedSeason;
+  //
+  //     await box.put(tvShowId.toString(), tvShow);
+  //   } catch (e) {
+  //     throw Exception("Error updating season and episodes status: $e");
+  //   }
+  // }
+
   // EPISODES METHODS
+
   Future<void> updateEpisodeStatus({
     required int tvShowId,
     required int seasonNumber,
@@ -243,23 +302,19 @@ class LocalMediaTrackingService {
         throw Exception("Episode not found");
       }
 
-      // Обновляем эпизод
       season.episodes![episodeNumber] = HiveEpisodes(
         episodeId: episode.episodeId,
         airDate: episode.airDate,
         status: status,
       );
 
-      // Подсчитываем количество эпизодов со статусом 1
       final completedEpisodes = season.episodes!.values.where((e) => e.status == 1).length;
       final totalEpisodes = season.episodeCount;
 
-      // Определяем новый статус сезона
       final newSeasonStatus = completedEpisodes == totalEpisodes
           ? 1
           : (completedEpisodes > 0 ? 2 : 0);
 
-      // Обновляем сезон
       tvShow.seasons![seasonNumber] = HiveSeasons(
         seasonId: season.seasonId,
         airDate: season.airDate,
@@ -269,12 +324,77 @@ class LocalMediaTrackingService {
         episodes: season.episodes,
       );
 
-      // Сохраняем обновления
-      await box.put(tvShowId.toString(), tvShow);
+      final seasonStatuses = tvShow.seasons!.values.map((s) => s.status).toList();
+      final newTvShowStatus = seasonStatuses.every((status) => status == 1) ? 1 : 2;
+
+      final updatedTvShow = HiveTvShow(
+        tvShowId: tvShow.tvShowId,
+        tvShowName: tvShow.tvShowName,
+        firstAirDate: tvShow.firstAirDate,
+        status: newTvShowStatus,
+        updatedAt: DateTime.now(),
+        addedAt: tvShow.addedAt,
+        seasons: tvShow.seasons,
+        autoSyncDate: tvShow.autoSyncDate,
+      );
+
+      await box.put(tvShowId.toString(), updatedTvShow);
     } catch (e) {
       throw Exception("Error updating episode status: $e");
     }
   }
+  //this method don't update TV show status
+  // Future<void> updateEpisodeStatus({
+  //   required int tvShowId,
+  //   required int seasonNumber,
+  //   required int episodeNumber,
+  //   required int status,
+  // }) async {
+  //   try {
+  //     final box = await Hive.openBox<HiveTvShow>(tvShowsBoxName);
+  //     final tvShow = box.get(tvShowId.toString());
+  //
+  //     if (tvShow == null || tvShow.seasons == null) {
+  //       throw Exception("TV Show or seasons not found");
+  //     }
+  //
+  //     final season = tvShow.seasons?[seasonNumber];
+  //     if (season == null || season.episodes == null) {
+  //       throw Exception("Season or episodes not found");
+  //     }
+  //
+  //     final episode = season.episodes?[episodeNumber];
+  //     if (episode == null) {
+  //       throw Exception("Episode not found");
+  //     }
+  //
+  //     season.episodes![episodeNumber] = HiveEpisodes(
+  //       episodeId: episode.episodeId,
+  //       airDate: episode.airDate,
+  //       status: status,
+  //     );
+  //
+  //     final completedEpisodes = season.episodes!.values.where((e) => e.status == 1).length;
+  //     final totalEpisodes = season.episodeCount;
+  //
+  //     final newSeasonStatus = completedEpisodes == totalEpisodes
+  //         ? 1
+  //         : (completedEpisodes > 0 ? 2 : 0);
+  //
+  //     tvShow.seasons![seasonNumber] = HiveSeasons(
+  //       seasonId: season.seasonId,
+  //       airDate: season.airDate,
+  //       status: newSeasonStatus,
+  //       updatedAt: DateTime.now(),
+  //       episodeCount: season.episodeCount,
+  //       episodes: season.episodes,
+  //     );
+  //
+  //     await box.put(tvShowId.toString(), tvShow);
+  //   } catch (e) {
+  //     throw Exception("Error updating episode status: $e");
+  //   }
+  // }
 
 
 // Utility methods

@@ -54,7 +54,6 @@ class _SeriesNameWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(name),
         airDate != null
           ? Text(
               "${context.l10n.episode}: $episodeNumber $releaseText",
@@ -63,7 +62,8 @@ class _SeriesNameWidget extends StatelessWidget {
           : Text(
               "${context.l10n.episode}: $episodeNumber",
               style: const TextStyle(fontStyle: FontStyle.italic),
-            )
+            ),
+        Text(name),
       ],
     );
   }
