@@ -108,26 +108,37 @@ class _MovieNameWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<MovieDetailsModel>(context);
     final releaseDate = model?.mediaDetails?.releaseDate;
+    final title = model?.mediaDetails?.title;
+    final originalTitle = model?.mediaDetails?.originalTitle;
     final releaseText = releaseDate != null && releaseDate.isNotEmpty
         ? " (${releaseDate.substring(0, 4)})" : "";
+    final locale = Localizations.localeOf(context);
 
     return RichText(
       maxLines: 3,
       text: TextSpan(
         children: [
           TextSpan(
-            text: model?.mediaDetails?.title,
+            text: title,
             style: const TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 21,
             ),
           ),
+          // TextSpan(
+          //   text: releaseText,
+          //     style: const TextStyle(
+          //       fontWeight: FontWeight.w400,
+          //       fontSize: 16,
+          //     )
+          // ),
+          if(locale.languageCode != "en" && title != originalTitle)
           TextSpan(
-            text: releaseText,
-              style: const TextStyle(
-                fontWeight: FontWeight.w400,
-                fontSize: 16,
-              )
+            text: "\n$originalTitle",
+            style: const TextStyle(
+              fontWeight: FontWeight.w400,
+              fontSize: 12,
+            )
           ),
         ]
       ),

@@ -30,7 +30,6 @@ class MovieDetailsModel extends ChangeNotifier implements IBaseMediaDetailsModel
   bool _isFavorite = false;
   bool _isWatched = false;
   bool _isRated = false;
-  // bool _isFBLinked = false;
   double _rate = 0;
   late int _currentPage;
   late int _totalPage;
@@ -64,8 +63,6 @@ class MovieDetailsModel extends ChangeNotifier implements IBaseMediaDetailsModel
   @override
   set rate(value) => _rate = value;
 
-  // bool get isFBlinked => _isFBLinked;
-
   @override
   int? get currentStatus => _currentStatus;
 
@@ -88,14 +85,8 @@ class MovieDetailsModel extends ChangeNotifier implements IBaseMediaDetailsModel
 
     await _getMovieStatus();
 
-    // await _getFBStatus();
-
     notifyListeners();
   }
-
-  // Future<void> _getFBStatus() async {
-  //   _isFBLinked = await AccountManager.getFBLinkStatus();
-  // }
 
   Future<void> _getMovieStatus() async {
     final cachedMovie = await _localMediaTrackingService.getMovieById(
@@ -105,27 +96,25 @@ class MovieDetailsModel extends ChangeNotifier implements IBaseMediaDetailsModel
 
   @override
   Future<void> toggleFavorite(BuildContext context) async {
-    final a = BackgroundSyncWithLocal();
-    await a.syncLocalData();
-    // try {
-    //   await _apiClient.addToFavorite(movieId: _movieId, isFavorite: !_isFavorite,);
-    //   _isFavorite = !_isFavorite;
-    //   notifyListeners();
-    //   SnackBarMessageHandler.showSuccessSnackBar(
-    //     context: context,
-    //     message: _isFavorite
-    //         ? "The movie has been added to the favorite list."
-    //         : "The movie has been removed from the favorite list."
-    //   );
-    // } on ApiClientException catch (e) {
-    //   if(e.type == ApiClientExceptionType.sessionExpired) {
-    //     SnackBarMessageHandler.showErrorSnackBarWithLoginButton(context);
-    //     return;
-    //   } else {
-    //     SnackBarMessageHandler.showErrorSnackBar(context);
-    //     return;
-    //   }
-    // }
+    try {
+      await _apiClient.addToFavorite(movieId: _movieId, isFavorite: !_isFavorite,);
+      _isFavorite = !_isFavorite;
+      notifyListeners();
+      SnackBarMessageHandler.showSuccessSnackBar(
+        context: context,
+        message: _isFavorite
+            ? "The movie has been added to the favorite list."
+            : "The movie has been removed from the favorite list."
+      );
+    } on ApiClientException catch (e) {
+      if(e.type == ApiClientExceptionType.sessionExpired) {
+        SnackBarMessageHandler.showErrorSnackBarWithLoginButton(context);
+        return;
+      } else {
+        SnackBarMessageHandler.showErrorSnackBar(context);
+        return;
+      }
+    }
   }
 
   @override

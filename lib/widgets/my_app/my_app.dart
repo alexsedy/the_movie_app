@@ -30,20 +30,20 @@ class MyApp extends StatelessWidget {
         Locale("ru", "US"),
       ],
       localeResolutionCallback: (locale, supportedLocales) {
-        final userLocale = model?.locale;
-        if (userLocale != null) {
-          return userLocale;
-        }
+        // final userLocale = model?.locale;
+        // if (userLocale != null) {
+        //   return userLocale;
+        // }
+        //
+        // for (var supportedLocale in supportedLocales) {
+        //   if (supportedLocale.languageCode == locale?.languageCode
+        //       && supportedLocale.countryCode == locale?.countryCode) {
+        //     model?.setCurrentLocale(supportedLocale);
+        //     return supportedLocale;
+        //   }
+        // }
 
-        for (var supportedLocale in supportedLocales) {
-          if (supportedLocale.languageCode == locale?.languageCode
-              && supportedLocale.countryCode == locale?.countryCode) {
-            model?.setCurrentLocale(supportedLocale);
-            return supportedLocale;
-          }
-        }
-
-        const defaultLocale = Locale('en', 'US');
+        const defaultLocale = Locale('ru', 'US');
         model?.setCurrentLocale(defaultLocale);
         return defaultLocale;
       },

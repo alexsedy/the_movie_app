@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/account_api_client.dart';
 import 'package:the_movie_app/domain/api_client/api_client.dart';
 import 'package:the_movie_app/domain/api_client/tv_show_api_client.dart';
+import 'package:the_movie_app/domain/cache_management/account_management.dart';
 import 'package:the_movie_app/domain/cache_management/local_media_tracking_service.dart';
 import 'package:the_movie_app/domain/entity/account/account_state/account_state.dart';
 import 'package:the_movie_app/domain/entity/account/user_lists/user_lists.dart';
@@ -23,7 +24,6 @@ import 'package:the_movie_app/models/interfaces/i_base_media_details_model.dart'
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 
 class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsModel{
   final _apiClient = TvShowApiClient();
@@ -93,7 +93,7 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
   Future<void> loadTvShowDetails() async {
     _tvShowDetails = await _apiClient.getTvShowById(_seriesId);
     _tvShowState = await _apiClient.getTvShowState(_seriesId);
-    
+
     if(_tvShowState != null) {
       _isFavorite = _tvShowState?.favorite ?? false;
       _isWatched = _tvShowState?.watchlist ?? false;
@@ -114,6 +114,16 @@ class TvShowDetailsModel extends ChangeNotifier implements IBaseMediaDetailsMode
       final seasonDetails = await Future.wait(futures);
       _seasonsList.addAll(seasonDetails);
     }
+
+    // if (seasons != null) {
+    //   final futures = seasons.map((s) {
+    //     return _apiClient.getSeason(_seriesId, s.seasonNumber);
+    //   }).toList();
+    //
+    //   Future.wait(futures).then((seasons) {
+    //     _seasonsList.addAll(seasons);
+    //   });
+    // }
 
     await _getTvShowStatus();
 
