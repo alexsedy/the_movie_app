@@ -3,11 +3,11 @@ import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/account_api_client.dart';
 import 'package:the_movie_app/domain/entity/account/items_to_delete/remove_items.dart';
 import 'package:the_movie_app/domain/entity/account/user_list_details/user_list_details.dart';
-import 'package:the_movie_app/helpers/event_bus.dart';
+import 'package:the_movie_app/helpers/event_helper.dart';
 import 'package:the_movie_app/widgets/list_screens/user_list/list_update_event_bus.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
-class ListDetailsModel extends ChangeNotifier {
+class DetailsUserListsModel extends ChangeNotifier {
   final ScrollController _scrollController = ScrollController();
   final int listId;
   final _accountApiClient = AccountApiClient();
@@ -20,7 +20,7 @@ class ListDetailsModel extends ChangeNotifier {
   final _dateFormat = DateFormat.yMMMMd();
   final _listOfItemsToDelete = ListOfItemsToRemove([]);
 
-  ListDetailsModel({required this.listId});
+  DetailsUserListsModel({required this.listId});
 
   ScrollController get scrollController => _scrollController;
   List<UserListResult> get listOfUserListDetails => List.unmodifiable(_listOfUserListDetails);
@@ -99,7 +99,7 @@ class ListDetailsModel extends ChangeNotifier {
     _selectedIndexes.clear();
     resetList();
     await loadContent();
-    Events.eventBus.fire(ListUpdateEvent(
+    EventHelper.eventBus.fire(ListUpdateEvent(
         listId,
         userListDetails?.itemCount ?? 0
     ));

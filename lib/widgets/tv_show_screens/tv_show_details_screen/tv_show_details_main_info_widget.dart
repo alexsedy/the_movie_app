@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:the_movie_app/constants/images_const/app_images.dart';
 import 'package:the_movie_app/helpers/converter_helper.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
-import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/models/models/parameterized_horizontal_widget_model.dart';
-import 'package:the_movie_app/widgets/widget_elements/list_elements/params_media_details_list_widget.dart';
-import 'package:the_movie_app/widgets/widget_elements/list_elements/parameterized_media_crew_widget.dart';
+import 'package:the_movie_app/provider/provider.dart';
+import 'package:the_movie_app/widgets/tv_show_screens/tv_show_details_screen/tv_show_details_model.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
-import 'package:the_movie_app/widgets/widget_elements/media_details_elements/belongs_to_collection_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/list_elements/parameterized_media_crew_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/list_elements/params_media_details_list_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/favorite_button_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/list_button_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/rate_button_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/watchlist_button_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/media_details_elements/belongs_to_collection_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/overview_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/score_and_trailer_widget.dart';
-import 'package:the_movie_app/widgets/tv_show_screens/tv_show_details_screen/tv_show_details_model.dart';
 
 class TvShowDetailsMainInfoWidget extends StatelessWidget {
   const TvShowDetailsMainInfoWidget({super.key});
@@ -49,8 +49,8 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
               model: model,
             ),
             WatchlistButtonWidget<TvShowDetailsModel>(
-              mediaDetailsElementType: MediaDetailsElementType.tv,
               model: model,
+              mediaDetailsElementType: MediaDetailsElementType.tv,
             ),
             RateButtonWidget<TvShowDetailsModel>(
               mediaDetailsElementType: MediaDetailsElementType.tv,
@@ -98,6 +98,7 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
             action: model.onSeasonDetailsScreen,
             additionalText: context.l10n.seasons,
             altImagePath: AppImages.noPoster,
+            statuses: ConverterHelper.convertWatchedSeasonsStatuses(model.seasonWatchStatuses),
           ),
           secondAction: () => model.onSeasonsListScreen(context, seasons),
         ),
@@ -158,6 +159,7 @@ class _SummaryTvShowWidget extends StatelessWidget {
     final firstAirDate = model?.mediaDetails?.firstAirDate;
     // final lastAirDate = model?.tvShowDetails?.lastAirDate;
     final ratingsList = tvShowDetails?.contentRatings?.ratingsList;
+    final status = tvShowDetails?.status;
 
     var countriesList = <String>[];
     var genresList = <String>[];
@@ -243,6 +245,18 @@ class _SummaryTvShowWidget extends StatelessWidget {
                     fontSize: textSize,
                   )
               ),
+              if(status != null)
+                TextSpan(
+                  text: genres.isNotEmpty ? " ● " : "",
+                  style: TextStyle(fontSize: textSize,),
+                ),
+              if(status != null)
+                TextSpan(
+                    text: status,
+                    style: TextStyle(
+                      fontSize: textSize,
+                    )
+                ),
             ]
         ),
       ),

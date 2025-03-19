@@ -50,13 +50,14 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
   void initState() {
     super.initState();
     _locale = Provider.read<MyAppModel>(context)?.locale;
+    accountModel.checkLoginStatus();
+    accountModel.checkLinkingStatus();
     movieListModel.loadContent();
     tvShowListModel.loadContent();
-    accountModel.checkLoginStatus();
   }
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     super.didChangeDependencies();
     final routeArguments = ModalRoute.of(context)?.settings.arguments;
     if(routeArguments != null) {

@@ -22,6 +22,7 @@ class _ParameterizedPaginationVerticalListWidgetState extends State<Parameterize
   @override
   void initState() {
     super.initState();
+
     var scrollController = widget.paramModel.scrollController;
 
     if(scrollController != null) {
@@ -52,6 +53,8 @@ class _ParameterizedPaginationVerticalListWidgetState extends State<Parameterize
 
   @override
   Widget build(BuildContext context) {
+    final statuses = widget.paramModel.statuses ?? [];
+
     return ListView.builder(
       itemExtent: 163,
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -153,7 +156,17 @@ class _ParameterizedPaginationVerticalListWidgetState extends State<Parameterize
                     widget.paramModel.action(context, index);
                   },
                 ),
-              )
+              ),
+              if(statuses.any((e) =>
+                e.id == widget.paramModel.list[index].id && e.status != 0))
+                Positioned(
+                    top: 5,
+                    right: 5,
+                    child: Icon(
+                      Icons.bookmark,
+                      color: Colors.blueAccent.withAlpha(180),
+                    ),
+                ),
             ],
           ),
         );

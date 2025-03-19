@@ -1,4 +1,7 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/domain/cache_management/local_media_tracking_service.dart';
+import 'package:the_movie_app/firebase_options.dart';
 import 'package:the_movie_app/l10n/generated/l10n.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/my_app/my_app.dart';
@@ -6,6 +9,11 @@ import 'package:the_movie_app/widgets/my_app/my_app_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await LocalMediaTrackingService.init();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform
+  );
 
   final model = MyAppModel();
 

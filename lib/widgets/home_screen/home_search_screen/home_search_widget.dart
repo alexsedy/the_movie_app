@@ -141,6 +141,7 @@ class _MovieListWidget extends StatelessWidget {
         action: model.onMovieScreen,
         scrollController: model.movieScrollController,
         list: ConverterHelper.convertMoviesForVerticalWidget(model.movies),
+        statuses: ConverterHelper.convertMovieStatuses(model.movieStatuses),
       ),
       loadMoreItems: () => model.loadMovies(),
     );
@@ -182,6 +183,7 @@ class _TvShowListWidget extends StatelessWidget {
         altImagePath: AppImages.noPoster,
         scrollController: model.tvScrollController,
         list: ConverterHelper.convertTVShowsForVerticalWidget(model.tvs),
+        statuses: ConverterHelper.convertTvShowStatuses(model.tvShowStatuses),
       ),
       loadMoreItems: model.loadTvShows,
     );

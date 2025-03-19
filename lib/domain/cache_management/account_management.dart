@@ -10,6 +10,7 @@ abstract class AccountManager {
   static const String _accountIdKey = 'account_id';
   static const String _languageCodeKey = 'language';
   static const String _countryCodeKey = 'country';
+  static const String _linkWithFirebase = 'link_with_firebase';
 
   static Future<AccountSate> getAccountData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -71,37 +72,28 @@ abstract class AccountManager {
     await prefs.remove(_countryCodeKey);
   }
 
-  // static Future<String?> getUserLanguage() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   return prefs.getString(_languageCodeKey);
-  // }
-  //
-  // static Future<void> setUserLanguage(String? value) async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   if (value != null) {
-  //     prefs.setString(_languageCodeKey, value);
-  //   }
-  // }
-  //
-  // static Future<void> resetUserLanguage() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   prefs.remove(_languageCodeKey);
-  // }
-  //
-  // static Future<String?> getUserCountry() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   return prefs.getString(_countryCodeKey);
-  // }
-  //
-  // static Future<void> setUserCountry(String? value) async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   if (value != null) {
-  //     prefs.setString(_countryCodeKey, value);
-  //   }
-  // }
-  //
-  // static Future<void> resetUserCountry() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   prefs.remove(_countryCodeKey);
-  // }
+  static Future<bool> getFBLinkStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final status = prefs.getBool(_linkWithFirebase);
+
+    if(status != null) {
+      try {
+        return status;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    return false;
+  }
+
+  static Future<void> setFBLinkStatus(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool(_linkWithFirebase, value);
+  }
+
+  static Future<void> resetFBLinkStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove(_linkWithFirebase);
+  }
 }

@@ -50,6 +50,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
         action: model.onMovieScreen,
         scrollController: model.scrollController,
         list: ConverterHelper.convertMoviesForVerticalWidget(model.movies),
+        statuses: ConverterHelper.convertMovieStatuses(model.movieStatuses),
       ),
       loadMoreItems: () => model.loadContent(),
     );

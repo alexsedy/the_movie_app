@@ -2,22 +2,27 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/domain/api_client/movie_api_client.dart';
+import 'package:the_movie_app/domain/cache_management/local_media_tracking_service.dart';
+import 'package:the_movie_app/domain/entity/hive/hive_movies/hive_movies.dart';
 import 'package:the_movie_app/domain/entity/media/list/list.dart';
+import 'package:the_movie_app/helpers/event_helper.dart';
 import 'package:the_movie_app/models/interfaces/i_media_filter_model.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
 
 class MovieListModel extends ChangeNotifier with FilterMovieListModelMixin {
-  final ScrollController _scrollController = ScrollController();
+  final _scrollController = ScrollController();
   final _apiClient = MovieApiClient();
   final _movies = <MediaList>[];
   int _currentPage = 0;
   int _totalPage = 1;
-  late String _locale;
   var _isMovieLoadingInProgress = false;
+  final _movieStatuses = <HiveMovies>[];
+  late final Future<void> _initMovieStatuses = _getMovieStatuses();
+  StreamSubscription? _subscription;
 
   List<MediaList> get movies => List.unmodifiable(_movies);
-
   ScrollController get scrollController => _scrollController;
+  List<HiveMovies> get movieStatuses => List.unmodifiable(_movieStatuses);
 
   @override
   Future<void> loadContent() async {
@@ -27,6 +32,8 @@ class MovieListModel extends ChangeNotifier with FilterMovieListModelMixin {
     } else {
       await _loadMovies();
     }
+
+    await _initMovieStatuses;
   }
 
   Future<void> _loadMovies() async {
@@ -82,6 +89,21 @@ class MovieListModel extends ChangeNotifier with FilterMovieListModelMixin {
     }
   }
 
+  Future<void> _getMovieStatuses() async {
+    final localMediaTrackingService = LocalMediaTrackingService();
+    final movies = await localMediaTrackingService.getAllMovies();
+    _movieStatuses.addAll(movies);
+
+    _subscription = EventHelper.eventBus.on<bool>().listen((event) async {
+      if(event) {
+        _movieStatuses.clear();
+        final movies = await localMediaTrackingService.getAllMovies();
+        _movieStatuses.addAll(movies);
+        notifyListeners();
+      }
+    });
+  }
+
   @override
   void clearAllFilters() {
     clearFilterValue();
@@ -126,9 +148,11 @@ class MovieListModel extends ChangeNotifier with FilterMovieListModelMixin {
     resetList();
   }
 
-  // void setupLocale(BuildContext context) {
-  //   final locale = Localizations.localeOf(context);
-  // }
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
+  }
 }
 
 mixin FilterMovieListModelMixin implements IMediaFilter {

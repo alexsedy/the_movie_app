@@ -83,7 +83,7 @@
   "seriesGuestStars": "Приглашенные звезды",
   "tvShowCrew": "Съемочная группа сериала",
   "tvShowCast": "Актерский состав сериала",
-  "networks": "Телемережі",
+  "networks": "Телесети",
   "recommendationTvShows": "Рекомендованные сериалы",
   "addToTheList": "Добавить в список",
   "list": "Список",
@@ -111,5 +111,6 @@
   "clearAll": "Очистить все",
   "theRatingWasDeletedSuccessfully": "Оценка была успешно удалена.",
   "movieExistsInListMessage": "Этот фильм уже есть в списке \"{name}\".",
-  "tvExistsInListMessage": "Этот сериал уже есть в списке \"{name}\"."
+  "tvExistsInListMessage": "Этот сериал уже есть в списке \"{name}\".",
+  "mediaStatus": "{status, select, status_0 {Нет статуса} status_1 {Посмотрел} status_2 {Смотрю} status_3 {Буду смотреть} status_4 {Перестал} status_5 {Не буду смотреть}}"
 }

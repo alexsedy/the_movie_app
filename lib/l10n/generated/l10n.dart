@@ -1187,6 +1187,24 @@ class S {
       args: [name],
     );
   }
+
+  /// `{status, select, status_0 {No status} status_1 {Watched} status_2 {Watching} status_3 {Going to Watch} status_4 {Stopped Watching} status_5 {Won't Watch}}`
+  String mediaStatus(Object status) {
+    return Intl.select(
+      status,
+      {
+        'status_0': 'No status',
+        'status_1': 'Watched',
+        'status_2': 'Watching',
+        'status_3': 'Going to Watch',
+        'status_4': 'Stopped Watching',
+        'status_5': 'Won\'t Watch',
+      },
+      name: 'mediaStatus',
+      desc: '',
+      args: [status],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

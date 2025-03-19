@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:the_movie_app/domain/data_providers/session_data_provider.dart';
 
 enum ApiClientExceptionType {
   network, auth, other, incorrectRequest, sessionExpired, loginNotApproved, notFound

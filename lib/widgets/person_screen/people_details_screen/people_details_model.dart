@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/people_api_client.dart';
+import 'package:the_movie_app/domain/cache_management/local_media_tracking_service.dart';
+import 'package:the_movie_app/domain/entity/hive/hive_movies/hive_movies.dart';
+import 'package:the_movie_app/domain/entity/hive/hive_tv_show/hive_tv_show.dart';
 import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
 import 'package:the_movie_app/domain/entity/person/details/person_details.dart';
 import 'package:the_movie_app/widgets/navigation/main_navigation.dart';
@@ -13,6 +16,10 @@ class PeopleDetailsModel extends ChangeNotifier{
   final _dateFormat = DateFormat.yMMMMd();
   final List<CreditList> _movieCreditList = [];
   final List<CreditList> _tvShowCreditList = [];
+  final _localMediaTrackingService = LocalMediaTrackingService();
+  final _movieStatuses = <HiveMovies>[];
+  final _tvShowStatuses = <HiveTvShow>[];
+  // StreamSubscription? _subscription;
   final order = {
     'Actor': 0,
     'Directing': 1,
@@ -31,6 +38,8 @@ class PeopleDetailsModel extends ChangeNotifier{
   List<CreditList> get movieCreditList => _movieCreditList;
   List<CreditList> get tvShowCreditList => _tvShowCreditList;
   PersonDetails? get personDetails => _personDetails;
+  List<HiveMovies> get movieStatuses => List.unmodifiable(_movieStatuses);
+  List<HiveTvShow> get tvShowStatuses => List.unmodifiable(_tvShowStatuses);
 
   PeopleDetailsModel(this._personId);
 
@@ -40,6 +49,16 @@ class PeopleDetailsModel extends ChangeNotifier{
 
     await _addAndSortMovieCredits();
     await _addAndSortTvShowCredits();
+    await _getTvShowStatuses();
+    await _getMovieStatuses();
+
+    // _subscription = EventHelper.eventBus.on<bool>().listen((event) async {
+    //   if (event) {
+    //     await _getTvShowStatuses();
+    //     await _getMovieStatuses();
+    //     notifyListeners();
+    //   }
+    // });
   }
 
   Future<void> _addAndSortMovieCredits() async {
@@ -76,6 +95,18 @@ class PeopleDetailsModel extends ChangeNotifier{
       }
       return departmentComparison;
     });
+  }
+
+  Future<void> _getMovieStatuses() async {
+    _movieStatuses.clear();
+    final movies = await _localMediaTrackingService.getAllMovies();
+    _movieStatuses.addAll(movies);
+  }
+
+  Future<void> _getTvShowStatuses() async {
+    _tvShowStatuses.clear();
+    final tvShows = await _localMediaTrackingService.getAllTVShows();
+    _tvShowStatuses.addAll(tvShows);
   }
 
   void onMovieDetailsTab(BuildContext context, int index) {
@@ -153,5 +184,11 @@ class PeopleDetailsModel extends ChangeNotifier{
     }
 
     return releaseDate.substring(0, 4);
+  }
+
+  @override
+  void dispose() {
+    // _subscription?.cancel();
+    super.dispose();
   }
 }

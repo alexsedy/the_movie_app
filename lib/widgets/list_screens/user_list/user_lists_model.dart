@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:the_movie_app/domain/api_client/account_api_client.dart';
 import 'package:the_movie_app/domain/entity/account/user_lists/user_lists.dart';
-import 'package:the_movie_app/helpers/event_bus.dart';
+import 'package:the_movie_app/helpers/event_helper.dart';
 import 'package:the_movie_app/helpers/snack_bar_helper.dart';
 import 'package:the_movie_app/helpers/snack_bar_message_handler.dart';
 import 'package:the_movie_app/models/interfaces/i_base_user_lists_model.dart';
@@ -24,7 +24,7 @@ class UserListsModel extends ChangeNotifier implements IBaseUserListsModel {
   int _listIndex = -1;
 
   UserListsModel() {
-    _subscription = Events.eventBus.on<ListUpdateEvent>().listen((event) {
+    _subscription = EventHelper.eventBus.on<ListUpdateEvent>().listen((event) {
       final index = _lists.indexWhere((list) => list.id == event.listId);
       if (index != -1) {
         _lists[index].numberOfItems = event.newCount;

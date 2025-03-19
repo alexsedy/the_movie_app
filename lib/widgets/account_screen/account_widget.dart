@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sign_in_button/sign_in_button.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/account_screen/account_model.dart';
@@ -15,6 +16,7 @@ class _AccountWidgetState extends State<AccountWidget> {
   void initState() {
     super.initState();
     NotifierProvider.read<AccountModel>(context)?.checkLoginStatus();
+    NotifierProvider.read<AccountModel>(context)?.checkLinkingStatus();
   }
 
   @override
@@ -165,55 +167,158 @@ class _LogoutButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<AccountModel>(context);
     final isLoggedIn = model?.isLoggedIn;
+    final isLinked = model?.isLinked;
 
     if(isLoggedIn == null) {
       return const SizedBox.shrink();
     }
 
-    return ElevatedButton(
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text(context.l10n.confirmLeaveMessage),
-              content: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text(context.l10n.cancel),
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (context) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
+    if(isLinked == null) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      children: [
+        ElevatedButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text(context.l10n.confirmLeaveMessage),
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text(context.l10n.cancel),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            },
                           );
+                          await model?.makeLogout(context);
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
                         },
-                      );
-                      await model?.makeLogout(context);
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(context.l10n.yes),
+                        child: Text(context.l10n.yes),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                );
+              },
             );
           },
-        );
-      },
-      // onPressed: () => model?.makeLogout(context),
-      style: ButtonStyle(
-        backgroundColor: WidgetStatePropertyAll(Colors.redAccent.shade100),
-      ),
-      child: Text(context.l10n.logout),
+          // onPressed: () => model?.makeLogout(context),
+          style: ButtonStyle(
+            backgroundColor: WidgetStatePropertyAll(Colors.redAccent.shade100),
+          ),
+          child: Text(context.l10n.logout),
+        ),
+        isLinked
+            ? ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: WidgetStatePropertyAll(Colors.redAccent.shade100),
+          ),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text("Are you sure you want to unlink your account?"),
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text(context.l10n.cancel),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            },
+                          );
+                          await model?.unlinkAccount();
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(context.l10n.yes),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+          child: Text("Unlink account"),
+        )
+            : ElevatedButton(
+          onPressed: () {
+            showAdaptiveDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog.adaptive(
+                  title: Text("Link your account with My Movie"),
+                  actions: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Link your TMDB account to My Movie to get benefits:",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        SizedBox(height: 10,),
+                        Text("• AI-powered playlist generation by genre."),
+                        Text("• AI-powered playlist generation by description."),
+                        Text("• Tracking movies and TV shows (including individual episodes)."),
+                        Text("• Receive notifications about the release of new episodes."),
+                        Text("• Receive notifications about movie release dates."),
+                        Center(
+                          child: Column(
+                            children: [
+                              SignInButton(Buttons.google, onPressed: () async {
+                                showDialog (
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  },
+                                );
+                                await model?.linkAccountWithGoogle(context);
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
+                                // Navigator.pop(context);
+                              }),
+                              SignInButton(Buttons.apple, onPressed: () {}),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          child: Text("Link account"),
+        ),
+      ],
     );
-
   }
 }
 
@@ -225,7 +330,7 @@ class _ColorPaletteWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const CircleAvatar(
-      radius: 50,
+      radius: 40,
       backgroundColor: Colors.greenAccent,
     );
   }
@@ -238,12 +343,16 @@ class _AccountBodyWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<AccountModel>(context);
 
+    if(model == null) {
+      return const SizedBox.shrink();
+    }
+
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: InkWell(
-            onTap: () => model?.onUserLists(context),
+            onTap: () => model.onUserLists(context),
             borderRadius: BorderRadius.circular(12),
             child: Container(
               decoration: BoxDecoration(
@@ -278,7 +387,7 @@ class _AccountBodyWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: InkWell(
-            onTap: () => model?.onFavoriteList(context),
+            onTap: () => model.onFavoriteList(context),
             borderRadius: BorderRadius.circular(12),
             child: Container(
               decoration: BoxDecoration(
@@ -313,7 +422,7 @@ class _AccountBodyWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: InkWell(
-            onTap: () => model?.onWatchlistList(context),
+            onTap: () => model.onWatchlistList(context),
             borderRadius: BorderRadius.circular(12),
             child: Container(
               decoration: BoxDecoration(
@@ -348,7 +457,7 @@ class _AccountBodyWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: InkWell(
-            onTap: () => model?.onRatedList(context),
+            onTap: () => model.onRatedList(context),
             borderRadius: BorderRadius.circular(12),
             child: Container(
               decoration: BoxDecoration(
@@ -383,7 +492,7 @@ class _AccountBodyWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: InkWell(
-            onTap: () => model?.onRecommendationList(context),
+            onTap: () => model.onRecommendationList(context),
             borderRadius: BorderRadius.circular(12),
             child: Container(
               decoration: BoxDecoration(
@@ -415,10 +524,11 @@ class _AccountBodyWidget extends StatelessWidget {
             ),
           ),
         ),
+        if(model.isLinked)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: InkWell(
-            onTap: () => model?.onAIFeatureScreen(context),
+            onTap: () => model.onAIFeatureScreen(context),
             borderRadius: BorderRadius.circular(12),
             child: Container(
               decoration: BoxDecoration(

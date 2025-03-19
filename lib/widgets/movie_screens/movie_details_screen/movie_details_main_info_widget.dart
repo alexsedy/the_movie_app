@@ -7,11 +7,12 @@ import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/widget_elements/list_elements/params_media_details_list_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/list_elements/parameterized_media_crew_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/enum_collection.dart';
+import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/watchlist_button_widget.dart';
+import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/watchlist_button_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/belongs_to_collection_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/favorite_button_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/list_button_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/rate_button_widget.dart';
-import 'package:the_movie_app/widgets/widget_elements/media_details_elements/action_buttons/watchlist_button_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/overview_widget.dart';
 import 'package:the_movie_app/widgets/widget_elements/media_details_elements/score_and_trailer_widget.dart';
 import 'package:the_movie_app/widgets/movie_screens/movie_details_screen/movie_details_model.dart';
@@ -59,9 +60,17 @@ class _MovieDetailsWidget extends StatelessWidget {
               model: model,
             ),
             WatchlistButtonWidget<MovieDetailsModel>(
-              mediaDetailsElementType: MediaDetailsElementType.movie,
               model: model,
+              mediaDetailsElementType: MediaDetailsElementType.movie,
             ),
+            // model.isFBlinked
+            //   ? FbWatchlistButtonWidget<MovieDetailsModel>(
+            //       model: model,
+            //     )
+            //   : WatchlistButtonWidget<MovieDetailsModel>(
+            //       mediaDetailsElementType: MediaDetailsElementType.movie,
+            //       model: model,
+            //     ),
             RateButtonWidget<MovieDetailsModel>(
               mediaDetailsElementType: MediaDetailsElementType.movie,
               model: model,
@@ -144,6 +153,7 @@ class _SummaryMovieWidget extends StatelessWidget {
     final releaseDate = model?.formatDate(movieDetails?.releaseDate);
     var countriesList = <String>[];
     var genresList = <String>[];
+    final status = movieDetails?.status;
 
     if(movieDetails != null) {
       final productionCountries = movieDetails.productionCountries;
@@ -227,6 +237,18 @@ class _SummaryMovieWidget extends StatelessWidget {
                     fontSize: textSize,
                   )
               ),
+              if(status != null)
+                TextSpan(
+                  text: genres.isNotEmpty ? " ● " : "",
+                  style: TextStyle(fontSize: textSize,),
+                ),
+              if(status != null)
+                TextSpan(
+                    text: status,
+                    style: TextStyle(
+                      fontSize: textSize,
+                    )
+                ),
             ]
         ),
       ),

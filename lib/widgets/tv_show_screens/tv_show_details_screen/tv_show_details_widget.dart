@@ -30,9 +30,6 @@ class _TvShowDetailsWidgetState extends State<TvShowDetailsWidget> {
           SliverAppBar(
             stretch: true,
             pinned: true,
-            onStretchTrigger: () async {
-              NotifierProvider.read<TvShowDetailsModel>(context)?.loadTvShowDetails();
-            },
             stretchTriggerOffset: 200.0,
             expandedHeight: 183.0,
             flexibleSpace: const _HeaderWidget(),
@@ -107,27 +104,38 @@ class _MovieNameWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<TvShowDetailsModel>(context);
     final firstAirDate = model?.mediaDetails?.firstAirDate;
+    final name = model?.mediaDetails?.name;
+    final originalName = model?.mediaDetails?.originalName;
     final releaseText = firstAirDate != null && firstAirDate.isNotEmpty
         ? " (${firstAirDate.substring(0, 4)})" : "";
+    final locale = Localizations.localeOf(context);
 
     return RichText(
       maxLines: 3,
       text: TextSpan(
         children: [
           TextSpan(
-            text: model?.mediaDetails?.name,
+            text: name,
             style: const TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 21,
             ),
           ),
-          TextSpan(
-            text: releaseText,
-              style: const TextStyle(
-                fontWeight: FontWeight.w400,
-                fontSize: 16,
-              )
-          ),
+          // TextSpan(
+          //   text: releaseText,
+          //     style: const TextStyle(
+          //       fontWeight: FontWeight.w400,
+          //       fontSize: 16,
+          //     )
+          // ),
+          if(locale.languageCode != "en" && name != originalName)
+            TextSpan(
+                text: "\n$originalName",
+                style: const TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 12,
+                )
+            ),
         ]
       ),
     );
