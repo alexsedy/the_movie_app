@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:the_movie_app/domain/entity/media/media_details/media_details.dart';
 import 'package:the_movie_app/domain/entity/person/credits_people/credits.dart';
 import 'package:the_movie_app/provider/provider.dart';
 import 'package:the_movie_app/widgets/ai_feature_screen/ai_feature_start_sreen/ai_feature_start_model.dart';
@@ -57,6 +56,7 @@ abstract class MainNavigationRouteNames {
   static const aiRecommendationByGenre = "/ai_recommendation_by_genre";
   static const aiRecommendationList = "/ai_recommendation_list";
   static const aiRecommendationByDescription = "/ai_recommendation_by_description";
+  static const authApprove = "/auth_approve";
 }
 
 class MainNavigation {
@@ -64,7 +64,7 @@ class MainNavigation {
     MainNavigationRouteNames.mainScreen : (context) => const MainScreenWidget(),
   };
 
-  Route<Object> onGenerateRoute(RouteSettings settings) {
+  Route<Object>? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case MainNavigationRouteNames.movieDetails:
         final arguments = settings.arguments;
@@ -192,7 +192,6 @@ class MainNavigation {
 
       case MainNavigationRouteNames.homeSearch:
         final arguments = settings.arguments;
-        // final searchController = arguments is TextEditingController ? arguments : TextEditingController();
         final args = arguments is Map ? arguments : {};
         final searchController = args["searchController"];
         final index = args["index"];
@@ -239,6 +238,9 @@ class MainNavigation {
               ),
               child: const AiRecommendationListScreenWidget()),
         );
+
+      case MainNavigationRouteNames.authApprove:
+        return null;
 
       default:
         const widget = Text('Navigation error!!!');
