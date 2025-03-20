@@ -148,20 +148,13 @@ class AccountModel extends ChangeNotifier {
 
   Future<void> _handleAuthDeepLink(String requestToken, BuildContext context) async {
     try {
-      // Uri? initialUri = await getInitialUri();
-      // if (initialUri != null) {
-      //   _handleAuthDeepLink(initialUri);
-      // }
       final appLinks = AppLinks();
       _sub = appLinks.uriLinkStream.listen((Uri? uri) async {
         if (uri != null) {
-          if(uri.path == '/auth_approve') {
+          if(uri.path == MainNavigationRouteNames.authApprove) {
             final authData = await _apiClientAuth.createAccessToken(requestToken: requestToken);
             final accountId = authData.accountId;
             final accessToken = authData.accessToken;
-            if (context.mounted) {
-              Navigator.canPop(context);
-            }
             _sub?.cancel();
             if(accountId != null && accessToken != null) {
               await SessionDataProvider.setAccessToken(accessToken);
