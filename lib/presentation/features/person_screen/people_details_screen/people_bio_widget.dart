@@ -126,7 +126,7 @@ class _GeneralInfoWidget extends StatelessWidget {
                 children: [
                   if (person?.deathday != null) ...[
                     Text(context.l10n.dateOfDeath),
-                    Text(deathDay ?? context.l10n.unknown),
+                    Text(deathDay),
                   ],
                 ],
               ),

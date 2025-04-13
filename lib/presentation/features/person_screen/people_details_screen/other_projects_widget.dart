@@ -192,7 +192,7 @@ class _MoviesButtonWidget extends StatelessWidget {
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Text(releaseDate != null && releaseDate.isNotEmpty
+                                            Text(releaseDate.isNotEmpty
                                                 ? releaseDate : context.l10n.unknown,
                                               style: const TextStyle(
                                                 fontSize: 18,
@@ -223,8 +223,7 @@ class _MoviesButtonWidget extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-                                    if(movieStatuses != null
-                                        && movieStatuses.any((e)
+                                    if(movieStatuses.any((e)
                                         => movieCreditList[index].id == e.movieId
                                             && e.status != 0))
                                       Positioned(
@@ -429,7 +428,7 @@ class _TvShowButtonWidget extends StatelessWidget {
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Text(firstAirDate != null && firstAirDate.isNotEmpty
+                                            Text(firstAirDate.isNotEmpty
                                                 ? firstAirDate : context.l10n.unknown,
                                               style: const TextStyle(
                                                 fontSize: 18,
@@ -460,8 +459,7 @@ class _TvShowButtonWidget extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-                                    if(tvShowStatuses != null
-                                        && tvShowStatuses.any((e)
+                                    if(tvShowStatuses.any((e)
                                         => tvShowCreditList[index].id == e.tvShowId
                                             && e.status != 0))
                                       Positioned(

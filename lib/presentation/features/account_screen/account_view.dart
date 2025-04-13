@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_in_button/sign_in_button.dart';
-import 'package:the_movie_app/data/models/account/account_state/account_state.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
-import 'package:the_movie_app/presentation/features/account_screen/account_model.dart';
 import 'package:the_movie_app/presentation/features/account_screen/viewmodel/account_viewmodel.dart';
 
 class AccountView extends StatelessWidget {
@@ -99,9 +97,7 @@ class AccountView extends StatelessWidget {
 }
 
 class _LoginButtonWidget extends StatelessWidget {
-  const _LoginButtonWidget({
-    super.key,
-  });
+  const _LoginButtonWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +106,7 @@ class _LoginButtonWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child:  ElevatedButton(
-        onPressed: () => model?.makeLogin(context),
+        onPressed: () => model.makeLogin(context),
         child: Text(context.l10n.login),
       ),
     );
@@ -277,7 +273,7 @@ class _LogoutButtonWidget extends StatelessWidget {
                                     );
                                   },
                                 );
-                                await model?.linkAccountWithGoogle(context);
+                                await model.linkAccountWithGoogle(context);
                                 Navigator.of(context).pop();
                                 Navigator.of(context).pop();
                                 // Navigator.pop(context);
