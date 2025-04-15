@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:the_movie_app/l10n/generated/l10n.dart';
 import 'package:the_movie_app/presentation/features/navigation/main_navigation.dart';
+import 'package:the_movie_app/theme/app_theme.dart';
 
 class MyApp extends StatelessWidget {
   static final mainNavigation = MainNavigation();
@@ -44,6 +45,9 @@ class MyApp extends StatelessWidget {
       },
       routes: mainNavigation.routes,
       onGenerateRoute: mainNavigation.onGenerateRoute,
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system,
     );
   }
 }
