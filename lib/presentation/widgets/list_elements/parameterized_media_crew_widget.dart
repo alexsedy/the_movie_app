@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/presentation/presentation_models/models/parameterized_horizontal_widget_model.dart';
 
 class ParameterizedMediaCrewWidget extends StatelessWidget {
@@ -9,27 +10,22 @@ class ParameterizedMediaCrewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const styleOfName = TextStyle(fontSize: 16,);
-    const styleOfRole = TextStyle(fontSize: 16, fontStyle: FontStyle.italic);
-
     if (paramsModel.list.isEmpty) {
-      return const SizedBox.shrink();
+      return AppSpacing.emptyGap;
     } else if (paramsModel.list.length == 1) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
+            padding: AppSpacing.screenPaddingAll6,
             child: InkWell(
               borderRadius: BorderRadius.circular(24),
               onTap: () => secondAction(),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: AppSpacing.screenPaddingH10V4,
                 child: Text(
                   paramsModel.additionalText,
-                  style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
             ),
@@ -37,7 +33,7 @@ class ParameterizedMediaCrewWidget extends StatelessWidget {
           SizedBox(
             height: 55,
             child: Padding (
-              padding: const EdgeInsets.only(left: 56),
+              padding: AppSpacing.screenPaddingL56,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -47,10 +43,12 @@ class ParameterizedMediaCrewWidget extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(paramsModel.list[0].firstLine ?? "", style: styleOfName,
+                        Text(paramsModel.list[0].firstLine ?? "",
+                          style: Theme.of(context).textTheme.bodyLarge,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,),
-                        Text(paramsModel.list[0].secondLine ?? "", style: styleOfRole,
+                        Text(paramsModel.list[0].secondLine ?? "",
+                          style: Theme.of(context).textTheme.bodySmall,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,),
                       ],
@@ -68,17 +66,15 @@ class ParameterizedMediaCrewWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
+          padding: AppSpacing.screenPaddingAll6,
           child: InkWell(
             borderRadius: BorderRadius.circular(24),
             onTap: () => secondAction(),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: AppSpacing.screenPaddingH10V4,
               child: Text(
                 paramsModel.additionalText,
-                style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
           ),
@@ -90,7 +86,7 @@ class ParameterizedMediaCrewWidget extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               return Padding(
-                padding: const EdgeInsets.only(left: 56),
+                padding: AppSpacing.screenPaddingL56,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -101,12 +97,12 @@ class ParameterizedMediaCrewWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(paramsModel.list[index * 2].firstLine ?? "",
-                            style: styleOfName,
+                            style: Theme.of(context).textTheme.bodyLarge,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(paramsModel.list[index * 2].secondLine ?? "",
-                            style: styleOfRole,
+                            style: Theme.of(context).textTheme.bodyMedium,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -120,12 +116,12 @@ class ParameterizedMediaCrewWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(paramsModel.list[index * 2 + 1].firstLine ?? "",
-                            style: styleOfName,
+                            style: Theme.of(context).textTheme.bodyLarge,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(paramsModel.list[index * 2 + 1].secondLine ?? "",
-                            style: styleOfRole,
+                            style: Theme.of(context).textTheme.bodyMedium,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),

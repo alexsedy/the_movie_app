@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/presentation/features/person_screen/viewmodel/people_details_viewmodel.dart';
@@ -13,7 +14,7 @@ class ImageGallery extends StatelessWidget {
     final profiles = person?.images?.profiles;
 
     if (profiles == null || profiles.isEmpty) {
-      return const SizedBox.shrink();
+      return AppSpacing.emptyGap;
     }
 
     final images = profiles.map((e) => e.filePath).toList();
@@ -22,13 +23,10 @@ class ImageGallery extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 10, bottom: 10),
+          padding: AppSpacing.screenPaddingH16V10,
           child: Text(
             context.l10n.imageGallery,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 24,
-            ),
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
         ),
         SizedBox(
@@ -52,7 +50,7 @@ class ImageGallery extends StatelessWidget {
                 child: Hero(
                   tag: index.toString(),
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: AppSpacing.screenPaddingAll10,
                     child: Container(
                       clipBehavior: Clip.hardEdge,
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(24)),

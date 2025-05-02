@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:provider/provider.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/core/constants/images_const/app_images.dart';
 import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
 import 'package:the_movie_app/data/models/person/credits_people/credits.dart';
@@ -32,7 +33,7 @@ class _BodyWidget extends StatelessWidget {
     final crews = model.crew;
 
     if (crews.isEmpty) {
-    return const SizedBox.shrink();
+    return AppSpacing.emptyGap;
   }
 
    return GroupedListView<Crew, String>(
@@ -42,10 +43,10 @@ class _BodyWidget extends StatelessWidget {
      useStickyGroupSeparators: true,
      groupHeaderBuilder: (c) {
        return Padding(
-         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+         padding: AppSpacing.screenPaddingH16V10,
          child: Text(
            c.department,
-           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+           style: Theme.of(context).textTheme.titleMedium,
          ),
        );},
      indexedItemBuilder: (context, crew, index) {
@@ -56,21 +57,21 @@ class _BodyWidget extends StatelessWidget {
        return SizedBox(
          height: 163,
          child: Padding(
-           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+           padding: AppSpacing.screenPaddingH16V10,
            child: Stack(
              children: [
                Container(
                  decoration: BoxDecoration(
-                     color: Colors.white,
-                     border: Border.all(color: Colors.black.withOpacity(0.2)),
-                     borderRadius: const BorderRadius.all(Radius.circular(10)),
-                     boxShadow: [
-                       BoxShadow(
-                         color: Colors.black.withOpacity(0.1),
-                         blurRadius: 8,
-                         offset: const Offset(1, 2),
-                       )
-                     ],
+                   color: Theme.of(context).colorScheme.surface,
+                   border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
+                   borderRadius: const BorderRadius.all(Radius.circular(10)),
+                   boxShadow: [
+                     BoxShadow(
+                       color: Colors.black.withOpacity(0.1),
+                       blurRadius: 8,
+                       offset: const Offset(1, 2),
+                     )
+                   ],
                  ),
                  clipBehavior: Clip.hardEdge,
                  child: Row(
@@ -94,20 +95,18 @@ class _BodyWidget extends StatelessWidget {
                      ),
                      Expanded(
                        child: Padding(
-                         padding: const EdgeInsets.only(
-                             left: 15, right: 10, bottom: 1),
+                         padding: AppSpacing.screenPaddingL16R10B2,
                          child: Column(
                            crossAxisAlignment: CrossAxisAlignment.start,
                            children: [
-                             const SizedBox(height: 15,),
+                             AppSpacing.gapH16,
                                Text(
                                  name ?? "",
-                                 style: const TextStyle(
-                                     fontWeight: FontWeight.bold),
+                                 style: Theme.of(context).textTheme.bodyLarge,
                                  maxLines: 1,
                                  overflow: TextOverflow.ellipsis,
                                ),
-                               const SizedBox(height: 15,),
+                             AppSpacing.gapH16,
                                Expanded(
                                  child: Text(
                                    job,

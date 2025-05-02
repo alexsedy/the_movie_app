@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
+import 'package:the_movie_app/core/constants/widget_size.dart';
 
 class ColorListShimmerSkeletonWidget extends StatelessWidget {
   const ColorListShimmerSkeletonWidget({super.key});
@@ -12,10 +14,10 @@ class ColorListShimmerSkeletonWidget extends StatelessWidget {
       child: ListView.builder(
         itemCount: 5,
         physics: const NeverScrollableScrollPhysics(),
-        itemExtent: 180,
+        itemExtent: WidgetSize.size180,
         itemBuilder: (BuildContext context, int index) {
           return const Padding(
-            padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            padding: AppSpacing.screenPaddingAll10,
             child: Card(
               color: Colors.white,
               clipBehavior: Clip.hardEdge,

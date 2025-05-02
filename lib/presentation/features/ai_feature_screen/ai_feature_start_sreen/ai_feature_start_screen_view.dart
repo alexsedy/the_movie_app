@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/core/constants/images_const/app_images.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/presentation/features/ai_feature_screen/ai_feature_start_sreen/viewmodel/ai_feature_start_viewmodel.dart';
@@ -29,15 +30,15 @@ class _BodyWidget extends StatelessWidget {
     final model = context.read<AiFeatureStartViewModel>();
 
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: AppSpacing.screenPaddingAll10,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             context.l10n.discoverGeminiAiMessage,
-            style: TextStyle(fontSize: 26),
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
-          SizedBox(height: 40,),
+          AppSpacing.gapH40,
           RunningColorBorder(
             radius: 50,
             child: ElevatedButton(
@@ -47,14 +48,14 @@ class _BodyWidget extends StatelessWidget {
                 child: Row(
                   children: [
                     Image.asset(AppImages.geminiIcon, height: 50,),
-                    SizedBox(width: 20,),
+                    AppSpacing.gapW20,
                     Text(context.l10n.generateListByGenres),
                   ],
                 ),
               ),
             ),
           ),
-          SizedBox(height: 40,),
+          AppSpacing.gapH40,
           RunningColorBorder(
             radius: 50,
             child: ElevatedButton(
@@ -64,47 +65,13 @@ class _BodyWidget extends StatelessWidget {
                 child: Row(
                   children: [
                     Image.asset(AppImages.geminiIcon, height: 50,),
-                    SizedBox(width: 20,),
+                    AppSpacing.gapW20,
                     Text(context.l10n.generateListByDescription),
                   ],
                 ),
               ),
             ),
           ),
-          // SizedBox(height: 40,),
-          // RunningColorBorder(
-          //   radius: 50,
-          //   child: ElevatedButton(
-          //     onPressed: () {},
-          //     child: SizedBox(
-          //       height: 100,
-          //       child: Row(
-          //         children: [
-          //           Image.asset(AppImages.geminiIcon, height: 50,),
-          //           SizedBox(width: 20,),
-          //           Text(""),
-          //         ],
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          // SizedBox(height: 40,),
-          // RunningColorBorder(
-          //   radius: 50,
-          //   child: ElevatedButton(
-          //     onPressed: () {},
-          //     child: SizedBox(
-          //       height: 100,
-          //       child: Row(
-          //         children: [
-          //           Image.asset(AppImages.geminiIcon, height: 50,),
-          //           SizedBox(width: 20,),
-          //           Text(""),
-          //         ],
-          //       ),
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );

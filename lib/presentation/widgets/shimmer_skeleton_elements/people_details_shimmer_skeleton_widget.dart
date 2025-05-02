@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 
 
@@ -12,7 +13,7 @@ class PeopleDetailsShimmerSkeletonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 8, left: 8, bottom: 8),
+      padding: AppSpacing.screenPaddingH10,
       child: Shimmer.fromColors(
         baseColor: Colors.grey.withOpacity(0.5),
         highlightColor: Colors.white.withOpacity(0.5),
@@ -37,7 +38,7 @@ class PeopleDetailsShimmerSkeletonWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 10,),
+                    AppSpacing.gapW10,
                     Expanded(
                       child: Column(
                         children: [
@@ -48,15 +49,10 @@ class PeopleDetailsShimmerSkeletonWidget extends StatelessWidget {
                           ),
                           Column(
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 30),
-                                child: Text(
-                                  context.l10n.socialNetwork,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                                ),
+                              AppSpacing.gapH32,
+                              Text(
+                                context.l10n.socialNetwork,
+                                style: Theme.of(context).textTheme.titleMedium,
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -108,7 +104,7 @@ class PeopleDetailsShimmerSkeletonWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10,),
+                AppSpacing.gapH10,
                 Column(
                   children: [
                     Row(
@@ -142,7 +138,7 @@ class PeopleDetailsShimmerSkeletonWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20,),
+                    AppSpacing.gapH20,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -173,44 +169,40 @@ class PeopleDetailsShimmerSkeletonWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20,),
+                    AppSpacing.gapH20,
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8,),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: AppSpacing.screenPaddingH16V10,
+                      child: Text(
                         context.l10n.biography,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24,
-                        ),
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      const SizedBox(height: 10,),
-                      Container(
+                    ),
+                    Padding(
+                      padding: AppSpacing.screenPaddingH10,
+                      child: Container(
                         height: 100,
                         color: Colors.white,
                       ),
-                      const Icon(Icons.keyboard_arrow_down,),
-                    ],
-                  ),
+                    ),
+                    const Icon(Icons.keyboard_arrow_down,),
+                  ],
                 ),
               ],
             ),
-            const SizedBox(height: 10,),
+            AppSpacing.gapH10,
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 10, bottom: 10),
+                  padding: AppSpacing.screenPaddingH16V10,
                   child: Text(
                     context.l10n.imageGallery,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                    ),
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
                 ),
                 SizedBox(
@@ -221,7 +213,7 @@ class PeopleDetailsShimmerSkeletonWidget extends StatelessWidget {
                     itemCount: 3,
                     itemBuilder: (context, index) {
                       return Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: AppSpacing.screenPaddingAll10,
                         child: Container(
                           clipBehavior: Clip.hardEdge,
                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(24)),

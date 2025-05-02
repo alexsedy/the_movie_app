@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/presentation/presentation_models/interfaces/i_base_media_details_model.dart';
 import 'package:the_movie_app/presentation/widgets/enum_collection.dart';
@@ -28,23 +29,20 @@ class _OverviewWidgetState extends State<OverviewWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          padding: AppSpacing.screenPaddingH16V10,
           child: Text(
             context.l10n.overview,
-            style: const TextStyle(
-                fontSize: 21, 
-                fontWeight: 
-                FontWeight.w700
-            ),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
         if(tagline != null && tagline != "") Padding(
-          padding: const EdgeInsets.all(10),
+          padding: AppSpacing.screenPaddingAll10,
           child: Text("\"$tagline\"",
-            style: const TextStyle(fontSize: 21, fontStyle: FontStyle.italic),),
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
         ),
         Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: AppSpacing.screenPaddingAll10,
           child: InkWell(
             onTap: () {
               setState(() {
@@ -67,7 +65,7 @@ class _OverviewWidgetState extends State<OverviewWidget> {
                   ),
                 ),
                 overview != null && overview.length <= 190
-                    ? const SizedBox.shrink()
+                    ? AppSpacing.emptyGap
                     : Icon(
                   _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
                 ),

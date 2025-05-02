@@ -6,7 +6,11 @@ abstract class SnackBarMessageHandler {
   static void showSuccessSnackBar({required BuildContext context, required String message}) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       duration: const Duration(seconds: 5),
-      content: Text(message, style: TextStyle(fontSize: 20),),
+      content: Text(message,
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+          color: Theme.of(context).colorScheme.onInverseSurface
+        ),
+      ),
     ));
   }
 
@@ -15,7 +19,9 @@ abstract class SnackBarMessageHandler {
       duration: const Duration(seconds: 5),
       content: Text(
         context.l10n.anErrorHasOccurredTryAgainLater,
-        style: const TextStyle(fontSize: 20),
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            color: Theme.of(context).colorScheme.onInverseSurface
+        ),
       ),
     ));
   }
@@ -23,7 +29,12 @@ abstract class SnackBarMessageHandler {
   static void showSuccessSnackBarWithPop({required BuildContext context, required String message}) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       duration: const Duration(seconds: 5),
-      content: Text(message, style: TextStyle(fontSize: 20),),
+      content: Text(
+        message,
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            color: Theme.of(context).colorScheme.onInverseSurface
+        ),
+      ),
     ));
     Navigator.pop(context);
   }
@@ -33,7 +44,9 @@ abstract class SnackBarMessageHandler {
       duration: const Duration(seconds: 5),
       content: Text(
         context.l10n.anErrorHasOccurredTryAgainLater,
-        style: const TextStyle(fontSize: 20),
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            color: Theme.of(context).colorScheme.onInverseSurface
+        ),
       ),
     ));
     Navigator.pop(context);
@@ -45,7 +58,12 @@ abstract class SnackBarMessageHandler {
       content: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(context.l10n.youAreNotLoggedIn, style: const TextStyle(fontSize: 20),),
+          Text(
+            context.l10n.youAreNotLoggedIn,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: Theme.of(context).colorScheme.onInverseSurface
+            ),
+          ),
           ElevatedButton(
             onPressed: () => Navigator.of(context).pushNamed(MainNavigationRouteNames.mainScreen, arguments: 3),
             child: Text(context.l10n.login),

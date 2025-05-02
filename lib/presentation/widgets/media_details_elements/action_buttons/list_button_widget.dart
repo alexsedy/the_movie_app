@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/core/helpers/date_format_helper.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/presentation/presentation_models/interfaces/i_base_media_details_model.dart';
@@ -36,46 +37,44 @@ class ListButtonWidget<T extends IBaseMediaDetailsModel> extends StatelessWidget
                       } else {
                         return Column(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 24),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    context.l10n.addToTheList,
-                                    style: const TextStyle(fontSize: 22),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Text(
+                                  context.l10n.addToTheList,
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                                AppSpacing.gapH20,
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
 
-                                      showModalBottomSheet(
-                                          context: context,
-                                          showDragHandle: true,
-                                          isScrollControlled: true,
-                                          elevation: 0.2,
-                                          shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
-                                          ),
-                                          builder: (BuildContext context) {
-                                            return SingleChildScrollView(
-                                              reverse: true,
-                                              child: Container(
-                                                  padding: EdgeInsets.only(
-                                                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                                                  ),
-                                                  child: CreateListWidget(model: model,)
-                                              ),
-                                            );
-                                          }
-                                      );
-                                    },
-                                    child: Text(context.l10n.newList),
-                                  ),
-                                ],
-                              ),
+                                    showModalBottomSheet(
+                                        context: context,
+                                        showDragHandle: true,
+                                        isScrollControlled: true,
+                                        elevation: 0.2,
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+                                        ),
+                                        builder: (BuildContext context) {
+                                          return SingleChildScrollView(
+                                            reverse: true,
+                                            child: Container(
+                                                padding: EdgeInsets.only(
+                                                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                                                ),
+                                                child: CreateListWidget(model: model,)
+                                            ),
+                                          );
+                                        }
+                                    );
+                                  },
+                                  child: Text(context.l10n.newList),
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 10,),
+                            AppSpacing.gapH10,
                             Container(height: 1, width: double.infinity, color: Colors.grey,),
                             Flexible(
                               child: ListView.builder(
@@ -89,7 +88,7 @@ class ListButtonWidget<T extends IBaseMediaDetailsModel> extends StatelessWidget
                                   final listId = lists.id;
 
                                   return Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: AppSpacing.screenPaddingAll10,
                                     child: ListTile(
                                       onTap: () => model.addItemListToList(context: context, listId: listId, name: name),
                                       minLeadingWidth: 20,
@@ -99,27 +98,21 @@ class ListButtonWidget<T extends IBaseMediaDetailsModel> extends StatelessWidget
                                           : Icon(Icons.lock_outline, color: Colors.redAccent[700],),
                                       title: Text(
                                         name,
-                                        style: const TextStyle(
-                                          fontSize: 22,
-                                        ),
+                                        style: Theme.of(context).textTheme.titleLarge,
                                       ),
                                       subtitle: Row(
                                         children: [
                                           Text(
                                             context.l10n.itemNumberOfItems(numberOfItems),
-                                            style: const TextStyle(
-                                              fontStyle: FontStyle.italic,
-                                            ),
+                                            style: Theme.of(context).textTheme.bodyMedium,
                                           ),
                                           const Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 10),
+                                            padding: AppSpacing.screenPaddingH10,
                                             child: Text("|"),
                                           ),
                                           Text(
                                             createdAt,
-                                            style: const TextStyle(
-                                              fontStyle: FontStyle.italic,
-                                            ),
+                                            style: Theme.of(context).textTheme.bodyMedium,
                                           ),
                                         ],
                                       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/presentation/presentation_models/interfaces/i_base_user_lists_model.dart';
 
@@ -28,14 +29,14 @@ class _CreateListWidgetState extends State<CreateListWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: AppSpacing.screenPaddingH16V10,
       child: Column(
         children: [
           Text(
             context.l10n.createANewList,
-            style: const TextStyle(fontSize: 22),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
-          const SizedBox(height: 30,),
+          AppSpacing.gapH32,
           TextField(
             controller: _nameController,
             textCapitalization: TextCapitalization.sentences,
@@ -46,11 +47,11 @@ class _CreateListWidgetState extends State<CreateListWidget> {
             decoration: InputDecoration(
               hintText: context.l10n.name,
               border: const OutlineInputBorder(),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              contentPadding: AppSpacing.screenPaddingH10V20,
               isCollapsed: true,
             ),
           ),
-          const SizedBox(height: 30,),
+          AppSpacing.gapH32,
           TextField(
             controller: _descriptionController,
             textCapitalization: TextCapitalization.sentences,
@@ -61,21 +62,19 @@ class _CreateListWidgetState extends State<CreateListWidget> {
             decoration: InputDecoration(
               hintText: context.l10n.description,
               border: const OutlineInputBorder(),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              contentPadding: AppSpacing.screenPaddingH10V20,
               isCollapsed: true,
             ),
           ),
-          const SizedBox(height: 20,),
+          AppSpacing.gapH20,
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: AppSpacing.screenPaddingH10,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   context.l10n.public,
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 Switch(
                   value: _isPublic,
@@ -88,7 +87,7 @@ class _CreateListWidgetState extends State<CreateListWidget> {
               ],
             ),
           ),
-          const SizedBox(height: 30,),
+          AppSpacing.gapH32,
           ElevatedButton(
             statesController: _createButtonController,
             onPressed: _nameController.text.isNotEmpty
@@ -101,7 +100,7 @@ class _CreateListWidgetState extends State<CreateListWidget> {
                 : null,
             child: Text(context.l10n.create),
           ),
-          const SizedBox(height: 20,),
+          AppSpacing.gapH20,
         ],
       ),
     );

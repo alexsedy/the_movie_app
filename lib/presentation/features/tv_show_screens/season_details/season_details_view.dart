@@ -53,10 +53,6 @@ class _AppBarText extends StatelessWidget {
         if(seriesCount != null && date != null)
         Text(
           context.l10n.episodesSeriesCountDate(seriesCount, date),
-          style: const TextStyle(
-            fontStyle: FontStyle.italic,
-            color: Colors.grey,
-          ),
         ),
       ],
     );

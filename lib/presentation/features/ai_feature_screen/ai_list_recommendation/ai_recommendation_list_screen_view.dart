@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/core/constants/images_const/app_images.dart';
+import 'package:the_movie_app/core/constants/widget_size.dart';
 import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
 import 'package:the_movie_app/data/models/media/list/list.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
@@ -33,7 +35,7 @@ class AiRecommendationListView extends StatelessWidget {
             }
             return ListView.builder(
                 itemCount: recommendations.length,
-                itemExtent: 163,
+                itemExtent: WidgetSize.size180,
                 keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                 itemBuilder: (BuildContext context, int index) {
                   final item = recommendations[index];
@@ -46,13 +48,13 @@ class AiRecommendationListView extends StatelessWidget {
                   final firstAirDate = item.firstAirDate;
 
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    padding: AppSpacing.screenPaddingH16V10,
                     child: Stack(
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(color: Colors.black.withOpacity(0.2)),
+                              color: Theme.of(context).colorScheme.surface,
+                              border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
                               borderRadius: const BorderRadius.all(Radius.circular(10)),
                               boxShadow: [
                                 BoxShadow(
@@ -81,34 +83,30 @@ class AiRecommendationListView extends StatelessWidget {
                               ),
                               Expanded(
                                 child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 15, right: 10, bottom: 1),
+                                  padding: AppSpacing.screenPaddingL16R10B2,
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      const SizedBox(height: 15,),
+                                      const SizedBox(height: AppSpacing.p16,),
                                         Text(
                                           title ?? name ?? "",
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold
-                                          ),
+                                          style: Theme.of(context).textTheme.bodyLarge,
                                         ),
-                                        const SizedBox(height: 5,),
+                                      AppSpacing.gapH6,
                                         Text(
                                           releaseDate ?? firstAirDate ?? "",
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                              color: Colors.grey
-                                          ),
+                                          style: Theme.of(context).textTheme.bodySmall,
                                         ),
-                                        const SizedBox(height: 10,),
+                                      AppSpacing.gapH10,
                                         Text(
                                           overview ?? "",
                                           maxLines: 3,
                                           overflow: TextOverflow.ellipsis,
+                                          style: Theme.of(context).textTheme.bodyMedium,
                                         ),
                                     ],
                                   ),

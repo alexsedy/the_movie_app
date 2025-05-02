@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/core/constants/images_const/app_images.dart';
 import 'package:the_movie_app/core/helpers/converter_helper.dart';
 import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
@@ -75,7 +76,6 @@ class _HeaderSearchBar extends StatelessWidget {
     return Container(
       height: 45.0,
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: TextField(
@@ -83,11 +83,14 @@ class _HeaderSearchBar extends StatelessWidget {
         focusNode: viewModel.searchFocusNode,
         textInputAction: TextInputAction.search,
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+          contentPadding: AppSpacing.screenPaddingH16V10,
           border: InputBorder.none,
-          hintText: context.l10n.search,
+          hintText: context.l10n.searchGlobalSearchHint,
           suffixIcon: IconButton(
-            icon: Icon(Icons.clear, color: Colors.grey[600]),
+            icon: Icon(
+              Icons.clear,
+              // color: Colors.grey[600],
+            ),
             onPressed: () => viewModel.searchController.clear(),
           ),
         ),
@@ -189,9 +192,9 @@ class _MediaCollectionListWidget extends StatelessWidget {
         if (index >= viewModel.collections.length) {
           if(viewModel.isCollectionLoadingInProgress) {
             context.read<HomeSearchViewModel>().loadCollections();
-            return const Center(child: Padding(padding: EdgeInsets.all(8.0), child: CircularProgressIndicator()));
+            return const Center(child: Padding(padding: AppSpacing.screenPaddingAll10, child: CircularProgressIndicator()));
           } else {
-            return const SizedBox.shrink();
+            return AppSpacing.emptyGap;
           }
         }
 
@@ -200,7 +203,7 @@ class _MediaCollectionListWidget extends StatelessWidget {
         final name = collection.name;
 
         return Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: AppSpacing.screenPaddingAll10,
           child: SizedBox(
             height: 150,
             child: Stack(
@@ -245,8 +248,8 @@ class _MediaCollectionListWidget extends StatelessWidget {
                   contentPadding: EdgeInsets.zero,
                   title: Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(name, /*...*/),
+                      padding: AppSpacing.screenPaddingAll10,
+                      child: Text(name,),
                     ),
                   ),
                 ),
