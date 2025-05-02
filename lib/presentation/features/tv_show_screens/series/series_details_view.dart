@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/core/constants/images_const/app_images.dart';
 import 'package:the_movie_app/core/helpers/converter_helper.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
@@ -37,7 +38,7 @@ class _SeriesNameWidget extends StatelessWidget {
     final episodeNumber = model.episodeNumber;
 
     if(name == null) {
-      return const SizedBox.shrink();
+      return AppSpacing.emptyGap;
     }
 
     return Column(
@@ -67,7 +68,7 @@ class _BodyDetails extends StatelessWidget {
     final mediaDetails = model.mediaDetails;
 
     if(mediaDetails == null) {
-      return const SizedBox.shrink();
+      return AppSpacing.emptyGap;
     }
 
     final overview = mediaDetails.overview;
@@ -79,11 +80,11 @@ class _BodyDetails extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 20,),
+          AppSpacing.gapH20,
           _WatchListButton(),
 
           if(overview != null && overview.isNotEmpty)
-          const SizedBox(height: 20,),
+            AppSpacing.gapH20,
 
           if(overview != null && overview.isNotEmpty)
           OverviewWidget<SeriesDetailsViewModel>(
@@ -122,7 +123,7 @@ class _BodyDetails extends StatelessWidget {
             ),
             secondAction: () => model.onGuestCastListScreen(context, guestStars),
           ),
-          const SizedBox(height: 20,),
+          AppSpacing.gapH20,
         ],
       ),
     );
@@ -138,7 +139,7 @@ class _WatchListButton extends StatelessWidget {
     final currentStatus = context.select<SeriesDetailsViewModel, int?>((m) => m.currentStatus);
 
     if(currentStatus == null) {
-      return SizedBox.shrink();
+      return AppSpacing.emptyGap;
     }
 
     return Center(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/core/constants/images_const/app_images.dart';
 import 'package:the_movie_app/core/helpers/converter_helper.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
@@ -32,7 +33,7 @@ class _BodyWidget extends StatelessWidget {
     final cast = model.cast;
 
     if (cast.isEmpty) {
-    return const SizedBox.shrink();
+    return AppSpacing.emptyGap;
   }
 
     return ParameterizedVerticalListWidget(

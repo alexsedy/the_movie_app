@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/presentation/features/ai_feature_screen/by_description/viewmodel/ai_recommendation_by_description_viewmodel.dart';
 
@@ -47,17 +48,17 @@ class _BodyWidgetState extends State<_BodyWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      padding: AppSpacing.screenPaddingAll10,
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 20),
+            AppSpacing.gapH20,
             Text(
               context.l10n.writeADescriptionAiMessage,
               style: const TextStyle(fontSize: 20),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 20),
+            AppSpacing.gapH20,
             TextField(
               controller: _textController,
               textCapitalization: TextCapitalization.sentences,
@@ -73,7 +74,7 @@ class _BodyWidgetState extends State<_BodyWidget> {
                 // counterText: "${_textController.text.length} / 500",
               ),
             ),
-            const SizedBox(height: 20),
+            AppSpacing.gapH20,
             Text(
               context.l10n.selectMaxNumberOfItems,
               style: const TextStyle(fontSize: 20),
@@ -90,7 +91,7 @@ class _BodyWidgetState extends State<_BodyWidget> {
               max: 100,
               divisions: 99,
             ),
-            const SizedBox(height: 20),
+            AppSpacing.gapH20,
             SizedBox(
               height: 50,
               width: 300,

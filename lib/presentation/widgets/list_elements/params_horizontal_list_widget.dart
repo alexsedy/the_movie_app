@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/presentation/presentation_models/models/parameterized_horizontal_widget_model.dart';
@@ -17,7 +18,7 @@ class ParameterizedHorizontalListWidget extends StatelessWidget {
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: paramModel.list.length,
-          itemExtent: 125,
+          itemExtent: AppSpacing.p130,
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           itemBuilder: (BuildContext context, int index) {
 
@@ -39,7 +40,7 @@ class ParameterizedHorizontalListWidget extends StatelessWidget {
             }
 
             return Padding(
-              padding: const EdgeInsets.all(8),
+              padding: AppSpacing.screenPaddingAll10,
               child: Stack(
                 children: [
                   Container(
@@ -86,7 +87,7 @@ class ParameterizedHorizontalListWidget extends StatelessWidget {
                             children: [
                               if(firstLine != null && firstLine.isNotEmpty)
                               Padding(
-                                padding: const EdgeInsets.only(left: 4, right: 2, top: 5),
+                                padding: AppSpacing.screenPaddingAll6,
                                 child: Text(
                                   firstLine,
                                   maxLines: firstMaxLine,
@@ -99,7 +100,7 @@ class ParameterizedHorizontalListWidget extends StatelessWidget {
                               ),
                               if(secondLine != null && secondLine.isNotEmpty)
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 4, right: 2, top: 5, bottom: 5),
+                                  padding: AppSpacing.screenPaddingAll6,
                                   child: Text(
                                     secondLine,
                                     maxLines: 1,
@@ -112,7 +113,7 @@ class ParameterizedHorizontalListWidget extends StatelessWidget {
                                 ),
                               if(thirdLine != null && thirdLine.isNotEmpty)
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 4, right: 2, top: 5, bottom: 5),
+                                  padding: AppSpacing.screenPaddingAll6,
                                   child: Text(
                                     thirdLine,
                                     maxLines: thirdMaxLine,
@@ -147,27 +148,24 @@ class ParameterizedHorizontalListWidget extends StatelessWidget {
                   Container(
                     height: 24,
                     child: Center(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 2),
-                        child: Container(
-                          clipBehavior: Clip.hardEdge,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(24),
-                            color: statuses[index].status == 1
-                                ? Colors.green.withValues(alpha: 0.9)
-                                : statuses[index].status == 2
-                                  ? Colors.blue.withValues(alpha: 0.9)
-                                  : Colors.black.withValues(alpha: 0.9),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 6),
-                            child: Text(
-                              textAlign: TextAlign.center,
-                              context.l10n.mediaStatus("status_${statuses[index].status}"),
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                              ),
+                      child: Container(
+                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(24),
+                          color: statuses[index].status == 1
+                              ? Colors.green.withValues(alpha: 0.9)
+                              : statuses[index].status == 2
+                                ? Colors.blue.withValues(alpha: 0.9)
+                                : Colors.black.withValues(alpha: 0.9),
+                        ),
+                        child: Padding(
+                          padding: AppSpacing.screenPaddingH10,
+                          child: Text(
+                            textAlign: TextAlign.center,
+                            context.l10n.mediaStatus("status_${statuses[index].status}"),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
                             ),
                           ),
                         ),

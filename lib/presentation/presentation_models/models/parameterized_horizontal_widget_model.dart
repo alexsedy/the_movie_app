@@ -15,7 +15,7 @@ class ParameterizedWidgetModel{
   final String additionalText;
 
 
-  ParameterizedWidgetModel({this.boxHeight = 280, this.statuses,
+  ParameterizedWidgetModel({this.boxHeight = 300, this.statuses,
     this.aspectRatio = 500 / 750, this.paddingEdgeInsets = 0.0,
     this.altImagePath = "", required this.list, required this.action,
     this.scrollController, this.additionalText = "NULL",

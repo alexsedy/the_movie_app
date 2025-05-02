@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/core/constants/images_const/app_images.dart';
 import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
 import 'package:the_movie_app/data/models/media/list/list.dart';
@@ -33,7 +34,7 @@ class AiRecommendationListView extends StatelessWidget {
             }
             return ListView.builder(
                 itemCount: recommendations.length,
-                itemExtent: 163,
+                itemExtent: AppSpacing.p160,
                 keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                 itemBuilder: (BuildContext context, int index) {
                   final item = recommendations[index];
@@ -46,7 +47,7 @@ class AiRecommendationListView extends StatelessWidget {
                   final firstAirDate = item.firstAirDate;
 
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    padding: AppSpacing.screenPaddingH16V10,
                     child: Stack(
                       children: [
                         Container(
@@ -81,12 +82,11 @@ class AiRecommendationListView extends StatelessWidget {
                               ),
                               Expanded(
                                 child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 15, right: 10, bottom: 1),
+                                  padding: AppSpacing.screenPaddingL16R10B2,
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      const SizedBox(height: 15,),
+                                      const SizedBox(height: AppSpacing.p16,),
                                         Text(
                                           title ?? name ?? "",
                                           maxLines: 1,
@@ -95,7 +95,7 @@ class AiRecommendationListView extends StatelessWidget {
                                               fontWeight: FontWeight.bold
                                           ),
                                         ),
-                                        const SizedBox(height: 5,),
+                                      AppSpacing.gapH6,
                                         Text(
                                           releaseDate ?? firstAirDate ?? "",
                                           maxLines: 1,
@@ -104,7 +104,7 @@ class AiRecommendationListView extends StatelessWidget {
                                               color: Colors.grey
                                           ),
                                         ),
-                                        const SizedBox(height: 10,),
+                                      AppSpacing.gapH10,
                                         Text(
                                           overview ?? "",
                                           maxLines: 3,

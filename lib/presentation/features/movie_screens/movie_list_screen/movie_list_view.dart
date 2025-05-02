@@ -37,26 +37,6 @@ class _MovieListViewState extends State<MovieListView> {
       );
     }
 
-    // if(model.movies.isEmpty) {
-    //   return FutureBuilder<void>(
-    //     future: Future.delayed(const Duration(milliseconds: 500)),
-    //     builder: (context, snapshot) {
-    //       if (snapshot.connectionState == ConnectionState.waiting) {
-    //         return const DefaultListsShimmerSkeletonWidget();
-    //       } else {
-    //         return Center(
-    //           child: Text(
-    //             context.l10n.noResults,
-    //             style: const TextStyle(
-    //               fontSize: 36,
-    //             ),
-    //           ),
-    //         );
-    //       }
-    //     },
-    //   );
-    // }
-
     return ParameterizedPaginationVerticalListWidget(
       paramModel: ParameterizedWidgetModel(
         altImagePath: AppImages.noPoster,

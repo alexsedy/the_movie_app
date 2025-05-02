@@ -15,7 +15,7 @@ abstract class SnackBarHelper{
             content: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(context.l10n.youAreNotLoggedIn, style: const TextStyle(fontSize: 20),),
+                Text(context.l10n.youAreNotLoggedIn,),
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).pushReplacementNamed(MainNavigationRouteNames.mainScreen, arguments: 3),
                   child: Text(context.l10n.login),
@@ -29,8 +29,7 @@ abstract class SnackBarHelper{
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             duration: const Duration(seconds: 5),
             content: Text(
-              context.l10n.anErrorHasOccurredTryAgainLater,
-              style: const TextStyle(fontSize: 20),),
+              context.l10n.anErrorHasOccurredTryAgainLater,),
           ));
 
           Navigator.of(context).pop();
@@ -38,8 +37,7 @@ abstract class SnackBarHelper{
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             duration: const Duration(seconds: 5),
             content: Text(
-              context.l10n.anErrorHasOccurredTryAgainLater,
-              style: const TextStyle(fontSize: 20),),
+              context.l10n.anErrorHasOccurredTryAgainLater,),
           ));
       }
     }
@@ -56,8 +54,7 @@ abstract class SnackBarHelper{
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             duration: const Duration(seconds: 5),
             content: Text(
-              context.l10n.listCreatedMessage(message),
-              style: TextStyle(fontSize: 20),),
+              context.l10n.listCreatedMessage(message),),
           ));
           Navigator.of(context).pop();
           return;
@@ -66,8 +63,7 @@ abstract class SnackBarHelper{
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             duration: const Duration(seconds: 5),
             content: Text(
-              context.l10n.movieAddedToListMessage(message),
-              style: TextStyle(fontSize: 20),),
+              context.l10n.movieAddedToListMessage(message),),
           ));
           Navigator.of(context).pop();
           return;
@@ -76,8 +72,7 @@ abstract class SnackBarHelper{
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             duration: const Duration(seconds: 5),
             content: Text(
-              context.l10n.tvAddedToListMessage(message),
-              style: TextStyle(fontSize: 20),),
+              context.l10n.tvAddedToListMessage(message),),
           ));
           Navigator.of(context).pop();
           return;
@@ -86,8 +81,7 @@ abstract class SnackBarHelper{
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             duration: const Duration(seconds: 5),
             content: Text(
-              context.l10n.theListRemovedMessage,
-              style: TextStyle(fontSize: 20),),
+              context.l10n.theListRemovedMessage,),
           ));
           Navigator.of(context).pop();
           return;
@@ -104,8 +98,7 @@ abstract class SnackBarHelper{
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  context.l10n.youAreNotLoggedIn,
-                  style: const TextStyle(fontSize: 20),),
+                  context.l10n.youAreNotLoggedIn,),
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).pushNamed(MainNavigationRouteNames.mainScreen, arguments: 3),
                   child: Text(context.l10n.login),
@@ -117,8 +110,7 @@ abstract class SnackBarHelper{
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             duration: const Duration(seconds: 5),
             content: Text(
-              context.l10n.anErrorHasOccurredTryAgainLater,
-              style: const TextStyle(fontSize: 20),),
+              context.l10n.anErrorHasOccurredTryAgainLater,),
           ));
       }
     }

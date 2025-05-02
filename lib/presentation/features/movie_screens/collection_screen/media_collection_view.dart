@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/core/constants/images_const/app_images.dart';
 import 'package:the_movie_app/core/helpers/converter_helper.dart';
 import 'package:the_movie_app/presentation/features/movie_screens/collection_screen/viewmodel/media_collection_viewmodel.dart';
@@ -63,7 +64,7 @@ class _BodyWidget extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 6, left: 10, right: 10, bottom: 2),
+          padding: AppSpacing.screenPaddingMedia,
           child: Shimmer.fromColors(
             baseColor: Colors.grey.withOpacity(0.5),
             highlightColor: Colors.white.withOpacity(0.5),
@@ -113,7 +114,7 @@ class _BodyOverviewWidgetState extends State<_BodyOverviewWidget> {
     final overview = mediaCollections?.overview;
 
     return Padding(
-      padding: const EdgeInsets.only(top: 6, left: 10, right: 10, bottom: 2),
+      padding: AppSpacing.screenPaddingMedia,
       child: InkWell(
         onTap: () {
           setState(() {
@@ -136,7 +137,7 @@ class _BodyOverviewWidgetState extends State<_BodyOverviewWidget> {
               ),
             ),
             overview != null && overview.length <= 60
-                ? const SizedBox.shrink()
+                ? AppSpacing.emptyGap
                 : Icon(
               _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
             ),

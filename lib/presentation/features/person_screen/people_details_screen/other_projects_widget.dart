@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:provider/provider.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/core/constants/images_const/app_images.dart';
 import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
 import 'package:the_movie_app/data/models/person/credits_people/credits.dart';
@@ -18,7 +19,7 @@ class OtherProjectsWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: AppSpacing.screenPaddingH10,
           child: Text(
             context.l10n.otherProjects,
             style: const TextStyle(
@@ -27,7 +28,7 @@ class OtherProjectsWidget extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 20,),
+        AppSpacing.gapH20,
         const Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -35,7 +36,7 @@ class OtherProjectsWidget extends StatelessWidget {
             _TvShowButtonWidget(),
           ],
         ),
-        const SizedBox(height: 30,),
+        AppSpacing.gapH32,
       ],
     );
   }
@@ -95,7 +96,7 @@ class _MoviesButtonWidget extends StatelessWidget {
           border: Border.all(),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: AppSpacing.screenPaddingAll10,
           child: Center(
             child: Text(
               context.l10n.movies,
@@ -138,8 +139,7 @@ class _MoviesButtonWidget extends StatelessWidget {
                       groupBy: (CreditList c) => c.department,
                       groupHeaderBuilder: (c) {
                         return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 16),
+                          padding: AppSpacing.screenPaddingH16V10,
                           child: Text(
                             c.department,
                             style: const TextStyle(
@@ -158,7 +158,7 @@ class _MoviesButtonWidget extends StatelessWidget {
                         return SizedBox(
                           height: 150,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                            padding: AppSpacing.screenPaddingAll10,
                             child: Card(
                               clipBehavior: Clip.hardEdge,
                               child: ListTile(
@@ -188,7 +188,7 @@ class _MoviesButtonWidget extends StatelessWidget {
                                         : Image.asset(AppImages.noPoster),
                                     Expanded(
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                                        padding: AppSpacing.screenPaddingH10,
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
@@ -199,7 +199,7 @@ class _MoviesButtonWidget extends StatelessWidget {
                                                 fontStyle: FontStyle.italic,
                                               ),
                                             ),
-                                            const SizedBox(height: 10,),
+                                            AppSpacing.gapH10,
                                             Text(
                                               title ?? "",
                                               softWrap: true,
@@ -256,7 +256,7 @@ class _MoviesButtonWidget extends StatelessWidget {
           border: Border.all(),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: AppSpacing.screenPaddingAll10,
           child: Center(
             child: Text(
               context.l10n.movies,
@@ -325,7 +325,7 @@ class _TvShowButtonWidget extends StatelessWidget {
           border: Border.all(),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: AppSpacing.screenPaddingAll10,
           child: Center(
             child: Text(
               context.l10n.tvShows,
@@ -369,8 +369,7 @@ class _TvShowButtonWidget extends StatelessWidget {
                       groupBy: (CreditList c) => c.department,
                       groupHeaderBuilder: (c) {
                         return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 16),
+                          padding: AppSpacing.screenPaddingH16V10,
                           child: Text(
                             c.department,
                             style: const TextStyle(
@@ -394,7 +393,7 @@ class _TvShowButtonWidget extends StatelessWidget {
                         return SizedBox(
                           height: 150,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                            padding: AppSpacing.screenPaddingAll10,
                             child: Card(
                               clipBehavior: Clip.hardEdge,
                               child: ListTile(
@@ -424,7 +423,7 @@ class _TvShowButtonWidget extends StatelessWidget {
                                         : Image.asset(AppImages.noPoster),
                                     Expanded(
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                                        padding: AppSpacing.screenPaddingH10,
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
@@ -435,7 +434,7 @@ class _TvShowButtonWidget extends StatelessWidget {
                                                 fontStyle: FontStyle.italic,
                                               ),
                                             ),
-                                            const SizedBox(height: 10,),
+                                            AppSpacing.gapH10,
                                             Text(
                                               name ?? "",
                                               softWrap: true,
@@ -492,7 +491,7 @@ class _TvShowButtonWidget extends StatelessWidget {
           border: Border.all(),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: AppSpacing.screenPaddingAll10,
           child: Center(
             child: Text(
               context.l10n.tvShows,

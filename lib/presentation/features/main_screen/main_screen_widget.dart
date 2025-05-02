@@ -59,7 +59,10 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("The Movie"),
+        title: Text(
+          "The Movie",
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         actions: [
           if(_selectedTab == 1)
             FilterMoviesButtonWidget(model: movieViewModel,),

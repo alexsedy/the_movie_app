@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/core/constants/images_const/app_images.dart';
 import 'package:the_movie_app/core/helpers/converter_helper.dart';
 import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
@@ -21,17 +22,17 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Padding(
-      padding: EdgeInsets.all(10.0),
+      padding: AppSpacing.screenPaddingAll10,
       child: SingleChildScrollView(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: Column(
           children: [
             _SearchWidget(),
-            SizedBox(height: 20,),
+            AppSpacing.gapH20,
             _TrendingToggleWidget(horizontalListElementType: HorizontalListElementType.movie),
-            SizedBox(height: 20,),
+            AppSpacing.gapH20,
             _TrendingToggleWidget(horizontalListElementType: HorizontalListElementType.tv,),
-            SizedBox(height: 20,),
+            AppSpacing.gapH20,
             _TrendingToggleWidget(horizontalListElementType: HorizontalListElementType.trendingPerson,),
           ],
         ),
@@ -55,7 +56,7 @@ class _SearchWidget extends StatelessWidget {
           child: Container(
             clipBehavior: Clip.hardEdge,
             height: 220,
-            margin: const EdgeInsets.all(8),
+            margin: AppSpacing.screenPaddingAll10,
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
@@ -64,14 +65,14 @@ class _SearchWidget extends StatelessWidget {
         ),
         Column(
           children: [
-            const SizedBox(height: 40),
+            AppSpacing.gapH40,
             Text(
               context.l10n.findAnythingWelcome,
               style: textStyle,
             ),
-            const SizedBox(height: 20),
+            AppSpacing.gapH20,
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: AppSpacing.screenPaddingH10,
               child: Row(
                 children: [
                   Expanded(
@@ -85,7 +86,7 @@ class _SearchWidget extends StatelessWidget {
                         readOnly: true,
                         dragStartBehavior: DragStartBehavior.start,
                         decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          contentPadding: AppSpacing.screenPaddingH10,
                           hintText: context.l10n.searchGlobalSearchHint,
                           border: InputBorder.none,
                         ),
@@ -179,20 +180,20 @@ class _TrendingToggleWidgetState extends State<_TrendingToggleWidget> {
         displayList = ConverterHelper.convertTrendingPeopleForHorizontalWidget(dataList as List<TrendingPersonList>);
         break;
       default:
-        return const SizedBox.shrink();
+        return AppSpacing.emptyGap;
     }
 
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: AppSpacing.screenPaddingH10,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
                 child: Text(_getName(context), maxLines: 2, style: const TextStyle(fontSize: 20)),
               ),
-              const SizedBox(width: 10),
+              AppSpacing.gapW10,
               SizedBox(
                 height: 30,
                 child: ToggleButtons(
@@ -230,7 +231,7 @@ class _TrendingToggleWidgetState extends State<_TrendingToggleWidget> {
             ],
           ),
         ),
-        const SizedBox(height: 10),
+        AppSpacing.gapH10,
         isLoading
             ? HorizontalListShimmerSkeletonWidget(horizontalListElementType: widget.horizontalListElementType)
             : dataList.isNotEmpty

@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         //   }
         // }
 
-        const defaultLocale = Locale('ru', 'US');
+        const defaultLocale = Locale('en', 'US');
         return defaultLocale;
       },
       routes: mainNavigation.routes,

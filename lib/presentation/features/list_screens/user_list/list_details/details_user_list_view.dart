@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/core/constants/images_const/app_images.dart';
 import 'package:the_movie_app/core/helpers/date_format_helper.dart';
 import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
@@ -218,7 +219,7 @@ class _ListBodyState extends State<_ListBody> {
 
     return ListView.builder(
       itemCount: model.listOfUserListDetails.length,
-      itemExtent: 163,
+      itemExtent: AppSpacing.p160,
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       itemBuilder: (BuildContext context, int index) {
         final item = model.listOfUserListDetails[index];
@@ -229,7 +230,7 @@ class _ListBodyState extends State<_ListBody> {
         final selectedIndexes = model.selectedIndexes;
 
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          padding: AppSpacing.screenPaddingH16V10,
           child: Stack(
             children: [
               Container(
@@ -269,12 +270,11 @@ class _ListBodyState extends State<_ListBody> {
                     ),
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 15, right: 10, bottom: 1),
+                        padding: AppSpacing.screenPaddingL16R10B2,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const SizedBox(height: 15,),
+                            AppSpacing.gapH16,
                             Text(
                               title,
                               style: const TextStyle(
@@ -282,7 +282,7 @@ class _ListBodyState extends State<_ListBody> {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(height: 5,),
+                            AppSpacing.gapH6,
                             Text(
                               date,
                               // movie.releaseDate,
@@ -290,7 +290,7 @@ class _ListBodyState extends State<_ListBody> {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(height: 15,),
+                            AppSpacing.gapH16,
                             Expanded(
                               child: Text(
                                 item.overview,

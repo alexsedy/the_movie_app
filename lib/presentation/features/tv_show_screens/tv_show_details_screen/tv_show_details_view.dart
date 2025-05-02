@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/core/constants/images_const/app_images.dart';
 import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
 import 'package:the_movie_app/data/models/media/media_details/media_details.dart';
@@ -67,7 +68,7 @@ class _BodyWidget extends StatelessWidget {
       delegate: SliverChildListDelegate(
         [
           const TvShowDetailsMainInfoWidget(),
-          const SizedBox(height: 20,),
+          AppSpacing.gapH20,
         ],
       ),
     );

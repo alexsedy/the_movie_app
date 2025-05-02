@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/presentation/features/ai_feature_screen/by_genre/viewmodel/ai_recommendation_by_genre_viewmodel.dart';
 
@@ -42,7 +43,7 @@ class _GenerateMovieByGenreWidgetState extends State<_GenerateMovieByGenreWidget
         : viewModel.toggleTvGenre;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      padding: AppSpacing.screenPaddingAll10,
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -50,7 +51,7 @@ class _GenerateMovieByGenreWidgetState extends State<_GenerateMovieByGenreWidget
               context.l10n.selectMovieOrTv,
               style: const TextStyle(fontSize: 20),
             ),
-            const SizedBox(height: 10),
+            AppSpacing.gapH10,
             ToggleButtons(
               onPressed: (int index) {
                 if (_isSelected[index]) return;
@@ -69,12 +70,12 @@ class _GenerateMovieByGenreWidgetState extends State<_GenerateMovieByGenreWidget
                 Text(context.l10n.tvShows),
               ],
             ),
-            const SizedBox(height: 20),
+            AppSpacing.gapH20,
             Text(
               context.l10n.selectOneOrMoreGenres,
               style: const TextStyle(fontSize: 20),
             ),
-            const SizedBox(height: 10),
+            AppSpacing.gapH10,
             Wrap(
               spacing: 8.0,
               runSpacing: 4.0,
@@ -90,12 +91,12 @@ class _GenerateMovieByGenreWidgetState extends State<_GenerateMovieByGenreWidget
                 );
               }).toList(),
             ),
-            const SizedBox(height: 20),
+            AppSpacing.gapH20,
             Text(
               context.l10n.selectMaxNumberOfItems,
               style: const TextStyle(fontSize: 20),
             ),
-            const SizedBox(height: 10),
+            AppSpacing.gapH10,
             Slider(
               value: _sliderValue,
               onChanged: (value) {
@@ -108,7 +109,7 @@ class _GenerateMovieByGenreWidgetState extends State<_GenerateMovieByGenreWidget
               max: 100,
               divisions: 99,
             ),
-            const SizedBox(height: 20),
+            AppSpacing.gapH20,
             SizedBox(
               height: 50,
               width: 300,
@@ -123,7 +124,7 @@ class _GenerateMovieByGenreWidgetState extends State<_GenerateMovieByGenreWidget
                 child: Text(context.l10n.generate),
               ),
             ),
-            const SizedBox(height: 20),
+            AppSpacing.gapH20,
           ],
         ),
       ),

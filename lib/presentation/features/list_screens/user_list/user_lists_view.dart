@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/core/helpers/date_format_helper.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/presentation/features/list_screens/user_list/viewmodel/user_lists_viewmodel.dart';
@@ -17,34 +18,32 @@ class UserListsView extends StatelessWidget {
       appBar: AppBar(
         title: Text(context.l10n.userLists),
         actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: ElevatedButton(
-              onPressed: () {
-                showModalBottomSheet(
-                    context: context,
-                    showDragHandle: true,
-                    isScrollControlled: true,
-                    elevation: 0.2,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
-                    ),
-                    builder: (BuildContext context) {
-                      return SingleChildScrollView(
-                        reverse: true,
-                        child: Container(
-                            padding: EdgeInsets.only(
-                              bottom: MediaQuery.of(context).viewInsets.bottom,
-                            ),
-                            child: CreateListWidget(model: model,)
-                        ),
-                      );
-                    }
-                );
-              },
-              child: Text(context.l10n.newList),
-            ),
+          ElevatedButton(
+            onPressed: () {
+              showModalBottomSheet(
+                  context: context,
+                  showDragHandle: true,
+                  isScrollControlled: true,
+                  elevation: 0.2,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+                  ),
+                  builder: (BuildContext context) {
+                    return SingleChildScrollView(
+                      reverse: true,
+                      child: Container(
+                          padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom,
+                          ),
+                          child: CreateListWidget(model: model,)
+                      ),
+                    );
+                  }
+              );
+            },
+            child: Text(context.l10n.newList),
           ),
+          AppSpacing.gapW16,
         ],
       ),
       body: const _UserListBody(),
@@ -78,12 +77,12 @@ class _UserListBody extends StatelessWidget {
                 final createdAt = DateFormatHelper.fullDate(lists.createdAt.substring(0, lists.createdAt.length - 4));
 
                 return Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: AppSpacing.screenPaddingAll10,
                   child: ListTile(
                     onTap: () => model.onUserListDetails(context, index),
                     minLeadingWidth: 10,
                     titleAlignment: ListTileTitleAlignment.center,
-                    contentPadding: const EdgeInsets.all(14),
+                    contentPadding: AppSpacing.screenPaddingAll10,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
@@ -178,13 +177,6 @@ class _UserListBody extends StatelessWidget {
                     ),
                     subtitle: Row(
                       children: [
-                        // public
-                        //     ? Icon(Icons.lock_open, color: Colors.greenAccent[700],)
-                        //     : Icon(Icons.lock_outline, color: Colors.redAccent[700],),
-                        // const Padding(
-                        //   padding: EdgeInsets.symmetric(horizontal: 10),
-                        //   child: Text("|"),
-                        // ),
                         Text(
                           context.l10n.itemNumberOfItems(numberOfItems),
                           style: const TextStyle(
@@ -192,7 +184,7 @@ class _UserListBody extends StatelessWidget {
                           ),
                         ),
                         const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          padding: AppSpacing.screenPaddingH10,
                           child: Text("|"),
                         ),
                         Text(
@@ -254,14 +246,14 @@ class _UpdateListWidgetState extends State<_UpdateListWidget> {
     final name = widget.model.lists[index].name;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: AppSpacing.screenPaddingH16V10,
       child: Column(
         children: [
           Text(
             context.l10n.updateTheNameList(name),
             style: TextStyle(fontSize: 22),
           ),
-          const SizedBox(height: 30,),
+          AppSpacing.gapH32,
           TextField(
             controller: _nameController,
             textCapitalization: TextCapitalization.sentences,
@@ -272,11 +264,11 @@ class _UpdateListWidgetState extends State<_UpdateListWidget> {
             decoration: InputDecoration(
               hintText: context.l10n.name,
               border: const OutlineInputBorder(),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              contentPadding: AppSpacing.screenPaddingH10V20,
               isCollapsed: true,
             ),
           ),
-          const SizedBox(height: 30,),
+          AppSpacing.gapH32,
           TextField(
             controller: _descriptionController,
             textCapitalization: TextCapitalization.sentences,
@@ -287,13 +279,13 @@ class _UpdateListWidgetState extends State<_UpdateListWidget> {
             decoration: InputDecoration(
               hintText: context.l10n.description,
               border: const OutlineInputBorder(),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              contentPadding: AppSpacing.screenPaddingH10V20,
               isCollapsed: true,
             ),
           ),
-          const SizedBox(height: 20,),
+          AppSpacing.gapH20,
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: AppSpacing.screenPaddingH10,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -314,7 +306,7 @@ class _UpdateListWidgetState extends State<_UpdateListWidget> {
               ],
             ),
           ),
-          const SizedBox(height: 30,),
+          AppSpacing.gapH32,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -337,7 +329,7 @@ class _UpdateListWidgetState extends State<_UpdateListWidget> {
               ),
             ],
           ),
-          const SizedBox(height: 20,),
+          AppSpacing.gapH20,
         ],
       ),
     );

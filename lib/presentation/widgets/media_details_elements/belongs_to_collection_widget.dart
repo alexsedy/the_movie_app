@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
 import 'package:the_movie_app/presentation/presentation_models/interfaces/i_base_media_details_model.dart';
 
@@ -13,7 +14,7 @@ class BelongsToCollectionWidget<T extends IBaseMediaDetailsModel> extends Statel
     final name = belongsToCollection?.name;
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: AppSpacing.screenPaddingAll10,
       child: SizedBox(
         height: 150,
         child: Stack(

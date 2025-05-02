@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_in_button/sign_in_button.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/presentation/features/account_screen/viewmodel/account_viewmodel.dart';
 
@@ -13,7 +14,7 @@ class AccountView extends StatelessWidget {
 
     if(isLoggedIn) {
       return const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        padding: AppSpacing.screenPaddingAll10,
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -23,17 +24,17 @@ class AccountView extends StatelessWidget {
                   Row(
                     children: [
                       _ColorPaletteWidget(),
-                      SizedBox(width: 10,),
+                      AppSpacing.gapW10,
                       _WelcomeTextWidget(),
                     ],
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: AppSpacing.screenPaddingH10,
                     child: _LogoutButtonWidget(),
                   ),
                 ],
               ),
-              SizedBox(height: 70,),
+              AppSpacing.gapH80,
               _AccountBodyWidget(),
             ],
           ),
@@ -41,7 +42,7 @@ class AccountView extends StatelessWidget {
       );
     } else {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        padding: AppSpacing.screenPaddingAll10,
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -51,9 +52,9 @@ class AccountView extends StatelessWidget {
                   Row(
                     children: [
                       const _ColorPaletteWidget(),
-                      const SizedBox(width: 10,),
+                      AppSpacing.gapW10,
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        padding: AppSpacing.screenPaddingH10,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -73,12 +74,12 @@ class AccountView extends StatelessWidget {
                   const _LoginButtonWidget(),
                 ],
               ),
-              const SizedBox(height: 70,),
+              AppSpacing.gapH80,
               Center(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 80,),
+                    AppSpacing.gapH80,
                     Text(
                       context.l10n.noLoginAccountMessage,
                       style: const TextStyle(
@@ -104,7 +105,7 @@ class _LoginButtonWidget extends StatelessWidget {
     final model = context.read<AccountViewModel>();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: AppSpacing.screenPaddingH10,
       child:  ElevatedButton(
         onPressed: () => model.makeLogin(context),
         child: Text(context.l10n.login),
@@ -123,7 +124,7 @@ class _WelcomeTextWidget extends StatelessWidget {
     final username = context.select<AccountViewModel, String?>((m) => m.accountSate?.username);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: AppSpacing.screenPaddingH10,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -254,7 +255,7 @@ class _LogoutButtonWidget extends StatelessWidget {
                           "Link your TMDB account to My Movie to get benefits:",
                           style: TextStyle(fontSize: 18),
                         ),
-                        SizedBox(height: 10,),
+                        AppSpacing.gapH10,
                         Text("• AI-powered playlist generation by genre."),
                         Text("• AI-powered playlist generation by description."),
                         Text("• Tracking movies and TV shows (including individual episodes)."),
@@ -320,7 +321,7 @@ class _AccountBodyWidget extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: AppSpacing.screenPaddingAll10,
           child: InkWell(
             onTap: () => model.onUserLists(context),
             borderRadius: BorderRadius.circular(12),
@@ -331,14 +332,14 @@ class _AccountBodyWidget extends StatelessWidget {
               ),
               width: double.infinity,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: AppSpacing.screenPaddingAll10,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
                         const Icon(Icons.list, size: 40,),
-                        const SizedBox(width: 15,),
+                        AppSpacing.gapW16,
                         Text(
                           context.l10n.userLists,
                           style: const TextStyle(
@@ -355,7 +356,7 @@ class _AccountBodyWidget extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: AppSpacing.screenPaddingAll10,
           child: InkWell(
             onTap: () => model.onFavoriteList(context),
             borderRadius: BorderRadius.circular(12),
@@ -366,14 +367,14 @@ class _AccountBodyWidget extends StatelessWidget {
               ),
               width: double.infinity,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: AppSpacing.screenPaddingAll10,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
                         const Icon(Icons.favorite, size: 40,),
-                        const SizedBox(width: 15,),
+                        AppSpacing.gapW16,
                         Text(
                           context.l10n.favorite,
                           style: const TextStyle(
@@ -390,7 +391,7 @@ class _AccountBodyWidget extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: AppSpacing.screenPaddingAll10,
           child: InkWell(
             onTap: () => model.onWatchlistList(context),
             borderRadius: BorderRadius.circular(12),
@@ -401,14 +402,14 @@ class _AccountBodyWidget extends StatelessWidget {
               ),
               width: double.infinity,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: AppSpacing.screenPaddingAll10,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
                         const Icon(Icons.bookmark, size: 40,),
-                        const SizedBox(width: 15,),
+                        AppSpacing.gapW16,
                         Text(
                           context.l10n.watchlist,
                           style: const TextStyle(
@@ -425,7 +426,7 @@ class _AccountBodyWidget extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: AppSpacing.screenPaddingAll10,
           child: InkWell(
             onTap: () => model.onRatedList(context),
             borderRadius: BorderRadius.circular(12),
@@ -436,14 +437,14 @@ class _AccountBodyWidget extends StatelessWidget {
               ),
               width: double.infinity,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: AppSpacing.screenPaddingAll10,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
                         const Icon(Icons.star, size: 40,),
-                        const SizedBox(width: 15,),
+                        AppSpacing.gapW16,
                         Text(
                           context.l10n.rated,
                           style: const TextStyle(
@@ -460,7 +461,7 @@ class _AccountBodyWidget extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: AppSpacing.screenPaddingAll10,
           child: InkWell(
             onTap: () => model.onRecommendationList(context),
             borderRadius: BorderRadius.circular(12),
@@ -471,14 +472,14 @@ class _AccountBodyWidget extends StatelessWidget {
               ),
               width: double.infinity,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: AppSpacing.screenPaddingAll10,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
                         const Icon(Icons.recommend, size: 40,),
-                        const SizedBox(width: 15,),
+                        AppSpacing.gapW16,
                         Text(
                           context.l10n.recommendation,
                           style: const TextStyle(
@@ -496,7 +497,7 @@ class _AccountBodyWidget extends StatelessWidget {
         ),
         if(model.isLinked)
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: AppSpacing.screenPaddingAll10,
           child: InkWell(
             onTap: () => model.onAIFeatureScreen(context),
             borderRadius: BorderRadius.circular(12),
@@ -507,14 +508,14 @@ class _AccountBodyWidget extends StatelessWidget {
               ),
               width: double.infinity,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: AppSpacing.screenPaddingAll10,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
                         const Icon(Icons.try_sms_star_outlined, size: 40,),
-                        const SizedBox(width: 15,),
+                        AppSpacing.gapW16,
                         Text(
                           context.l10n.aiRecommendation,
                           style: const TextStyle(
