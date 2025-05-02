@@ -52,10 +52,7 @@ class PeopleDetailsShimmerSkeletonWidget extends StatelessWidget {
                               AppSpacing.gapH32,
                               Text(
                                 context.l10n.socialNetwork,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontStyle: FontStyle.italic,
-                                ),
+                                style: Theme.of(context).textTheme.titleMedium,
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -182,10 +179,7 @@ class PeopleDetailsShimmerSkeletonWidget extends StatelessWidget {
                       padding: AppSpacing.screenPaddingH16V10,
                       child: Text(
                         context.l10n.biography,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24,
-                        ),
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
                     ),
                     Padding(
@@ -208,10 +202,7 @@ class PeopleDetailsShimmerSkeletonWidget extends StatelessWidget {
                   padding: AppSpacing.screenPaddingH16V10,
                   child: Text(
                     context.l10n.imageGallery,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                    ),
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
                 ),
                 SizedBox(

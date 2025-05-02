@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/core/constants/app_spacing.dart';
+import 'package:the_movie_app/core/constants/widget_size.dart';
 import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
 import 'package:the_movie_app/presentation/presentation_models/models/parameterized_horizontal_widget_model.dart';
 
@@ -13,7 +14,7 @@ class ParameterizedVerticalListWidget extends StatelessWidget {
 
     return ListView.builder(
         itemCount: paramModel.list.length,
-        itemExtent: AppSpacing.p160,
+        itemExtent: WidgetSize.size180,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         itemBuilder: (BuildContext context, int index) {
           String? posterPath = paramModel.list[index].imagePath;
@@ -24,8 +25,8 @@ class ParameterizedVerticalListWidget extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.black.withOpacity(0.2)),
+                      color: Theme.of(context).colorScheme.surface,
+                      border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                       boxShadow: [
                         BoxShadow(
@@ -65,8 +66,7 @@ class ParameterizedVerticalListWidget extends StatelessWidget {
                               if(paramModel.list[index].firstLine != null)
                                 Text(
                                   paramModel.list[index].firstLine ?? "",
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
+                                  style: Theme.of(context).textTheme.bodyLarge,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -75,8 +75,7 @@ class ParameterizedVerticalListWidget extends StatelessWidget {
                               if(paramModel.list[index].secondLine != null)
                               Text(
                                 paramModel.list[index].secondLine ?? "",
-                                style: const TextStyle(
-                                    color: Colors.grey),
+                                style: Theme.of(context).textTheme.bodySmall,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -86,6 +85,7 @@ class ParameterizedVerticalListWidget extends StatelessWidget {
                                 Expanded(
                                   child: Text(
                                     paramModel.list[index].thirdLine ?? "",
+                                    style: Theme.of(context).textTheme.bodyMedium,
                                     maxLines: 3,
                                     overflow: TextOverflow.ellipsis,
                                   ),

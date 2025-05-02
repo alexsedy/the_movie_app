@@ -32,10 +32,7 @@ class BioPersonWidget extends StatelessWidget {
                     name ?? "",
                     maxLines: 3,
                     softWrap: true,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                    ),
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   const _SocialNetworkWidget(),
                 ],
@@ -161,10 +158,7 @@ class _SocialNetworkWidget extends StatelessWidget {
         AppSpacing.gapH32,
         Text(
           context.l10n.socialNetwork,
-          style: const TextStyle(
-            fontSize: 18,
-            fontStyle: FontStyle.italic,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -299,10 +293,7 @@ class _BioTextWidgetState extends State<_BioTextWidget> {
                 padding: AppSpacing.screenPaddingH16V10,
                 child: Text(
                   context.l10n.biography,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                  ),
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
               Padding(

@@ -61,9 +61,7 @@ class BelongsToCollectionWidget<T extends IBaseMediaDetailsModel> extends Statel
                 child: Text(
                   name?? "",
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 20,
-                  ),
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
             ),

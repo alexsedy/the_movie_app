@@ -46,7 +46,7 @@ class _BodyWidget extends StatelessWidget {
          padding: AppSpacing.screenPaddingH16V10,
          child: Text(
            c.department,
-           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+           style: Theme.of(context).textTheme.titleMedium,
          ),
        );},
      indexedItemBuilder: (context, crew, index) {
@@ -62,16 +62,16 @@ class _BodyWidget extends StatelessWidget {
              children: [
                Container(
                  decoration: BoxDecoration(
-                     color: Colors.white,
-                     border: Border.all(color: Colors.black.withOpacity(0.2)),
-                     borderRadius: const BorderRadius.all(Radius.circular(10)),
-                     boxShadow: [
-                       BoxShadow(
-                         color: Colors.black.withOpacity(0.1),
-                         blurRadius: 8,
-                         offset: const Offset(1, 2),
-                       )
-                     ],
+                   color: Theme.of(context).colorScheme.surface,
+                   border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
+                   borderRadius: const BorderRadius.all(Radius.circular(10)),
+                   boxShadow: [
+                     BoxShadow(
+                       color: Colors.black.withOpacity(0.1),
+                       blurRadius: 8,
+                       offset: const Offset(1, 2),
+                     )
+                   ],
                  ),
                  clipBehavior: Clip.hardEdge,
                  child: Row(
@@ -102,8 +102,7 @@ class _BodyWidget extends StatelessWidget {
                              AppSpacing.gapH16,
                                Text(
                                  name ?? "",
-                                 style: const TextStyle(
-                                     fontWeight: FontWeight.bold),
+                                 style: Theme.of(context).textTheme.bodyLarge,
                                  maxLines: 1,
                                  overflow: TextOverflow.ellipsis,
                                ),

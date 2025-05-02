@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/core/constants/app_spacing.dart';
+import 'package:the_movie_app/core/constants/widget_size.dart';
 import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/presentation/presentation_models/models/parameterized_horizontal_widget_model.dart';
@@ -18,7 +19,7 @@ class ParameterizedHorizontalListWidget extends StatelessWidget {
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: paramModel.list.length,
-          itemExtent: AppSpacing.p130,
+          itemExtent: WidgetSize.size130,
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           itemBuilder: (BuildContext context, int index) {
 
@@ -45,16 +46,19 @@ class ParameterizedHorizontalListWidget extends StatelessWidget {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.black.withOpacity(0.2)),
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 8,
-                            offset: const Offset(1, 2),
-                          )
-                        ]
+                        // color: Colors.white,
+                      // color: Theme.of(context).scaffoldBackgroundColor,
+                      color: Theme.of(context).colorScheme.surface,
+                      // border: Border.all(color: Colors.black.withOpacity(0.2)),
+                      border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(1, 2),
+                        )
+                      ]
                     ),
                     clipBehavior: Clip.hardEdge,
                     child: Column(
@@ -92,10 +96,7 @@ class ParameterizedHorizontalListWidget extends StatelessWidget {
                                   firstLine,
                                   maxLines: firstMaxLine,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w700
-                                  ),
+                                  style: Theme.of(context).textTheme.bodyLarge,
                                 ),
                               ),
                               if(secondLine != null && secondLine.isNotEmpty)
@@ -105,10 +106,7 @@ class ParameterizedHorizontalListWidget extends StatelessWidget {
                                     secondLine,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        fontStyle: FontStyle.italic
-                                    ),
+                                    style: Theme.of(context).textTheme.bodySmall,
                                   ),
                                 ),
                               if(thirdLine != null && thirdLine.isNotEmpty)
@@ -118,10 +116,7 @@ class ParameterizedHorizontalListWidget extends StatelessWidget {
                                     thirdLine,
                                     maxLines: thirdMaxLine,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        fontStyle: FontStyle.italic
-                                    ),
+                                    style: Theme.of(context).textTheme.bodyMedium,
                                   ),
                                 ),
                             ],
@@ -163,9 +158,8 @@ class ParameterizedHorizontalListWidget extends StatelessWidget {
                           child: Text(
                             textAlign: TextAlign.center,
                             context.l10n.mediaStatus("status_${statuses[index].status}"),
-                            style: TextStyle(
+                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
                               color: Colors.white,
-                              fontSize: 15,
                             ),
                           ),
                         ),

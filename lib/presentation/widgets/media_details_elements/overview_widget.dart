@@ -32,17 +32,14 @@ class _OverviewWidgetState extends State<OverviewWidget> {
           padding: AppSpacing.screenPaddingH16V10,
           child: Text(
             context.l10n.overview,
-            style: const TextStyle(
-                fontSize: 21, 
-                fontWeight: 
-                FontWeight.w700
-            ),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
         if(tagline != null && tagline != "") Padding(
           padding: AppSpacing.screenPaddingAll10,
           child: Text("\"$tagline\"",
-            style: const TextStyle(fontSize: 21, fontStyle: FontStyle.italic),),
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
         ),
         Padding(
           padding: AppSpacing.screenPaddingAll10,

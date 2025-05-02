@@ -13,9 +13,7 @@ abstract class AppSpacing {
   static const double p56 = 56.0;
   static const double p60 = 60.0;
   static const double p80 = 80.0;
-  static const double p130 = 130.0;
   static const double p160 = 160.0;
-  static const double p216 = 216.0;
 
 
   static const EdgeInsets screenPaddingAll6 = EdgeInsets.all(p6);

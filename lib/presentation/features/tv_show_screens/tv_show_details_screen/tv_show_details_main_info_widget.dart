@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/core/constants/images_const/app_images.dart';
+import 'package:the_movie_app/core/constants/widget_size.dart';
 import 'package:the_movie_app/core/helpers/converter_helper.dart';
 import 'package:the_movie_app/core/helpers/date_format_helper.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
@@ -112,7 +113,7 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
             additionalText: context.l10n.networks,
             altImagePath: AppImages.noLogo,
             aspectRatio: 1 / 1,
-            boxHeight: AppSpacing.p216,
+            boxHeight: WidgetSize.size216,
             paddingEdgeInsets: 4,
           ),
           secondAction: () {},
@@ -126,7 +127,7 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
             additionalText: context.l10n.productionCompanies,
             altImagePath: AppImages.noLogo,
             aspectRatio: 1 / 1,
-            boxHeight: AppSpacing.p216,
+            boxHeight: WidgetSize.size216,
             paddingEdgeInsets: 4,
           ),
           secondAction: () {},
@@ -208,55 +209,36 @@ class _SummaryTvShowWidget extends StatelessWidget {
       child: RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
-          style: const TextStyle(color: Colors.black),
+            style: Theme.of(context).textTheme.titleMedium,
             children: [
               TextSpan(
                 text: rating,
-                style: TextStyle(
-                  fontSize: 16,
-                ),
               ),
               TextSpan(
                 text: rating.isNotEmpty ? " ● " : "",
-                style: TextStyle(fontSize: 16,),
               ),
               TextSpan(
                   text: firstAirDateText,
-                  style: TextStyle(
-                    fontSize: 16,
-                  )
               ),
               TextSpan(
                 text: countries.isNotEmpty ? " ● " : "",
-                style: TextStyle(fontSize: 16,),
               ),
               TextSpan(
                   text: countries.isNotEmpty ? countries : "",
-                  style: TextStyle(
-                    fontSize: 16,
-                  )
               ),
               TextSpan(
                 text: genres.isNotEmpty ? " ● " : "",
-                style: TextStyle(fontSize: 16,),
               ),
               TextSpan(
                   text: genres.isNotEmpty ? genres : "",
-                  style: TextStyle(
-                    fontSize: 16,
-                  )
               ),
               if(status != null)
                 TextSpan(
                   text: genres.isNotEmpty ? " ● " : "",
-                  style: TextStyle(fontSize: 16,),
                 ),
               if(status != null)
                 TextSpan(
                     text: status,
-                    style: TextStyle(
-                      fontSize: 16,
-                    )
                 ),
             ]
         ),

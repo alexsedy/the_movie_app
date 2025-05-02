@@ -49,7 +49,7 @@ class _GenerateMovieByGenreWidgetState extends State<_GenerateMovieByGenreWidget
           children: [
             Text(
               context.l10n.selectMovieOrTv,
-              style: const TextStyle(fontSize: 20),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             AppSpacing.gapH10,
             ToggleButtons(
@@ -73,7 +73,7 @@ class _GenerateMovieByGenreWidgetState extends State<_GenerateMovieByGenreWidget
             AppSpacing.gapH20,
             Text(
               context.l10n.selectOneOrMoreGenres,
-              style: const TextStyle(fontSize: 20),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             AppSpacing.gapH10,
             Wrap(
@@ -94,7 +94,7 @@ class _GenerateMovieByGenreWidgetState extends State<_GenerateMovieByGenreWidget
             AppSpacing.gapH20,
             Text(
               context.l10n.selectMaxNumberOfItems,
-              style: const TextStyle(fontSize: 20),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             AppSpacing.gapH10,
             Slider(

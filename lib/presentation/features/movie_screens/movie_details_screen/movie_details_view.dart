@@ -111,25 +111,12 @@ class _MovieNameWidget extends StatelessWidget {
         children: [
           TextSpan(
             text: title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w700,
-              fontSize: 21,
-            ),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
-          // TextSpan(
-          //   text: releaseText,
-          //     style: const TextStyle(
-          //       fontWeight: FontWeight.w400,
-          //       fontSize: 16,
-          //     )
-          // ),
           if(locale.languageCode != "en" && title != originalTitle)
           TextSpan(
             text: "\n$originalTitle",
-            style: const TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 12,
-            )
+            style: Theme.of(context).textTheme.bodySmall,
           ),
         ]
       ),

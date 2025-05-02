@@ -10,9 +10,6 @@ class ParameterizedMediaCrewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const styleOfName = TextStyle(fontSize: 16,);
-    const styleOfRole = TextStyle(fontSize: 16, fontStyle: FontStyle.italic);
-
     if (paramsModel.list.isEmpty) {
       return AppSpacing.emptyGap;
     } else if (paramsModel.list.length == 1) {
@@ -28,9 +25,7 @@ class ParameterizedMediaCrewWidget extends StatelessWidget {
                 padding: AppSpacing.screenPaddingH10V4,
                 child: Text(
                   paramsModel.additionalText,
-                  style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
             ),
@@ -48,10 +43,12 @@ class ParameterizedMediaCrewWidget extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(paramsModel.list[0].firstLine ?? "", style: styleOfName,
+                        Text(paramsModel.list[0].firstLine ?? "",
+                          style: Theme.of(context).textTheme.bodyLarge,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,),
-                        Text(paramsModel.list[0].secondLine ?? "", style: styleOfRole,
+                        Text(paramsModel.list[0].secondLine ?? "",
+                          style: Theme.of(context).textTheme.bodySmall,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,),
                       ],
@@ -77,9 +74,7 @@ class ParameterizedMediaCrewWidget extends StatelessWidget {
               padding: AppSpacing.screenPaddingH10V4,
               child: Text(
                 paramsModel.additionalText,
-                style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
           ),
@@ -102,12 +97,12 @@ class ParameterizedMediaCrewWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(paramsModel.list[index * 2].firstLine ?? "",
-                            style: styleOfName,
+                            style: Theme.of(context).textTheme.bodyLarge,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(paramsModel.list[index * 2].secondLine ?? "",
-                            style: styleOfRole,
+                            style: Theme.of(context).textTheme.bodyMedium,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -121,12 +116,12 @@ class ParameterizedMediaCrewWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(paramsModel.list[index * 2 + 1].firstLine ?? "",
-                            style: styleOfName,
+                            style: Theme.of(context).textTheme.bodyLarge,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(paramsModel.list[index * 2 + 1].secondLine ?? "",
-                            style: styleOfRole,
+                            style: Theme.of(context).textTheme.bodyMedium,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),

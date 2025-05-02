@@ -22,10 +22,7 @@ class OtherProjectsWidget extends StatelessWidget {
           padding: AppSpacing.screenPaddingH10,
           child: Text(
             context.l10n.otherProjects,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 24,
-            ),
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
         ),
         AppSpacing.gapH20,
@@ -79,7 +76,7 @@ class _MoviesButtonWidget extends StatelessWidget {
                     child: Center(
                       child: Text(
                         context.l10n.noOtherMovieProjects,
-                        style: const TextStyle(fontSize: 34),
+                        style: Theme.of(context).textTheme.headlineSmall,
                       ),
                     ),
                   );
@@ -100,9 +97,7 @@ class _MoviesButtonWidget extends StatelessWidget {
           child: Center(
             child: Text(
               context.l10n.movies,
-              style: const TextStyle(
-                fontSize: 20,
-              ),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
         ),
@@ -142,8 +137,7 @@ class _MoviesButtonWidget extends StatelessWidget {
                           padding: AppSpacing.screenPaddingH16V10,
                           child: Text(
                             c.department,
-                            style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                         );
                       },
@@ -194,30 +188,21 @@ class _MoviesButtonWidget extends StatelessWidget {
                                           children: [
                                             Text(releaseDate.isNotEmpty
                                                 ? releaseDate : context.l10n.unknown,
-                                              style: const TextStyle(
-                                                fontSize: 18,
-                                                fontStyle: FontStyle.italic,
-                                              ),
+                                              style: Theme.of(context).textTheme.titleMedium,
                                             ),
                                             AppSpacing.gapH10,
                                             Text(
                                               title ?? "",
                                               softWrap: true,
                                               maxLines: 2,
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                                              style: Theme.of(context).textTheme.titleMedium,
                                             ),
                                             Text(department != "Actor"
                                                 ? job ?? ""
                                                 : character ?? "",
                                               softWrap: true,
                                               maxLines: 2,
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                fontStyle: FontStyle.italic,
-                                              ),
+                                              style: Theme.of(context).textTheme.titleMedium,
                                             ),
                                           ],
                                         ),
@@ -260,9 +245,7 @@ class _MoviesButtonWidget extends StatelessWidget {
           child: Center(
             child: Text(
               context.l10n.movies,
-              style: const TextStyle(
-                fontSize: 20,
-              ),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
         ),
@@ -308,8 +291,7 @@ class _TvShowButtonWidget extends StatelessWidget {
                     child: Center(
                       child: Text(
                         context.l10n.noOtherTvShowProjects,
-                        style: const TextStyle(fontSize: 34),
-                      ),
+                        style: Theme.of(context).textTheme.displaySmall,                      ),
                     ),
                   );
                 },
@@ -329,9 +311,7 @@ class _TvShowButtonWidget extends StatelessWidget {
           child: Center(
             child: Text(
               context.l10n.tvShows,
-              style: const TextStyle(
-                fontSize: 20,
-              ),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
         ),
@@ -372,8 +352,7 @@ class _TvShowButtonWidget extends StatelessWidget {
                           padding: AppSpacing.screenPaddingH16V10,
                           child: Text(
                             c.department,
-                            style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                         );
                       },
@@ -429,30 +408,20 @@ class _TvShowButtonWidget extends StatelessWidget {
                                           children: [
                                             Text(firstAirDate.isNotEmpty
                                                 ? firstAirDate : context.l10n.unknown,
-                                              style: const TextStyle(
-                                                fontSize: 18,
-                                                fontStyle: FontStyle.italic,
-                                              ),
-                                            ),
+                                              style: Theme.of(context).textTheme.titleMedium,                                            ),
                                             AppSpacing.gapH10,
                                             Text(
                                               name ?? "",
                                               softWrap: true,
                                               maxLines: 2,
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                                              style: Theme.of(context).textTheme.titleMedium,
                                             ),
                                             Text(department != "Actor"
                                                 ? "${job ?? ""} $episodeCountText"
                                                 : "${character ?? ""} $episodeCountText",
                                               softWrap: true,
                                               maxLines: 2,
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                fontStyle: FontStyle.italic,
-                                              ),
+                                              style: Theme.of(context).textTheme.titleMedium,
                                             ),
                                           ],
                                         ),
@@ -495,9 +464,7 @@ class _TvShowButtonWidget extends StatelessWidget {
           child: Center(
             child: Text(
               context.l10n.tvShows,
-              style: const TextStyle(
-                fontSize: 20,
-              ),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
         ),

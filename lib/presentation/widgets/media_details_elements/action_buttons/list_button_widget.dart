@@ -42,7 +42,7 @@ class ListButtonWidget<T extends IBaseMediaDetailsModel> extends StatelessWidget
                               children: [
                                 Text(
                                   context.l10n.addToTheList,
-                                  style: const TextStyle(fontSize: 22),
+                                  style: Theme.of(context).textTheme.titleLarge,
                                 ),
                                 AppSpacing.gapH20,
                                 ElevatedButton(
@@ -98,17 +98,13 @@ class ListButtonWidget<T extends IBaseMediaDetailsModel> extends StatelessWidget
                                           : Icon(Icons.lock_outline, color: Colors.redAccent[700],),
                                       title: Text(
                                         name,
-                                        style: const TextStyle(
-                                          fontSize: 22,
-                                        ),
+                                        style: Theme.of(context).textTheme.titleLarge,
                                       ),
                                       subtitle: Row(
                                         children: [
                                           Text(
                                             context.l10n.itemNumberOfItems(numberOfItems),
-                                            style: const TextStyle(
-                                              fontStyle: FontStyle.italic,
-                                            ),
+                                            style: Theme.of(context).textTheme.bodyMedium,
                                           ),
                                           const Padding(
                                             padding: AppSpacing.screenPaddingH10,
@@ -116,9 +112,7 @@ class ListButtonWidget<T extends IBaseMediaDetailsModel> extends StatelessWidget
                                           ),
                                           Text(
                                             createdAt,
-                                            style: const TextStyle(
-                                              fontStyle: FontStyle.italic,
-                                            ),
+                                            style: Theme.of(context).textTheme.bodyMedium,
                                           ),
                                         ],
                                       ),

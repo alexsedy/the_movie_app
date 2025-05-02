@@ -26,10 +26,7 @@ class ImageGallery extends StatelessWidget {
           padding: AppSpacing.screenPaddingH16V10,
           child: Text(
             context.l10n.imageGallery,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 24,
-            ),
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
         ),
         SizedBox(

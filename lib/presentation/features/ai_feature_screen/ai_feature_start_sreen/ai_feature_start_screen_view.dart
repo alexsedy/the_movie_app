@@ -36,7 +36,7 @@ class _BodyWidget extends StatelessWidget {
         children: [
           Text(
             context.l10n.discoverGeminiAiMessage,
-            style: TextStyle(fontSize: 26),
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
           AppSpacing.gapH40,
           RunningColorBorder(

@@ -47,11 +47,9 @@ class _SeriesNameWidget extends StatelessWidget {
         airDate != null
           ? Text(
               "${context.l10n.episode}: $episodeNumber $releaseText",
-              style: const TextStyle(fontStyle: FontStyle.italic),
             )
           : Text(
               "${context.l10n.episode}: $episodeNumber",
-              style: const TextStyle(fontStyle: FontStyle.italic),
             ),
         Text(name),
       ],

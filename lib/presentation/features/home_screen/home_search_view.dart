@@ -76,7 +76,6 @@ class _HeaderSearchBar extends StatelessWidget {
     return Container(
       height: 45.0,
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: TextField(
@@ -86,9 +85,12 @@ class _HeaderSearchBar extends StatelessWidget {
         decoration: InputDecoration(
           contentPadding: AppSpacing.screenPaddingH16V10,
           border: InputBorder.none,
-          hintText: context.l10n.search,
+          hintText: context.l10n.searchGlobalSearchHint,
           suffixIcon: IconButton(
-            icon: Icon(Icons.clear, color: Colors.grey[600]),
+            icon: Icon(
+              Icons.clear,
+              // color: Colors.grey[600],
+            ),
             onPressed: () => viewModel.searchController.clear(),
           ),
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/core/constants/images_const/app_images.dart';
+import 'package:the_movie_app/core/constants/widget_size.dart';
 import 'package:the_movie_app/core/helpers/converter_helper.dart';
 import 'package:the_movie_app/core/helpers/date_format_helper.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
@@ -99,7 +100,7 @@ class MovieDetailsMainInfoWidget extends StatelessWidget {
             additionalText: context.l10n.productionCompanies,
             altImagePath: AppImages.noLogo,
             aspectRatio: 1 / 1,
-            boxHeight: AppSpacing.p216,
+            boxHeight: WidgetSize.size216,
             paddingEdgeInsets: 4,
           ),
           secondAction: () {},
@@ -124,7 +125,6 @@ class MovieDetailsMainInfoWidget extends StatelessWidget {
 
 class _SummaryMovieWidget extends StatelessWidget {
   const _SummaryMovieWidget({super.key});
-  final double textSize = 16;
 
   @override
   Widget build(BuildContext context) {
@@ -172,66 +172,43 @@ class _SummaryMovieWidget extends StatelessWidget {
       child: RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
-          style: const TextStyle(color: Colors.black),
+            style: Theme.of(context).textTheme.titleMedium,
             children: [
               TextSpan(
                 text: rating,
-                style: TextStyle(
-                  fontSize: textSize,
-                ),
               ),
               TextSpan(
                 text: rating.isNotEmpty ? " ● " : "",
                 // text: movieDetails?.runtime != null ? " ● " : "",
-                style: TextStyle(fontSize: textSize,),
               ),
               TextSpan(
                   text: "${movieDetails?.runtime.toString()} ${context.l10n.min}",
-                  style: TextStyle(
-                    fontSize: textSize,
-                  )
               ),
               TextSpan(
                 text: releaseDate != "" ? " ● " : "",
-                style: TextStyle(fontSize: textSize,),
               ),
               TextSpan(
                   text: releaseDate,
-                  style: TextStyle(
-                    fontSize: textSize,
-                  )
               ),
               TextSpan(
                 text: countries.isNotEmpty ? " ● " : "",
-                style: TextStyle(fontSize: textSize,),
               ),
               TextSpan(
                   text: countries.isNotEmpty ? countries : "",
-                  style: TextStyle(
-                    fontSize: textSize,
-                  )
               ),
               TextSpan(
                 text: genres.isNotEmpty ? " ● " : "",
-                style: TextStyle(fontSize: textSize,),
               ),
               TextSpan(
                   text: genres.isNotEmpty ? genres : "",
-                  style: TextStyle(
-                    fontSize: textSize,
-                  )
               ),
               if(status != null)
                 TextSpan(
                   text: genres.isNotEmpty ? " ● " : "",
-                  style: TextStyle(fontSize: textSize,),
                 ),
               if(status != null)
                 TextSpan(
                     text: status,
-                    style: TextStyle(
-                      fontSize: textSize,
-                    )
                 ),
             ]
         ),

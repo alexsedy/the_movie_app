@@ -86,7 +86,8 @@ class _UserListBody extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    tileColor: Colors.grey[200],
+                    // tileColor: Colors.grey[200],
+                    tileColor: Theme.of(context).colorScheme.inversePrimary,
                     trailing: PopupMenuButton<String>(
                       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                         PopupMenuItem<String>(
@@ -160,18 +161,13 @@ class _UserListBody extends StatelessWidget {
                       children: [
                         Text(
                           name,
-                          style: const TextStyle(
-                            fontSize: 22,
-                          ),
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                         Text(
                           description,
                           maxLines: 1,
                           overflow: TextOverflow.clip,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontStyle: FontStyle.italic,
-                          ),
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ],
                     ),
@@ -179,9 +175,7 @@ class _UserListBody extends StatelessWidget {
                       children: [
                         Text(
                           context.l10n.itemNumberOfItems(numberOfItems),
-                          style: const TextStyle(
-                            fontStyle: FontStyle.italic,
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall,
                         ),
                         const Padding(
                           padding: AppSpacing.screenPaddingH10,
@@ -189,9 +183,7 @@ class _UserListBody extends StatelessWidget {
                         ),
                         Text(
                           createdAt,
-                          style: const TextStyle(
-                            fontStyle: FontStyle.italic,
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ],
                     ),
@@ -251,7 +243,7 @@ class _UpdateListWidgetState extends State<_UpdateListWidget> {
         children: [
           Text(
             context.l10n.updateTheNameList(name),
-            style: TextStyle(fontSize: 22),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           AppSpacing.gapH32,
           TextField(
@@ -291,9 +283,7 @@ class _UpdateListWidgetState extends State<_UpdateListWidget> {
               children: [
                 Text(
                   context.l10n.public,
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 Switch(
                   value: _isPublic,

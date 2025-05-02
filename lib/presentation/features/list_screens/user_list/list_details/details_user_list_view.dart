@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/core/constants/images_const/app_images.dart';
+import 'package:the_movie_app/core/constants/widget_size.dart';
 import 'package:the_movie_app/core/helpers/date_format_helper.dart';
 import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
@@ -207,9 +208,7 @@ class _ListBodyState extends State<_ListBody> {
           return Center(
             child: Text(
               context.l10n.theListIsEmpty,
-              style: TextStyle(
-                fontSize: 36,
-              ),
+              style: Theme.of(context).textTheme.displaySmall,
             ),
           );
         }
@@ -219,7 +218,7 @@ class _ListBodyState extends State<_ListBody> {
 
     return ListView.builder(
       itemCount: model.listOfUserListDetails.length,
-      itemExtent: AppSpacing.p160,
+      itemExtent: WidgetSize.size180,
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       itemBuilder: (BuildContext context, int index) {
         final item = model.listOfUserListDetails[index];
@@ -235,7 +234,7 @@ class _ListBodyState extends State<_ListBody> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.surface,
                     border: Border.all(
                         color: Colors.black.withOpacity(0.2)),
                     borderRadius: const BorderRadius.all(
@@ -277,22 +276,21 @@ class _ListBodyState extends State<_ListBody> {
                             AppSpacing.gapH16,
                             Text(
                               title,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold),
+                              style: Theme.of(context).textTheme.bodyLarge,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                             AppSpacing.gapH6,
                             Text(
                               date,
-                              // movie.releaseDate,
-                              style: const TextStyle(color: Colors.grey),
+                              style: Theme.of(context).textTheme.bodySmall,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                             AppSpacing.gapH16,
                             Expanded(
                               child: Text(
+                                style: Theme.of(context).textTheme.bodyMedium,
                                 item.overview,
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,

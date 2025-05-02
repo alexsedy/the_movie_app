@@ -24,9 +24,7 @@ class ParameterizedMediaDetailsListWidget extends StatelessWidget {
               padding: AppSpacing.screenPaddingH10V4,
               child: Text(
                 paramsModel.additionalText,
-                style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
           ),

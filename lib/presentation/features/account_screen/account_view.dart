@@ -60,11 +60,11 @@ class AccountView extends StatelessWidget {
                           children: [
                             Text(
                               context.l10n.hello,
-                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                              style: Theme.of(context).textTheme.titleLarge,
                             ),
                             Text(
                               context.l10n.guest,
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                              style: Theme.of(context).textTheme.titleLarge,
                             ),
                           ],
                         ),
@@ -82,9 +82,7 @@ class AccountView extends StatelessWidget {
                     AppSpacing.gapH80,
                     Text(
                       context.l10n.noLoginAccountMessage,
-                      style: const TextStyle(
-                          fontSize: 24
-                      ),
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
                   ],
                 ),
@@ -130,11 +128,11 @@ class _WelcomeTextWidget extends StatelessWidget {
         children: [
           Text(
             context.l10n.hello,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           Text(
             username ?? "",
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ],
       ),
@@ -155,6 +153,9 @@ class _LogoutButtonWidget extends StatelessWidget {
     return Column(
       children: [
         ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
           onPressed: () {
             showDialog(
               context: context,
@@ -192,15 +193,12 @@ class _LogoutButtonWidget extends StatelessWidget {
             );
           },
           // onPressed: () => model?.makeLogout(context),
-          style: ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(Colors.redAccent.shade100),
-          ),
           child: Text(context.l10n.logout),
         ),
         isLinked
             ? ElevatedButton(
-          style: ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(Colors.redAccent.shade100),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.error,
           ),
           onPressed: () {
             showDialog(
@@ -253,7 +251,7 @@ class _LogoutButtonWidget extends StatelessWidget {
                       children: [
                         Text(
                           "Link your TMDB account to My Movie to get benefits:",
-                          style: TextStyle(fontSize: 18),
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
                         AppSpacing.gapH10,
                         Text("• AI-powered playlist generation by genre."),
@@ -342,9 +340,7 @@ class _AccountBodyWidget extends StatelessWidget {
                         AppSpacing.gapW16,
                         Text(
                           context.l10n.userLists,
-                          style: const TextStyle(
-                              fontSize: 24
-                          ),
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ],
                     ),
@@ -377,9 +373,7 @@ class _AccountBodyWidget extends StatelessWidget {
                         AppSpacing.gapW16,
                         Text(
                           context.l10n.favorite,
-                          style: const TextStyle(
-                              fontSize: 24
-                          ),
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ],
                     ),
@@ -412,9 +406,7 @@ class _AccountBodyWidget extends StatelessWidget {
                         AppSpacing.gapW16,
                         Text(
                           context.l10n.watchlist,
-                          style: const TextStyle(
-                              fontSize: 24
-                          ),
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ],
                     ),
@@ -447,9 +439,7 @@ class _AccountBodyWidget extends StatelessWidget {
                         AppSpacing.gapW16,
                         Text(
                           context.l10n.rated,
-                          style: const TextStyle(
-                              fontSize: 24
-                          ),
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ],
                     ),
@@ -482,9 +472,7 @@ class _AccountBodyWidget extends StatelessWidget {
                         AppSpacing.gapW16,
                         Text(
                           context.l10n.recommendation,
-                          style: const TextStyle(
-                              fontSize: 24
-                          ),
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ],
                     ),
@@ -518,9 +506,7 @@ class _AccountBodyWidget extends StatelessWidget {
                         AppSpacing.gapW16,
                         Text(
                           context.l10n.aiRecommendation,
-                          style: const TextStyle(
-                              fontSize: 24
-                          ),
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ],
                     ),

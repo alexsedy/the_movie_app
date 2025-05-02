@@ -34,7 +34,7 @@ class _CreateListWidgetState extends State<CreateListWidget> {
         children: [
           Text(
             context.l10n.createANewList,
-            style: const TextStyle(fontSize: 22),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           AppSpacing.gapH32,
           TextField(
@@ -74,9 +74,7 @@ class _CreateListWidgetState extends State<CreateListWidget> {
               children: [
                 Text(
                   context.l10n.public,
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 Switch(
                   value: _isPublic,

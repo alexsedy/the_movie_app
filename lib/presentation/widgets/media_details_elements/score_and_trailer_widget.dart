@@ -38,14 +38,14 @@ class ScoreAndTrailerWidget<T extends IBaseMediaDetailsModel> extends StatelessW
                       lineWidth: 3,
                       child: Text(
                         "$voteAverageText%",
-                        style: const TextStyle(color: Colors.white),),
+                        style: TextStyle(color: Colors.white),),
                     ),
                   ),
                   AppSpacing.gapW10,
                   Text(
                     context.l10n.userScore, 
-                    style: const TextStyle(
-                      color: Colors.black,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -88,8 +88,11 @@ class ScoreAndTrailerWidget<T extends IBaseMediaDetailsModel> extends StatelessW
               },
               child: Row(
                 children: [
-                  const Icon(Icons.play_arrow, color: Colors.black),
-                  Text(context.l10n.playTrailer, style: const TextStyle(color: Colors.black),),
+                  Icon(Icons.play_arrow, color: Theme.of(context).colorScheme.onSurface),
+                  Text(
+                    context.l10n.playTrailer,
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                  ),
                 ],
               )
           )
@@ -101,7 +104,7 @@ class ScoreAndTrailerWidget<T extends IBaseMediaDetailsModel> extends StatelessW
                   const Icon(Icons.play_arrow_outlined),
                   Text(
                     context.l10n.noTrailer,
-                    style: const TextStyle(color: Colors.black),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   ),
                 ],
               ),

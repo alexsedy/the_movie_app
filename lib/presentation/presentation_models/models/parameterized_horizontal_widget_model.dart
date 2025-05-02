@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/core/constants/widget_size.dart';
 import 'package:the_movie_app/presentation/presentation_models/models/parameterized_widget_display_model.dart';
 import 'package:the_movie_app/presentation/presentation_models/models/statuses_model.dart';
 
@@ -15,7 +16,7 @@ class ParameterizedWidgetModel{
   final String additionalText;
 
 
-  ParameterizedWidgetModel({this.boxHeight = 300, this.statuses,
+  ParameterizedWidgetModel({this.boxHeight = WidgetSize.defaultBoxH, this.statuses,
     this.aspectRatio = 500 / 750, this.paddingEdgeInsets = 0.0,
     this.altImagePath = "", required this.list, required this.action,
     this.scrollController, this.additionalText = "NULL",

@@ -60,8 +60,8 @@ class MediaDetailsBodyShimmerSkeletonWidget extends StatelessWidget {
                               AppSpacing.gapW10,
                               Text(
                                 context.l10n.userScore, 
-                                style: const TextStyle(
-                                    color: Colors.black,
+                                style: TextStyle(
+                                    color: Theme.of(context).colorScheme.onSurface,
                                 ),
                               ),
                             ],
@@ -75,11 +75,11 @@ class MediaDetailsBodyShimmerSkeletonWidget extends StatelessWidget {
                           onPressed: (){},
                           child: Row(
                             children: [
-                              const Icon(Icons.play_arrow, color: Colors.black),
+                              Icon(Icons.play_arrow, color: Theme.of(context).colorScheme.onSurface),
                               Text(
                                 context.l10n.playTrailer, 
-                                style: const TextStyle(
-                                  color: Colors.black,
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.onSurface,
                                 ),
                               ),
                             ],
@@ -142,11 +142,8 @@ class MediaDetailsBodyShimmerSkeletonWidget extends StatelessWidget {
                 Padding(
                   padding: AppSpacing.screenPaddingH16V10,
                   child: Text(
-                    context.l10n.overview, 
-                    style: const TextStyle(
-                      fontSize: 21, 
-                      fontWeight: FontWeight.w700,
-                    ),
+                    context.l10n.overview,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
                 Padding(
@@ -175,9 +172,7 @@ class MediaDetailsBodyShimmerSkeletonWidget extends StatelessWidget {
                         child: Text(
                           mediaDetailsElementType == MediaDetailsElementType.movie
                            ? context.l10n.movieCrew : context.l10n.tvShowCrew,
-                          style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ),
                     ),
@@ -275,9 +270,7 @@ class MediaDetailsBodyShimmerSkeletonWidget extends StatelessWidget {
                         child: Text(
                           mediaDetailsElementType == MediaDetailsElementType.movie
                               ? context.l10n.movieCast : context.l10n.tvShowCast,
-                          style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ),
                     ),

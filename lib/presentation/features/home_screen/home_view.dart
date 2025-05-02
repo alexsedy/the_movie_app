@@ -46,7 +46,6 @@ class _SearchWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const textStyle = TextStyle(fontSize: 36,);
     final viewModel = context.read<HomeViewModel>();
 
     return Stack(
@@ -68,7 +67,7 @@ class _SearchWidget extends StatelessWidget {
             AppSpacing.gapH40,
             Text(
               context.l10n.findAnythingWelcome,
-              style: textStyle,
+              style: Theme.of(context).textTheme.displayMedium,
             ),
             AppSpacing.gapH20,
             Padding(
@@ -77,13 +76,14 @@ class _SearchWidget extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
+                      // decoration: BoxDecoration(
+                      //   border: Border.all(),
+                      //   borderRadius: BorderRadius.circular(8.0),
+                      // ),
                       child: TextField(
                         onTap: () => viewModel.onHomeSearchScreen(context: context),
                         readOnly: true,
+                        focusNode: _AlwaysDisabledFocusNode(),
                         dragStartBehavior: DragStartBehavior.start,
                         decoration: InputDecoration(
                           contentPadding: AppSpacing.screenPaddingH10,
@@ -101,6 +101,11 @@ class _SearchWidget extends StatelessWidget {
       ],
     );
   }
+}
+
+class _AlwaysDisabledFocusNode extends FocusNode {
+  @override
+  bool get hasFocus => true;
 }
 
 
@@ -191,7 +196,10 @@ class _TrendingToggleWidgetState extends State<_TrendingToggleWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: Text(_getName(context), maxLines: 2, style: const TextStyle(fontSize: 20)),
+                child: Text(
+                  _getName(context), maxLines: 2,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
               ),
               AppSpacing.gapW10,
               SizedBox(

@@ -55,7 +55,7 @@ class _BodyWidgetState extends State<_BodyWidget> {
             AppSpacing.gapH20,
             Text(
               context.l10n.writeADescriptionAiMessage,
-              style: const TextStyle(fontSize: 20),
+              style: Theme.of(context).textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
             AppSpacing.gapH20,
@@ -77,7 +77,7 @@ class _BodyWidgetState extends State<_BodyWidget> {
             AppSpacing.gapH20,
             Text(
               context.l10n.selectMaxNumberOfItems,
-              style: const TextStyle(fontSize: 20),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             Slider(
               value: _sliderValue,

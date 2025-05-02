@@ -30,9 +30,7 @@ class _MovieListViewState extends State<MovieListView> {
       return Center(
         child: Text(
           context.l10n.noResults,
-          style: const TextStyle(
-            fontSize: 36,
-          ),
+          style: Theme.of(context).textTheme.displaySmall,
         ),
       );
     }
