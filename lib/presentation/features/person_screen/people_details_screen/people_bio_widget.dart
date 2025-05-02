@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/core/constants/images_const/app_images.dart';
 import 'package:the_movie_app/core/helpers/date_format_helper.dart';
 import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
@@ -23,7 +24,7 @@ class BioPersonWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const _ProfilePhotoWidget(),
-            const SizedBox(width: 10,),
+            AppSpacing.gapW10,
             Expanded(
               child: Column(
                 children: [
@@ -31,10 +32,7 @@ class BioPersonWidget extends StatelessWidget {
                     name ?? "",
                     maxLines: 3,
                     softWrap: true,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                    ),
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   const _SocialNetworkWidget(),
                 ],
@@ -42,7 +40,7 @@ class BioPersonWidget extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 10,),
+        AppSpacing.gapH10,
         const _GeneralInfoWidget(),
         const _BioTextWidget(),
       ],
@@ -87,7 +85,7 @@ class _GeneralInfoWidget extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 20,),
+        AppSpacing.gapH20,
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -115,7 +113,7 @@ class _GeneralInfoWidget extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 20,),
+        AppSpacing.gapH20,
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -131,7 +129,7 @@ class _GeneralInfoWidget extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 150,),
+            AppSpacing.gapW160,
           ],
         ),
       ],
@@ -157,15 +155,10 @@ class _SocialNetworkWidget extends StatelessWidget {
 
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 30),
-          child: Text(
-            context.l10n.socialNetwork,
-            style: const TextStyle(
-              fontSize: 18,
-              fontStyle: FontStyle.italic,
-            ),
-          ),
+        AppSpacing.gapH32,
+        Text(
+          context.l10n.socialNetwork,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -282,48 +275,51 @@ class _BioTextWidgetState extends State<_BioTextWidget> {
     final biography = context.watch<PeopleDetailsViewModel>().personDetails?.biography;
 
     if(biography == null || biography.isEmpty) {
-      return const SizedBox.shrink();
+      return AppSpacing.emptyGap;
     }
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8,),
-      child: InkWell(
-        onTap: () {
-          setState(() {
-            _isExpanded = !_isExpanded;
-          });
-        },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              context.l10n.biography,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
+    return Column(
+      children: [
+        InkWell(
+          onTap: () {
+            setState(() {
+              _isExpanded = !_isExpanded;
+            });
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: AppSpacing.screenPaddingH16V10,
+                child: Text(
+                  context.l10n.biography,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
               ),
-            ),
-            const SizedBox(height: 10,),
-            AnimatedCrossFade(
-              duration: const Duration(milliseconds: 300),
-              crossFadeState: _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-              firstChild: Text(
-                biography,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 5,
+              Padding(
+                padding: AppSpacing.screenPaddingH10,
+                child: AnimatedCrossFade(
+                  duration: const Duration(milliseconds: 300),
+                  crossFadeState: _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                  firstChild: Text(
+                    biography,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 5,
+                  ),
+                  secondChild: Text(
+                    biography,
+                  ),
+                ),
               ),
-              secondChild: Text(
-                biography,
+              biography.length <= 300
+                  ? AppSpacing.emptyGap
+                  : Icon(
+                _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
               ),
-            ),
-            biography.length <= 300
-                ? const SizedBox.shrink()
-                : Icon(
-              _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

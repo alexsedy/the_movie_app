@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
+import 'package:the_movie_app/core/constants/widget_size.dart';
 import 'package:the_movie_app/presentation/widgets/enum_collection.dart';
 
 class HorizontalListShimmerSkeletonWidget extends StatelessWidget {
@@ -12,11 +14,11 @@ class HorizontalListShimmerSkeletonWidget extends StatelessWidget {
 
     switch(horizontalListElementType) {
       case HorizontalListElementType.movie:
-        boxHeight = 280;
+        boxHeight = WidgetSize.defaultBoxH;
       case HorizontalListElementType.tv:
-        boxHeight = 280;
+        boxHeight = WidgetSize.defaultBoxH;
       case HorizontalListElementType.trendingPerson:
-        boxHeight = 280;
+        boxHeight = WidgetSize.defaultBoxH;
       case HorizontalListElementType.cast:
       case HorizontalListElementType.companies:
       case HorizontalListElementType.seasons:
@@ -35,14 +37,14 @@ class HorizontalListShimmerSkeletonWidget extends StatelessWidget {
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: 10,
-          itemExtent: 125,
+          itemExtent: WidgetSize.size130,
           itemBuilder: (BuildContext context, _) {
             return Padding(
-              padding: const EdgeInsets.all(8),
+              padding: AppSpacing.screenPaddingAll10,
               child: Container(
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.black.withOpacity(0.2)),
+                    color: Theme.of(context).colorScheme.surface,
+                    border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     boxShadow: [
                       BoxShadow(
@@ -71,28 +73,27 @@ class DefaultListsShimmerSkeletonWidget extends StatelessWidget {
       baseColor: Colors.grey.withOpacity(0.5),
       highlightColor: Colors.white.withOpacity(0.5),
       child: ListView.builder(
-          itemCount: 6,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (BuildContext context, _) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              child: Container(
-                height: 143,
-                width: 391.5,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.black.withOpacity(0.2)),
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 8,
-                        offset: const Offset(1, 2),
-                      )]
-                ),
+        itemExtent: WidgetSize.size180,
+        itemCount: 6,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (BuildContext context, _) {
+          return Padding(
+            padding: AppSpacing.screenPaddingH16V10,
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(1, 2),
+                    )]
               ),
-            );
-          }
+            ),
+          );
+        }
       ),
     );
   }
@@ -111,13 +112,13 @@ class AiListsShimmerSkeletonWidget extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, _) {
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              padding: AppSpacing.screenPaddingH16V10,
               child: Container(
                 height: 143,
                 width: 391.5,
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.black.withOpacity(0.2)),
+                    color: Theme.of(context).colorScheme.surface,
+                    border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     boxShadow: [
                       BoxShadow(
@@ -147,13 +148,13 @@ class UserListsShimmerSkeletonWidget extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, _) {
             return Padding(
-              padding: const EdgeInsets.all(8),
+              padding: AppSpacing.screenPaddingAll10,
               child: Container(
                 height: 140,
                 width: 411.5,
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.black.withOpacity(0.2)),
+                    color: Theme.of(context).colorScheme.surface,
+                    border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     boxShadow: [
                       BoxShadow(

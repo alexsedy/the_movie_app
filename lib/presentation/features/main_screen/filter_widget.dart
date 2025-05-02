@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/presentation/presentation_models/interfaces/i_media_filter_model.dart';
 
@@ -36,17 +37,17 @@ class _FilterMoviesButtonWidgetState extends State<FilterMoviesButtonWidget> {
                 heightFactor: 0.75,
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: AppSpacing.screenPaddingAll10,
                     child: Column(
                       children: [
                         _DateFilterWidget(model: widget.model, key: _dateKey,),
-                        const SizedBox(height: 20),
+                        AppSpacing.gapH20,
                         _GenresMoviesFilterWidget(model: widget.model, key: _genreKey,),
-                        const SizedBox(height: 20),
+                        AppSpacing.gapH20,
                         _UserScoreFilterWidget(model: widget.model, key: _userScoreKey,),
-                        const SizedBox(height: 20),
+                        AppSpacing.gapH20,
                         _SortByFilterWidget(model: widget.model, key: _sortByKey,),
-                        const SizedBox(height: 20),
+                        AppSpacing.gapH20,
                         _AcceptedButtonsWidget(
                           model: widget.model,
                           genreKey: _genreKey,
@@ -54,7 +55,7 @@ class _FilterMoviesButtonWidgetState extends State<FilterMoviesButtonWidget> {
                           userScoreKey: _userScoreKey,
                           dateKey: _dateKey,
                         ),
-                        const SizedBox(height: 10),
+                        AppSpacing.gapH10,
                       ],
                     ),
                   ),
@@ -167,15 +168,16 @@ class _DateFilterWidgetState extends State<_DateFilterWidget> {
       children: [
         Text(
           context.l10n.releaseDates,
-          style: const TextStyle(
-            fontSize: 18,
-          ),
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
         if(_isShowError)
           Text(
             context.l10n.pleaseEnterCorrectDate, 
-            style: const TextStyle(color: Colors.red)),
-        const SizedBox(height: 6,),
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color:
+            Theme.of(context).colorScheme.error
+            ),
+          ),
+        AppSpacing.gapH6,
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -267,11 +269,9 @@ class _UserScoreFilterWidgetState extends State<_UserScoreFilterWidget> {
 
     return Column(
       children: [
-        const Text(
+        Text(
           "User score",
-          style: TextStyle(
-            fontSize: 18,
-          ),
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
         RangeSlider(
           labels: RangeLabels(

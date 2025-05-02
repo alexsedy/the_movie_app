@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/core/constants/images_const/app_images.dart';
 import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
 import 'package:the_movie_app/data/models/media/media_details/media_details.dart';
@@ -67,7 +68,7 @@ class _BodyWidget extends StatelessWidget {
       delegate: SliverChildListDelegate(
         [
           const TvShowDetailsMainInfoWidget(),
-          const SizedBox(height: 20,),
+          AppSpacing.gapH20,
         ],
       ),
     );
@@ -107,25 +108,12 @@ class _MovieNameWidget extends StatelessWidget {
         children: [
           TextSpan(
             text: name,
-            style: const TextStyle(
-              fontWeight: FontWeight.w700,
-              fontSize: 21,
-            ),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
-          // TextSpan(
-          //   text: releaseText,
-          //     style: const TextStyle(
-          //       fontWeight: FontWeight.w400,
-          //       fontSize: 16,
-          //     )
-          // ),
           if(locale.languageCode != "en" && name != originalName)
             TextSpan(
-                text: "\n$originalName",
-                style: const TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 12,
-                )
+              text: "\n$originalName",
+              style: Theme.of(context).textTheme.bodySmall,
             ),
         ]
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/presentation/presentation_models/interfaces/i_base_media_details_model.dart';
 import 'package:the_movie_app/presentation/widgets/media_details_elements/score_radial_percent_widget.dart';
@@ -37,14 +38,14 @@ class ScoreAndTrailerWidget<T extends IBaseMediaDetailsModel> extends StatelessW
                       lineWidth: 3,
                       child: Text(
                         "$voteAverageText%",
-                        style: const TextStyle(color: Colors.white),),
+                        style: TextStyle(color: Colors.white),),
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  AppSpacing.gapW10,
                   Text(
                     context.l10n.userScore, 
-                    style: const TextStyle(
-                      color: Colors.black,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -87,8 +88,11 @@ class ScoreAndTrailerWidget<T extends IBaseMediaDetailsModel> extends StatelessW
               },
               child: Row(
                 children: [
-                  const Icon(Icons.play_arrow, color: Colors.black),
-                  Text(context.l10n.playTrailer, style: const TextStyle(color: Colors.black),),
+                  Icon(Icons.play_arrow, color: Theme.of(context).colorScheme.onSurface),
+                  Text(
+                    context.l10n.playTrailer,
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                  ),
                 ],
               )
           )
@@ -100,7 +104,7 @@ class ScoreAndTrailerWidget<T extends IBaseMediaDetailsModel> extends StatelessW
                   const Icon(Icons.play_arrow_outlined),
                   Text(
                     context.l10n.noTrailer,
-                    style: const TextStyle(color: Colors.black),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   ),
                 ],
               ),

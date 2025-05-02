@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/presentation/presentation_models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/presentation/widgets/list_elements/params_horizontal_list_widget.dart';
 
@@ -13,19 +14,17 @@ class ParameterizedMediaDetailsListWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
+          padding: AppSpacing.screenPaddingAll6,
           child: InkWell(
             borderRadius: BorderRadius.circular(24),
             onTap: () {
               secondAction();
             },
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: AppSpacing.screenPaddingH10V4,
               child: Text(
                 paramsModel.additionalText,
-                style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
           ),

@@ -68,10 +68,7 @@ class _RateDialogWidgetState extends State<_RateDialogWidget> {
         Center(
           child: Text(
             "${context.l10n.rate}: ${rate.round()}",
-            style: TextStyle(
-              fontSize: 18,
-              color: Theme.of(context).primaryColor,
-            ),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
         Slider(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/core/constants/images_const/app_images.dart';
+import 'package:the_movie_app/core/constants/widget_size.dart';
 import 'package:the_movie_app/core/helpers/converter_helper.dart';
 import 'package:the_movie_app/core/helpers/date_format_helper.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
@@ -111,7 +113,7 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
             additionalText: context.l10n.networks,
             altImagePath: AppImages.noLogo,
             aspectRatio: 1 / 1,
-            boxHeight: 215,
+            boxHeight: WidgetSize.size216,
             paddingEdgeInsets: 4,
           ),
           secondAction: () {},
@@ -125,7 +127,7 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
             additionalText: context.l10n.productionCompanies,
             altImagePath: AppImages.noLogo,
             aspectRatio: 1 / 1,
-            boxHeight: 215,
+            boxHeight: WidgetSize.size216,
             paddingEdgeInsets: 4,
           ),
           secondAction: () {},
@@ -142,7 +144,7 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
           secondAction: () => {},
         ),
 
-        const SizedBox(height: 20,),
+        AppSpacing.gapH20,
       ],
     );
   }
@@ -150,7 +152,6 @@ class TvShowDetailsMainInfoWidget extends StatelessWidget {
 
 class _SummaryTvShowWidget extends StatelessWidget {
   const _SummaryTvShowWidget();
-  final double textSize = 16;
 
   @override
   Widget build(BuildContext context) {
@@ -204,59 +205,40 @@ class _SummaryTvShowWidget extends StatelessWidget {
     final genres = genresList.join(" | ");
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 15),
+      padding: AppSpacing.screenPaddingH60V16,
       child: RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
-          style: const TextStyle(color: Colors.black),
+            style: Theme.of(context).textTheme.titleMedium,
             children: [
               TextSpan(
                 text: rating,
-                style: TextStyle(
-                  fontSize: textSize,
-                ),
               ),
               TextSpan(
                 text: rating.isNotEmpty ? " ● " : "",
-                style: TextStyle(fontSize: textSize,),
               ),
               TextSpan(
                   text: firstAirDateText,
-                  style: TextStyle(
-                    fontSize: textSize,
-                  )
               ),
               TextSpan(
                 text: countries.isNotEmpty ? " ● " : "",
-                style: TextStyle(fontSize: textSize,),
               ),
               TextSpan(
                   text: countries.isNotEmpty ? countries : "",
-                  style: TextStyle(
-                    fontSize: textSize,
-                  )
               ),
               TextSpan(
                 text: genres.isNotEmpty ? " ● " : "",
-                style: TextStyle(fontSize: textSize,),
               ),
               TextSpan(
                   text: genres.isNotEmpty ? genres : "",
-                  style: TextStyle(
-                    fontSize: textSize,
-                  )
               ),
               if(status != null)
                 TextSpan(
                   text: genres.isNotEmpty ? " ● " : "",
-                  style: TextStyle(fontSize: textSize,),
                 ),
               if(status != null)
                 TextSpan(
                     text: status,
-                    style: TextStyle(
-                      fontSize: textSize,
-                    )
                 ),
             ]
         ),
