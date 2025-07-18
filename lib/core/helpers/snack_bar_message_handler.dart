@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/presentation/features/navigation/main_navigation.dart';
 
@@ -71,5 +72,15 @@ abstract class SnackBarMessageHandler {
         ],
       ),
     ));
+  }
+
+  static void showErrorSnackBarWithApiClientException(ApiClientException exception, BuildContext context) {
+    switch (exception.type) {
+      case ApiClientExceptionType.sessionExpired:
+        SnackBarMessageHandler.showErrorSnackBarWithLoginButton(context);
+        break;
+      default:
+        SnackBarMessageHandler.showErrorSnackBar(context);
+    }
   }
 }

@@ -7,6 +7,7 @@ import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/presentation/features/tv_show_screens/seasons/viewmodel/seasons_list_view_model.dart';
 import 'package:the_movie_app/presentation/presentation_models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/presentation/widgets/list_elements/params_vertical_list_widget.dart';
+import 'package:the_movie_app/presentation/widgets/widget_elements/error_widget.dart';
 
 class SeasonsListWidget extends StatelessWidget {
   const SeasonsListWidget({super.key});
@@ -29,6 +30,15 @@ class _BodyWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.watch<SeasonsListViewModel>();
     final seasons = model.seasons;
+    final errorMessage =  context.select<SeasonsListViewModel, String?>(
+            (model) => model.errorMessage);
+
+    if(errorMessage != null) {
+      return ErrorWithRetryWidget(
+        errorMessage: errorMessage,
+        onRetryPressed: () => context.read<SeasonsListViewModel>().getSeasonsStatuses(),
+      );
+    }
 
     if (seasons.isEmpty) {
     return AppSpacing.emptyGap;

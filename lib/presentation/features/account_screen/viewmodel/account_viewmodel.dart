@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/core/helpers/api_error_mapper.dart';
 import 'package:the_movie_app/data/datasources/firebase/firebase_auth_service.dart';
 import 'package:the_movie_app/data/datasources/local/cache_management/account_management.dart';
 import 'package:the_movie_app/data/datasources/local/data_providers/session_data_provider.dart';
@@ -26,6 +27,7 @@ class AccountViewModel extends ChangeNotifier {
   bool _isLoading = false;
   bool _isAuthProcess = false;
   bool _isLinkProcess = false;
+  String? _errorMessage;
 
   AccountSate? get accountSate => _accountSate;
   bool get isLoggedIn => _isLoggedIn;
@@ -33,6 +35,7 @@ class AccountViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isAuthProcess => _isAuthProcess;
   bool get isLinkProcess => _isLinkProcess;
+  String? get errorMessage => _errorMessage;
 
 
   AccountViewModel(
@@ -61,21 +64,25 @@ class AccountViewModel extends ChangeNotifier {
     if (_isLoggedIn && _accountSate == null) {
       await _getAccountState();
     }
-    if (wasLoggedIn != _isLoggedIn) {
+    // if (wasLoggedIn != _isLoggedIn) {
       notifyListeners();
-    }
+    // }
   }
 
   Future<void> _getAccountState() async {
     try {
       _accountSate = await _accountRepository.getAccountState();
-      // Сохраняем в кеш (если AccountManager еще не делает этого)
-      // await AccountManager.setAccountData(_accountSate); // Пример
+      _errorMessage = null;
     } catch (e) {
       print("Error getting account state: $e");
-      // Возможно, сбросить сессию, если ошибка связана с ней
       if (e is ApiClientException && e.type == ApiClientExceptionType.sessionExpired) {
         await _forceLogout();
+      }
+
+      if(e is ApiClientException) {
+        _errorMessage = ApiErrorMapper.mapError(e);
+      } else {
+        _errorMessage = ApiErrorMapper.unknownError();
       }
     }
   }
@@ -181,7 +188,7 @@ class AccountViewModel extends ChangeNotifier {
       if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
         throw Exception('Could not launch $url');
       }
-      _handleAuthDeepLink(requestToken, context); // Этот метод нужно будет адаптировать
+      _handleAuthDeepLink(requestToken, context);
     } catch (e) {
       print("Login error: $e");
       _showGenericErrorDialog(context);
@@ -212,8 +219,6 @@ class AccountViewModel extends ChangeNotifier {
     } catch (e) {
       print("Login completion error: $e");
       _showGenericErrorDialog(context);
-      // При ошибке здесь тоже можно почистить локальные данные, если нужно
-      // await _clearLocalAuthData();
     } finally {
       _isAuthProcess = false;
       notifyListeners();
@@ -229,11 +234,6 @@ class AccountViewModel extends ChangeNotifier {
       print("Received URI: $uri");
       if (uri != null && uri.host == 'the_movie_app' && uri.path == '/auth_approve') {
         completeLogin(requestToken, context);
-      } else {
-        // Ссылка не та, или null - возможно, пользователь закрыл вкладку
-        // Можно сбросить флаг загрузки через таймер, если ответ не пришел
-        // _isAuthProcess = false;
-        // notifyListeners();
       }
     }, onError: (err) {
       print("Error listening to deep links: $err");

@@ -66,7 +66,9 @@ class _FilterMoviesButtonWidgetState extends State<FilterMoviesButtonWidget> {
       },
       icon: Icon(
         Icons.filter_list_alt,
-        color: widget.model.isFiltered() ? Colors.blueAccent : Colors.black,
+        color: widget.model.isFiltered()
+            ? Theme.of(context).colorScheme.secondary
+            : Theme.of(context).colorScheme.primary,
       ),
     );
   }
@@ -348,7 +350,7 @@ class _AcceptedButtonsWidget extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             model.applyFilter();
-            model.loadContent();
+            model.fetchContent();
             Navigator.pop(context);
           },
           child: Text(context.l10n.ok),

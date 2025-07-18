@@ -12,14 +12,12 @@ class ParameterizedWidgetModel{
   final double aspectRatio;
   final double paddingEdgeInsets;
   final String altImagePath;
-  final ScrollController? scrollController;
   final String additionalText;
 
 
   ParameterizedWidgetModel({this.boxHeight = WidgetSize.defaultBoxH, this.statuses,
     this.aspectRatio = 500 / 750, this.paddingEdgeInsets = 0.0,
     this.altImagePath = "", required this.list, required this.action,
-    this.scrollController, this.additionalText = "NULL",
-    this.additionAction
+    this.additionalText = "NULL", this.additionAction,
   });
 }

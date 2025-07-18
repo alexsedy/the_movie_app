@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/core/helpers/api_error_mapper.dart';
 import 'package:the_movie_app/core/helpers/event_helper.dart';
 import 'package:the_movie_app/core/helpers/snack_bar_message_handler.dart';
 import 'package:the_movie_app/data/datasources/local/cache_management/local_media_tracking_service.dart';
@@ -31,7 +32,6 @@ class MovieDetailsViewModel extends ChangeNotifier implements IBaseMediaDetailsM
   int? _currentStatus;
   bool _isLoading = true;
   bool _isListsLoading = false;
-  // Пагинация для списков пользователя (если нужно)
   int _userListCurrentPage = 0;
   int _userListTotalPage = 1;
 
@@ -39,6 +39,8 @@ class MovieDetailsViewModel extends ChangeNotifier implements IBaseMediaDetailsM
   bool _isWatchlistLoading = false;
   bool _isRatingLoading = false;
   bool _isAddToLisLoading = false;
+
+  String? _errorMessage;
 
   @override
   MediaDetails? get mediaDetails => _mediaDetails;
@@ -64,6 +66,8 @@ class MovieDetailsViewModel extends ChangeNotifier implements IBaseMediaDetailsM
   bool get isRatingLoading => _isRatingLoading;
   bool get isAddToLisLoading => _isAddToLisLoading;
 
+  String? get errorMessage => _errorMessage;
+
   @override
   set rate(value) => _rate = value;
 
@@ -73,10 +77,10 @@ class MovieDetailsViewModel extends ChangeNotifier implements IBaseMediaDetailsM
       this._accountRepository,
       this._localMediaTrackingService,
       ) {
-    _loadMovieDetails();
+    fetchMovieDetails();
   }
 
-  Future<void> _loadMovieDetails() async {
+  Future<void> fetchMovieDetails() async {
     _isLoading = true;
     notifyListeners();
 
@@ -105,13 +109,15 @@ class MovieDetailsViewModel extends ChangeNotifier implements IBaseMediaDetailsM
       }
 
       _currentStatus = localMovie?.status;
-      if (_currentStatus != null && _currentStatus != 0) {
-        // _isWatched = true;
-      }
 
+      _errorMessage = null;
     } catch (e) {
-      // TODO: Handle error
       print("Error loading movie details: $e");
+      if(e is ApiClientException) {
+        _errorMessage = ApiErrorMapper.mapError(e);
+      } else {
+        _errorMessage = ApiErrorMapper.unknownError();
+      }
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -132,7 +138,7 @@ class MovieDetailsViewModel extends ChangeNotifier implements IBaseMediaDetailsM
               : "The movie has been removed from the favorite list."
       );
     } on ApiClientException catch (e) {
-      _handleApiClientException(e, context);
+      SnackBarMessageHandler.showErrorSnackBarWithApiClientException(e, context);
     } catch (e) {
       SnackBarMessageHandler.showErrorSnackBar(context);
     } finally {
@@ -195,7 +201,7 @@ class MovieDetailsViewModel extends ChangeNotifier implements IBaseMediaDetailsM
       }
       EventHelper.eventBus.fire(true);
     } on ApiClientException catch (e) {
-      _handleApiClientException(e, context);
+      SnackBarMessageHandler.showErrorSnackBarWithApiClientException(e, context);
       // TODO: Откатить изменения состояния при ошибке?
     } catch (e) {
       SnackBarMessageHandler.showErrorSnackBar(context);
@@ -219,7 +225,7 @@ class MovieDetailsViewModel extends ChangeNotifier implements IBaseMediaDetailsM
           message: "Movie rated." // TODO: Localize
       );
     } on ApiClientException catch (e) {
-      _handleApiClientException(e, context);
+      SnackBarMessageHandler.showErrorSnackBarWithApiClientException(e, context);
     } catch (e) {
       SnackBarMessageHandler.showErrorSnackBar(context);
     } finally {
@@ -242,7 +248,7 @@ class MovieDetailsViewModel extends ChangeNotifier implements IBaseMediaDetailsM
         message: context.l10n.theRatingWasDeletedSuccessfully,
       );
     } on ApiClientException catch (e) {
-      _handleApiClientException(e, context);
+      SnackBarMessageHandler.showErrorSnackBarWithApiClientException(e, context);
     } catch (e) {
       SnackBarMessageHandler.showErrorSnackBar(context);
     } finally {
@@ -253,18 +259,16 @@ class MovieDetailsViewModel extends ChangeNotifier implements IBaseMediaDetailsM
 
   @override
   Future<void> getAllUserLists(BuildContext context) async {
-    // Загружаем только если списки еще не загружены
     if (_lists.isNotEmpty && !_isListsLoading) return;
 
     _isListsLoading = true;
-    notifyListeners(); // Показать индикатор загрузки списков
+    notifyListeners();
 
-    _userListCurrentPage = 0; // Сброс пагинации
+    _userListCurrentPage = 0;
     _userListTotalPage = 1;
     _lists.clear();
 
     try {
-      // Можно добавить пагинацию, если списков может быть много
       while (_userListCurrentPage < _userListTotalPage) {
         final nextPage = _userListCurrentPage + 1;
         final userListsResponse = await _accountRepository.getUserLists(nextPage);
@@ -273,31 +277,30 @@ class MovieDetailsViewModel extends ChangeNotifier implements IBaseMediaDetailsM
         _userListTotalPage = userListsResponse.totalPages;
       }
     } on ApiClientException catch (e) {
-      _handleApiClientException(e, context); // Обрабатываем ошибку сессии и др.
-      Navigator.of(context).pop(); // Закрываем bottom sheet при ошибке сессии
+      SnackBarMessageHandler.showErrorSnackBarWithApiClientException(e, context);
+      Navigator.of(context).pop();
     } catch(e) {
       print("Error loading user lists: $e");
       SnackBarMessageHandler.showErrorSnackBar(context);
-      Navigator.of(context).pop(); // Закрываем bottom sheet при другой ошибке
+      Navigator.of(context).pop();
     } finally {
       _isListsLoading = false;
-      notifyListeners(); // Обновить UI (убрать индикатор, показать списки)
+      notifyListeners();
     }
   }
 
   @override
   Future<void> createNewList({required BuildContext context, required String? description, required String name, required bool public}) async {
-    _isAddToLisLoading = true; // Используем общий флаг или создадим отдельный
+    _isAddToLisLoading = true;
     notifyListeners();
     try {
       await _accountRepository.addNewList(description: description, name: name, public: public);
       SnackBarMessageHandler.showSuccessSnackBar(context: context, message: context.l10n.listCreatedMessage(name));
-      // После создания нового списка нужно обновить список доступных списков
-      _lists.clear(); // Очищаем кэш
-      // getAllUserLists(context); // Перезагружаем списки (можно сделать опционально)
-      Navigator.of(context).pop(); // Закрываем диалог создания
+      _lists.clear();
+      // getAllUserLists(context);
+      Navigator.of(context).pop();
     } on ApiClientException catch (e) {
-      _handleApiClientException(e, context);
+      SnackBarMessageHandler.showErrorSnackBarWithApiClientException(e, context);
     } catch(e) {
       SnackBarMessageHandler.showErrorSnackBar(context);
     } finally {
@@ -311,45 +314,31 @@ class MovieDetailsViewModel extends ChangeNotifier implements IBaseMediaDetailsM
     _isAddToLisLoading = true;
     notifyListeners();
     try {
-      // Проверка, есть ли уже элемент в списке
       final isAdded = await _accountRepository.isAddedToListToList(
           listId: listId, mediaType: MediaType.movie, mediaId: _movieId
       );
 
       if (isAdded) {
         SnackBarMessageHandler.showSuccessSnackBar(context: context, message: context.l10n.movieExistsInListMessage(name));
-        Navigator.pop(context); // Закрываем bottom sheet со списками
+        Navigator.pop(context);
       } else {
-        // Добавляем элемент
         await _accountRepository.addItemListToList(
             listId: listId, mediaType: MediaType.movie, mediaId: _movieId
         );
         SnackBarMessageHandler.showSuccessSnackBar(context: context, message: context.l10n.movieAddedToListMessage(name));
-        // Обновляем количество элементов в списке (опционально)
         final index = _lists.indexWhere((list) => list.id == listId);
         if (index != -1) {
-          _lists[index].numberOfItems++; // Увеличиваем счетчик локально
+          _lists[index].numberOfItems++;
         }
-        Navigator.pop(context); // Закрываем bottom sheet со списками
+        Navigator.pop(context);
       }
     } on ApiClientException catch (e) {
-      _handleApiClientException(e, context);
+      SnackBarMessageHandler.showErrorSnackBarWithApiClientException(e, context);
     } catch (e) {
       SnackBarMessageHandler.showErrorSnackBar(context);
     } finally {
       _isAddToLisLoading = false;
       notifyListeners();
-    }
-  }
-
-  // --- Вспомогательные методы ---
-  void _handleApiClientException(ApiClientException exception, BuildContext context) {
-    switch (exception.type) {
-      case ApiClientExceptionType.sessionExpired:
-        SnackBarMessageHandler.showErrorSnackBarWithLoginButton(context);
-        break;
-      default:
-        SnackBarMessageHandler.showErrorSnackBar(context);
     }
   }
 

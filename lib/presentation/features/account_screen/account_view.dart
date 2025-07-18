@@ -4,13 +4,22 @@ import 'package:sign_in_button/sign_in_button.dart';
 import 'package:the_movie_app/core/constants/app_spacing.dart';
 import 'package:the_movie_app/l10n/localization_extension.dart';
 import 'package:the_movie_app/presentation/features/account_screen/viewmodel/account_viewmodel.dart';
+import 'package:the_movie_app/presentation/widgets/widget_elements/error_widget.dart';
 
 class AccountView extends StatelessWidget {
   const AccountView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final isLoggedIn = context.select<AccountViewModel, bool>((value) => value.isLoggedIn);
+    final isLoggedIn = context.select<AccountViewModel, bool>((m) => m.isLoggedIn);
+    final errorMessage = context.select<AccountViewModel, String?>((m) => m.errorMessage);
+
+    if(errorMessage != null) {
+      return ErrorWithRetryWidget(
+        errorMessage: errorMessage,
+        onRetryPressed: () => context.read<AccountViewModel>().checkLoginStatus(),
+      );
+    }
 
     if(isLoggedIn) {
       return const Padding(

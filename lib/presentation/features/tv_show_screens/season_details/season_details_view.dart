@@ -8,6 +8,7 @@ import 'package:the_movie_app/presentation/features/tv_show_screens/season_detai
 import 'package:the_movie_app/presentation/presentation_models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/presentation/widgets/list_elements/params_vertical_list_widget.dart';
 import 'package:the_movie_app/presentation/widgets/shimmer_skeleton_elements/color_list_shimmer_skeleton_widget.dart';
+import 'package:the_movie_app/presentation/widgets/widget_elements/error_widget.dart';
 
 class SeasonDetailsView extends StatelessWidget {
   const SeasonDetailsView({super.key});
@@ -66,6 +67,15 @@ class _BodySeason extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.watch<SeasonDetailsViewModel>();
     final season = model.season;
+    final errorMessage =  context.select<SeasonDetailsViewModel, String?>(
+            (model) => model.errorMessage);
+
+    if(errorMessage != null) {
+      return ErrorWithRetryWidget(
+        errorMessage: errorMessage,
+        onRetryPressed: () => context.read<SeasonDetailsViewModel>().fetchSeasonDetails(),
+      );
+    }
 
     if (season == null) {
     return const ColorListShimmerSkeletonWidget();

@@ -8,6 +8,7 @@ import 'package:the_movie_app/presentation/presentation_models/models/parameteri
 import 'package:the_movie_app/presentation/widgets/list_elements/params_pagination_vertical_list_widget.dart';
 import 'package:the_movie_app/presentation/widgets/list_elements/params_vertical_list_widget.dart';
 import 'package:the_movie_app/presentation/widgets/shimmer_skeleton_elements/list_shimmer_skeleton_widget.dart';
+import 'package:the_movie_app/presentation/widgets/widget_elements/error_widget.dart';
 
 class DefaultListsView extends StatelessWidget {
   const DefaultListsView({super.key});
@@ -75,6 +76,14 @@ class _MovieListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = context.watch<DefaultListsViewModel>();
     final bool isWatchlist = viewModel.listType == ListType.watchlist;
+    final errorMessage = viewModel.errorMessage;
+
+    if(errorMessage != null) {
+      return ErrorWithRetryWidget(
+        errorMessage: errorMessage,
+        onRetryPressed: () => viewModel.fetchAll(),
+      );
+    }
 
     if (viewModel.movies.isEmpty && (isWatchlist
         ? viewModel.isWatchlistLoading
@@ -90,16 +99,15 @@ class _MovieListWidget extends StatelessWidget {
     final paramModel = ParameterizedWidgetModel(
       action: (ctx, index) => ctx.read<DefaultListsViewModel>().onMovieScreen(context, index),
       altImagePath: AppImages.noPoster,
-      scrollController: viewModel.movieScrollController,
       list: ConverterHelper.convertMoviesForVerticalWidget(viewModel.movies),
-      statuses: isWatchlist ? ConverterHelper.convertMovieStatuses(viewModel.movieStatuses) : null,
+      statuses: ConverterHelper.convertMovieStatuses(viewModel.movieStatuses),
     );
 
-    return isWatchlist
-        ? ParameterizedVerticalListWidget(paramModel: paramModel)
-        : ParameterizedPaginationVerticalListWidget(
+    return ParameterizedPaginationVerticalListWidget(
       paramModel: paramModel,
-      loadMoreItems: context.read<DefaultListsViewModel>().loadMovies,
+      loadMoreItems: isWatchlist ? () {} : context.read<DefaultListsViewModel>().loadMovies,
+      scrollController: viewModel.movieScrollController,
+      hasPagination: isWatchlist ? false : true,
     );
   }
 }
@@ -111,6 +119,14 @@ class _TvShowListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = context.watch<DefaultListsViewModel>();
     final bool isWatchlist = viewModel.listType == ListType.watchlist;
+    final errorMessage = viewModel.errorMessage;
+
+    if(errorMessage != null) {
+      return ErrorWithRetryWidget(
+        errorMessage: errorMessage,
+        onRetryPressed: () => viewModel.fetchAll(),
+      );
+    }
 
     if (viewModel.tvs.isEmpty && (isWatchlist ? viewModel.isWatchlistLoading : viewModel.isTvShowLoadingInProgress)) {
       return const DefaultListsShimmerSkeletonWidget();
@@ -122,16 +138,15 @@ class _TvShowListWidget extends StatelessWidget {
     final paramModel = ParameterizedWidgetModel(
       action: (ctx, index) => ctx.read<DefaultListsViewModel>().onTvShowScreen(context, index),
       altImagePath: AppImages.noPoster,
-      scrollController: viewModel.tvScrollController,
       list: ConverterHelper.convertTVShowsForVerticalWidget(viewModel.tvs),
-      statuses: isWatchlist ? ConverterHelper.convertTvShowStatuses(viewModel.tvShowStatuses) : null,
+      statuses: ConverterHelper.convertTvShowStatuses(viewModel.tvShowStatuses),
     );
 
-    return isWatchlist
-        ? ParameterizedVerticalListWidget(paramModel: paramModel)
-        : ParameterizedPaginationVerticalListWidget(
+    return ParameterizedPaginationVerticalListWidget(
       paramModel: paramModel,
-      loadMoreItems: context.read<DefaultListsViewModel>().loadTvShows,
+      loadMoreItems: isWatchlist ? () {} : context.read<DefaultListsViewModel>().loadTvShows,
+      scrollController: viewModel.tvScrollController,
+      hasPagination: isWatchlist ? false : true,
     );
   }
 }

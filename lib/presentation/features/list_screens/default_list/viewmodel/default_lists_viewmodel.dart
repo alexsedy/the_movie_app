@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/core/helpers/api_error_mapper.dart';
 import 'package:the_movie_app/core/helpers/event_helper.dart';
 import 'package:the_movie_app/data/datasources/local/cache_management/local_media_tracking_service.dart';
+import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
 import 'package:the_movie_app/data/models/hive/hive_movies/hive_movies.dart';
 import 'package:the_movie_app/data/models/hive/hive_tv_show/hive_tv_show.dart';
 import 'package:the_movie_app/data/models/media/list/list.dart';
@@ -43,6 +45,7 @@ class DefaultListsViewModel extends ChangeNotifier {
   bool get isMovieLoadingInProgress => _isMovieLoadingInProgress;
   bool get isTvShowLoadingInProgress => _isTvShowLoadingInProgress;
   bool get isWatchlistLoading => listType == ListType.watchlist && !_initialLoadWatchlistComplete;
+  String? get errorMessage => _errorMessage;
 
 
   DefaultListsViewModel(this.listType,
@@ -52,6 +55,12 @@ class DefaultListsViewModel extends ChangeNotifier {
   }
 
   void _initialize() {
+    fetchAll();
+  }
+
+  void fetchAll() {
+    _getMovieStatuses();
+    _getTvShowStatuses();
     if (listType == ListType.watchlist) {
       fetchAllMediaData();
       _subscribeToEvents();
@@ -73,12 +82,18 @@ class DefaultListsViewModel extends ChangeNotifier {
       _movies.addAll(moviesResponse.list);
       _movieCurrentPage = moviesResponse.page;
       _movieTotalPage = moviesResponse.totalPages;
+      _errorMessage = null;
     } catch (e) {
       print("Error loading default movies: $e");
-      // TODO: Error handling
+      if(e is ApiClientException) {
+        _errorMessage = ApiErrorMapper.mapError(e);
+      } else {
+        _errorMessage = ApiErrorMapper.unknownError();
+      }
     } finally {
       _isMovieLoadingInProgress = false;
-      notifyListeners();    }
+      notifyListeners();
+    }
   }
 
   Future<void> loadTvShows() async {
@@ -93,9 +108,14 @@ class DefaultListsViewModel extends ChangeNotifier {
       _tvs.addAll(tvShowResponse.list);
       _tvCurrentPage = tvShowResponse.page;
       _tvTotalPage = tvShowResponse.totalPages;
+      _errorMessage = null;
     } catch (e) {
       print("Error loading default tv shows: $e");
-      // TODO: Error handling
+      if(e is ApiClientException) {
+        _errorMessage = ApiErrorMapper.mapError(e);
+      } else {
+        _errorMessage = ApiErrorMapper.unknownError();
+      }
     } finally {
       _isTvShowLoadingInProgress = false;
       notifyListeners();
@@ -114,9 +134,6 @@ class DefaultListsViewModel extends ChangeNotifier {
     _tvCurrentPage = 0; _tvTotalPage = 1; _tvs.clear();
 
     try {
-      await _getMovieStatuses();
-      await _getTvShowStatuses();
-
       while (_movieCurrentPage < _movieTotalPage) {
         final nextPage = _movieCurrentPage + 1;
         final moviesResponse = await _accountRepository.getDefaultMovieLists(page: nextPage, listType: listType);
@@ -124,9 +141,15 @@ class DefaultListsViewModel extends ChangeNotifier {
         _movies.addAll(moviesResponse.list);
         _movieCurrentPage = moviesResponse.page;
         _movieTotalPage = moviesResponse.totalPages;
+        _errorMessage = null;
       }
     } catch (e) {
       print('Error loading all watchlist movies: $e');
+      if(e is ApiClientException) {
+        _errorMessage = ApiErrorMapper.mapError(e);
+      } else {
+        _errorMessage = ApiErrorMapper.unknownError();
+      }
     } finally {
       _isMovieLoadingInProgress = false;
       // notifyListeners();
@@ -143,6 +166,11 @@ class DefaultListsViewModel extends ChangeNotifier {
       }
     } catch (e) {
       print('Error loading all watchlist tv shows: $e');
+      if(e is ApiClientException) {
+        _errorMessage = ApiErrorMapper.mapError(e);
+      } else {
+        _errorMessage = ApiErrorMapper.unknownError();
+      }
     } finally {
       _isTvShowLoadingInProgress = false;
       // notifyListeners();

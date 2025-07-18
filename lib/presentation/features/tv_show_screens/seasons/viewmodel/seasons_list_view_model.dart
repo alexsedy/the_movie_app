@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/core/constants/navigator_param_const.dart';
+import 'package:the_movie_app/core/helpers/api_error_mapper.dart';
 import 'package:the_movie_app/core/helpers/event_helper.dart';
 import 'package:the_movie_app/core/helpers/snack_bar_message_handler.dart';
 import 'package:the_movie_app/data/datasources/local/cache_management/local_media_tracking_service.dart';
@@ -16,8 +17,10 @@ class SeasonsListViewModel extends ChangeNotifier {
 
   final _seasonsStatuses = <int, HiveSeasons>{};
   StreamSubscription? _subscription;
+  String? _errorMessage;
 
   Map<int, HiveSeasons> get seasonsStatuses => Map.unmodifiable(_seasonsStatuses);
+  String? get errorMessage => _errorMessage;
 
   SeasonsListViewModel({
     required this.seasons,
@@ -28,11 +31,11 @@ class SeasonsListViewModel extends ChangeNotifier {
   }
 
   void _initialize() {
-    _getSeasonsStatuses();
+    getSeasonsStatuses();
     _subscribeToEvents();
   }
 
-  Future<void> _getSeasonsStatuses() async {
+  Future<void> getSeasonsStatuses() async {
     try {
       final tvShow = await _localMediaTrackingService.getTVShowById(tvShowId);
       final localSeasons = tvShow?.seasons;
@@ -40,16 +43,19 @@ class SeasonsListViewModel extends ChangeNotifier {
       if (localSeasons != null) {
         _seasonsStatuses.addAll(localSeasons);
       }
-      notifyListeners();
+      _errorMessage = null;
     } catch (e) {
       print("Error getting season statuses: $e");
-    }
+      _errorMessage = ApiErrorMapper.unknownError();
+    } finally {
+      notifyListeners();
+  }
   }
 
   void _subscribeToEvents() {
     _subscription = EventHelper.eventBus.on<bool>().listen((event) async {
       if (event && !_isDisposed) {
-        await _getSeasonsStatuses();
+        await getSeasonsStatuses();
       }
     });
   }
@@ -68,7 +74,7 @@ class SeasonsListViewModel extends ChangeNotifier {
         status: currentStatus == 0 || currentStatus == 2 ? 1 : 0,
       );
 
-      await _getSeasonsStatuses();
+      await getSeasonsStatuses();
       EventHelper.eventBus.fire(true);
     } catch (e) {
       SnackBarMessageHandler.showErrorSnackBar(context);

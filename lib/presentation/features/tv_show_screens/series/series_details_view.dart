@@ -10,6 +10,7 @@ import 'package:the_movie_app/presentation/widgets/enum_collection.dart';
 import 'package:the_movie_app/presentation/widgets/list_elements/parameterized_media_crew_widget.dart';
 import 'package:the_movie_app/presentation/widgets/list_elements/params_media_details_list_widget.dart';
 import 'package:the_movie_app/presentation/widgets/media_details_elements/overview_widget.dart';
+import 'package:the_movie_app/presentation/widgets/widget_elements/error_widget.dart';
 
 class SeriesDetailsView extends StatelessWidget {
   const SeriesDetailsView({super.key});
@@ -64,6 +65,15 @@ class _BodyDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.watch<SeriesDetailsViewModel>();
     final mediaDetails = model.mediaDetails;
+    final errorMessage =  context.select<SeriesDetailsViewModel, String?>(
+            (model) => model.errorMessage);
+
+    if(errorMessage != null) {
+      return ErrorWithRetryWidget(
+        errorMessage: errorMessage,
+        onRetryPressed: () => context.read<SeriesDetailsViewModel>().fetchSeriesDetails(),
+      );
+    }
 
     if(mediaDetails == null) {
       return AppSpacing.emptyGap;

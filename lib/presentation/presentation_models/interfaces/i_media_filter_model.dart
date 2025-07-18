@@ -15,7 +15,7 @@ abstract class IMediaFilter {
   set scoreEnd(value);
   set sortingValue(value);
 
-  Future<void> loadContent();
+  Future<void> fetchContent();
 
   bool isFiltered();
 

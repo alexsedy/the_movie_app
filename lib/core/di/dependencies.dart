@@ -202,7 +202,7 @@ void setupDependencies() {
         (params, _) => AiRecommendationListViewModel(
       prompt: params[NavParamConst.prompt] as String,
       isMovie: params[NavParamConst.isMovie] as bool,
-      isGenre: params[NavParamConst.isGenre] as bool,
+      aiListType: params[NavParamConst.aiListType] as AiListType,
       searchRepository: getIt<ISearchRepository>(),
       generativeModel: getIt<GenerativeModel>(),
     ),

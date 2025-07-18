@@ -8,6 +8,7 @@ import 'package:the_movie_app/presentation/features/movie_screens/collection_scr
 import 'package:the_movie_app/presentation/presentation_models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/presentation/widgets/list_elements/params_vertical_list_widget.dart';
 import 'package:the_movie_app/presentation/widgets/shimmer_skeleton_elements/color_list_shimmer_skeleton_widget.dart';
+import 'package:the_movie_app/presentation/widgets/widget_elements/error_widget.dart';
 
 class MediaCollectionView extends StatelessWidget {
   const MediaCollectionView({super.key});
@@ -59,6 +60,14 @@ class _BodyWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.watch<MediaCollectionViewModel>();
     final mediaCollections = model.mediaCollections;
+    final errorMessage = model.errorMessage;
+
+    if(errorMessage != null) {
+      return ErrorWithRetryWidget(
+        errorMessage: errorMessage,
+        onRetryPressed: () => model.fetchCollections(),
+      );
+    }
 
     if (mediaCollections == null) {
     return Column(

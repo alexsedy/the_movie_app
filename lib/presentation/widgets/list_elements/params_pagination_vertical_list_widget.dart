@@ -7,10 +7,15 @@ import 'package:the_movie_app/presentation/presentation_models/models/parameteri
 class ParameterizedPaginationVerticalListWidget extends StatefulWidget {
   final ParameterizedWidgetModel paramModel;
   final Function loadMoreItems;
+  final bool hasPagination;
+  final ScrollController? scrollController;
 
   const ParameterizedPaginationVerticalListWidget({
     super.key,
-    required this.paramModel, required this.loadMoreItems,
+    required this.paramModel,
+    required this.loadMoreItems,
+    this.hasPagination = true,
+    this.scrollController,
   });
 
   @override
@@ -18,37 +23,41 @@ class ParameterizedPaginationVerticalListWidget extends StatefulWidget {
 }
 
 class _ParameterizedPaginationVerticalListWidgetState extends State<ParameterizedPaginationVerticalListWidget> {
-  late ScrollController _scrollController;
+  late final ScrollController _scrollController;
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
 
-    var scrollController = widget.paramModel.scrollController;
-
-    if(scrollController != null) {
-      _scrollController = scrollController;
+    if (widget.hasPagination) {
+      _scrollController = widget.scrollController ?? ScrollController();
+      _scrollController.addListener(_onScroll);
     }
-    _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
-    _scrollController.removeListener(_onScroll);
+    if (widget.hasPagination && widget.scrollController == null) {
+      _scrollController.dispose();
+    } else if (widget.hasPagination) {
+      _scrollController.removeListener(_onScroll);
+    }
     super.dispose();
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent && !_isLoading) {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100 && !_isLoading) {
       setState(() {
         _isLoading = true;
       });
 
-      widget.loadMoreItems().then((_) {
-        setState(() {
-          _isLoading = false;
-        });
+      widget.loadMoreItems().whenComplete(() {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
       });
     }
   }
@@ -60,16 +69,17 @@ class _ParameterizedPaginationVerticalListWidgetState extends State<Parameterize
     return ListView.builder(
       itemExtent: WidgetSize.size180,
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-      controller: _scrollController,
-      itemCount: widget.paramModel.list.length + 1,
+      controller: widget.hasPagination ? _scrollController : null,
+      itemCount: widget.paramModel.list.length + (widget.hasPagination ? 1 : 0),
       itemBuilder: (BuildContext context, int index) {
-        if (index == widget.paramModel.list.length) {
+        if (widget.hasPagination && index == widget.paramModel.list.length) {
           return _isLoading
-              ? Center(child: CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator())
               : AppSpacing.emptyGap;
         }
 
-        String? posterPath = widget.paramModel.list[index].imagePath;
+        final item = widget.paramModel.list[index];
+        final posterPath = item.imagePath;
 
         return Padding(
           padding: AppSpacing.screenPaddingH16V10,
@@ -95,17 +105,17 @@ class _ParameterizedPaginationVerticalListWidgetState extends State<Parameterize
                       aspectRatio: 500 / 750,
                       child: posterPath != null
                           ? Image.network(
-                              loadingBuilder: (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return const Center(
-                                  child: SizedBox(
-                                    width: 60,
-                                    height: 60,
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                );
-                              },
-                              ApiClient.getImageByUrl(posterPath), width: 95, fit: BoxFit.fill,)
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return const Center(
+                            child: SizedBox(
+                              width: 60,
+                              height: 60,
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        },
+                        ApiClient.getImageByUrl(posterPath), width: 95, fit: BoxFit.fill,)
                           : Image.asset(widget.paramModel.altImagePath, width: 95, fit: BoxFit.fill,),
                     ),
                     Expanded(
@@ -116,14 +126,14 @@ class _ParameterizedPaginationVerticalListWidgetState extends State<Parameterize
                           children: [
                             AppSpacing.gapH16,
                             Text(
-                              widget.paramModel.list[index].firstLine ?? "",
+                              item.firstLine ?? "",
                               style: Theme.of(context).textTheme.bodyLarge,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                             AppSpacing.gapH6,
                             Text(
-                              widget.paramModel.list[index].secondLine ?? "",
+                              item.secondLine ?? "",
                               style: Theme.of(context).textTheme.bodySmall,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -131,7 +141,7 @@ class _ParameterizedPaginationVerticalListWidgetState extends State<Parameterize
                             AppSpacing.gapH16,
                             Expanded(
                               child: Text(
-                                widget.paramModel.list[index].thirdLine ?? "",
+                                item.thirdLine ?? "",
                                 style: Theme.of(context).textTheme.bodyMedium,
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
@@ -147,22 +157,18 @@ class _ParameterizedPaginationVerticalListWidgetState extends State<Parameterize
               Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  borderRadius: const BorderRadius.all(Radius.circular(
-                      10)),
-                  onTap: () {
-                    widget.paramModel.action(context, index);
-                  },
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  onTap: () => widget.paramModel.action(context, index),
                 ),
               ),
-              if(statuses.any((e) =>
-                e.id == widget.paramModel.list[index].id && e.status != 0))
+              if (statuses.any((e) => e.id == item.id && e.status != 0))
                 Positioned(
-                    top: 5,
-                    right: 5,
-                    child: Icon(
-                      Icons.bookmark,
-                      color: Colors.blueAccent.withAlpha(180),
-                    ),
+                  top: 5,
+                  right: 5,
+                  child: Icon(
+                    Icons.bookmark,
+                    color: Colors.blueAccent.withAlpha(180),
+                  ),
                 ),
             ],
           ),

@@ -5,6 +5,7 @@ import 'package:the_movie_app/data/models/person/details/person_details.dart';
 import 'package:the_movie_app/presentation/features/person_screen/people_details_screen/people_bio_widget.dart';
 import 'package:the_movie_app/presentation/widgets/shimmer_skeleton_elements/people_details_shimmer_skeleton_widget.dart';
 import 'package:the_movie_app/presentation/features/person_screen/viewmodel/people_details_viewmodel.dart';
+import 'package:the_movie_app/presentation/widgets/widget_elements/error_widget.dart';
 
 import 'image_gallery_widget.dart';
 import 'other_projects_widget.dart';
@@ -32,6 +33,15 @@ class _BodyPeopleDetailsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final person = context.select<PeopleDetailsViewModel, PersonDetails?>(
             (viewModel) => viewModel.personDetails);
+    final errorMessage =  context.select<PeopleDetailsViewModel, String?>(
+            (model) => model.errorMessage);
+
+    if(errorMessage != null) {
+      return ErrorWithRetryWidget(
+        errorMessage: errorMessage,
+        onRetryPressed: () => context.read<PeopleDetailsViewModel>().fetchDetails(),
+      );
+    }
 
     if(person == null) {
       return const PeopleDetailsShimmerSkeletonWidget();

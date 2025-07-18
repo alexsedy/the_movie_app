@@ -39,16 +39,23 @@ class ImageGallery extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (_) => _FullScreenImage(
-                        currentIndex: index,
+                    PageRouteBuilder(
+                      opaque: false,
+                      pageBuilder: (_, __, ___) => _FullScreenImage(
+                        initIndex: index,
                         images: images,
                       ),
+                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        );
+                      },
                     ),
                   );
                 },
                 child: Hero(
-                  tag: index.toString(),
+                  tag: "fullscreen_image_${images[index]}_$index",
                   child: Padding(
                     padding: AppSpacing.screenPaddingAll10,
                     child: Container(
@@ -83,35 +90,87 @@ class ImageGallery extends StatelessWidget {
   }
 }
 
-class _FullScreenImage extends StatelessWidget {
-  final int currentIndex;
+class _FullScreenImage extends StatefulWidget {
+  final int initIndex;
   final List<String> images;
 
   const _FullScreenImage({super.key,
-    required this.currentIndex,
+    required this.initIndex,
     required this.images,
   });
 
   @override
+  State<_FullScreenImage> createState() => _FullScreenImageState();
+}
+
+class _FullScreenImageState extends State<_FullScreenImage> {
+  Offset _dragOffset = Offset.zero;
+  String _imageCountText = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _imageCountText = "${widget.initIndex + 1} / ${widget.images.length}";
+  }
+
+  @override
   Widget build(BuildContext context) {
+    double totalOffset = _dragOffset.distance;
+    double opacity = (1 - (totalOffset / 150).clamp(0, 1));
+    Color backgroundColor = Theme.of(context).scaffoldBackgroundColor.withValues(alpha: opacity);
+
     return Scaffold(
-      body: PageView.builder(
-        itemCount: images.length,
-        controller: PageController(initialPage: currentIndex),
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Center(
-              child: Hero(
-                tag: index.toString(),
-                child: Image.network(
-                  ApiClient.getImageByUrl(images[index]),
-                  fit: BoxFit.contain,
-                ),
-              ),
+      backgroundColor: backgroundColor,
+      body: Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned(
+            child: Text(
+              _imageCountText,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
-          );
-        },
+            top: 90.0,
+          ),
+          PageView.builder(
+            onPageChanged: (int value) {
+              setState(() {
+                _imageCountText = "${value + 1} / ${widget.images.length}";
+              });
+            },
+            itemCount: widget.images.length,
+            controller: PageController(initialPage: widget.initIndex),
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onPanUpdate: (details) {
+                  setState(() {
+                    _dragOffset += details.delta;
+                  });
+                },
+                onPanEnd: (details) {
+                  if (totalOffset > 150) {
+                    Navigator.pop(context);
+                  } else {
+                    setState(() {
+                      _dragOffset = Offset.zero;
+                    });
+                  }
+                },
+                child: Transform.translate(
+                  offset: _dragOffset,
+                  child: Center(
+                    child: Hero(
+                      tag: "fullscreen_image_${widget.images[index]}_$index",
+                      child: Image.network(
+                        ApiClient.getImageByUrl(widget.images[index]),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

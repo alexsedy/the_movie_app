@@ -90,7 +90,10 @@ class _MoviesButtonWidget extends StatelessWidget {
         width: 150,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(),
+          border: Border.all(
+            width: AppSpacing.p2,
+            color: Theme.of(context).colorScheme.primary,
+          ),
         ),
         child: Padding(
           padding: AppSpacing.screenPaddingAll10,
@@ -238,7 +241,10 @@ class _MoviesButtonWidget extends StatelessWidget {
         width: 150,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(),
+          border: Border.all(
+            width: AppSpacing.p2,
+            color: Theme.of(context).colorScheme.primary,
+          ),
         ),
         child: Padding(
           padding: AppSpacing.screenPaddingAll10,
@@ -304,7 +310,10 @@ class _TvShowButtonWidget extends StatelessWidget {
         width: 150,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(),
+          border: Border.all(
+            width: AppSpacing.p2,
+            color: Theme.of(context).colorScheme.primary,
+          ),
         ),
         child: Padding(
           padding: AppSpacing.screenPaddingAll10,
@@ -457,7 +466,10 @@ class _TvShowButtonWidget extends StatelessWidget {
         width: 150,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(),
+          border: Border.all(
+            width: AppSpacing.p2,
+            color: Theme.of(context).colorScheme.primary,
+          ),
         ),
         child: Padding(
           padding: AppSpacing.screenPaddingAll10,

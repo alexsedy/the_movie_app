@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/core/constants/navigator_param_const.dart';
+import 'package:the_movie_app/core/helpers/api_error_mapper.dart';
 import 'package:the_movie_app/core/helpers/event_helper.dart';
 import 'package:the_movie_app/core/helpers/snack_bar_message_handler.dart';
 import 'package:the_movie_app/data/datasources/local/cache_management/local_media_tracking_service.dart';
+import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
 import 'package:the_movie_app/data/models/hive/hive_episodes/hive_episodes.dart';
 import 'package:the_movie_app/data/models/media/season/season.dart';
 import 'package:the_movie_app/data/repositories/i_tv_show_repository.dart';
@@ -19,9 +21,11 @@ class SeasonDetailsViewModel extends ChangeNotifier {
   Season? _season;
   final Map<int, HiveEpisodes> _episodesStatuses = {};
   StreamSubscription? _subscription;
+  String? _errorMessage;
 
   Season? get season => _season;
   Map<int, HiveEpisodes> get episodesStatuses => Map.unmodifiable(_episodesStatuses);
+  String? get errorMessage => _errorMessage;
 
   SeasonDetailsViewModel({
     required this.tvShowId,
@@ -34,11 +38,11 @@ class SeasonDetailsViewModel extends ChangeNotifier {
   }
 
   void _initialize() {
-    loadSeasonDetails();
+    fetchSeasonDetails();
     _subscribeToEvents();
   }
 
-  Future<void> loadSeasonDetails() async {
+  Future<void> fetchSeasonDetails() async {
     notifyListeners();
 
     try {
@@ -46,8 +50,14 @@ class SeasonDetailsViewModel extends ChangeNotifier {
         _tvShowRepository.getSeason(tvShowId, seasonNumber).then((s) => _season = s),
         _getEpisodeStatuses(),
       ]);
+      _errorMessage = null;
     } catch (e) {
       print("Error loading season details: $e");
+      if(e is ApiClientException) {
+        _errorMessage = ApiErrorMapper.mapError(e);
+      } else {
+        _errorMessage = ApiErrorMapper.unknownError();
+      }
     } finally {
       notifyListeners();
     }

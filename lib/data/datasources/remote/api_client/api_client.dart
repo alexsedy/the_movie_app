@@ -1,10 +1,17 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 
 enum ApiClientExceptionType {
-  network, auth, other, incorrectRequest, sessionExpired, loginNotApproved, notFound
+  network,
+  auth,
+  other,
+  incorrectRequest,
+  sessionExpired,
+  loginNotApproved,
+  notFound,
 }
 
 class ApiClientException implements Exception {
@@ -59,41 +66,43 @@ class ApiClient {
     }
   }
 
-  ///Validate error for API requests
-  ///statusCode 401:
-  ///status_code == 7 - Invalid API key: You must be granted a valid key.
-  ///status_code == 3 - sessionId expired or null, Authentication failed: You do not have permissions to access the service.
-  ///
-  /// statusCode 404:
-  /// status_code = 6 - error in request
-  ///
-  /// statusCode == 400:
-  /// status_code = 22 - error in request
-  /// status_code = 5 - error in request
+  Future<T> safeRequest<T>(Future<T> Function() request) async {
+    try {
+      return await request();
+    } on SocketException {
+      throw ApiClientException(ApiClientExceptionType.network);
+    } on TimeoutException {
+      throw ApiClientException(ApiClientExceptionType.network);
+    } on HttpException {
+      throw ApiClientException(ApiClientExceptionType.other);
+    } catch (e) {
+      throw ApiClientException(ApiClientExceptionType.other);
+    }
+  }
+
   void validateError(HttpClientResponse response, Map<String, dynamic> json) {
-    if(response.statusCode == 401) {
-      final responseCode = json["status_code"] as int;
-      if(responseCode == 7) {
-        throw ApiClientException(ApiClientExceptionType.other);
-      } else if (responseCode == 3) {
-        throw ApiClientException(ApiClientExceptionType.sessionExpired);
-      } else if (responseCode == 41) {
-        throw ApiClientException(ApiClientExceptionType.loginNotApproved);
-      }
-    } else if (response.statusCode == 404) {
-      final responseCode = json["status_code"] as int;
-      if(responseCode == 6) {
-        throw ApiClientException(ApiClientExceptionType.incorrectRequest);
-      } else if (responseCode == 34) {
-        throw  ApiClientException(ApiClientExceptionType.notFound);
-      }
-    } else if (response.statusCode == 400) {
-      final responseCode = json["status_code"] as int;
-      if(responseCode == 22) {
-        throw ApiClientException(ApiClientExceptionType.incorrectRequest);
-      } else if (responseCode == 5) {
-        throw ApiClientException(ApiClientExceptionType.incorrectRequest);
-      }
+    final statusCode = response.statusCode;
+    final responseCode = json["status_code"] as int?;
+
+    final errorMap = <int, Map<int, ApiClientExceptionType>>{
+      401: {
+        3: ApiClientExceptionType.sessionExpired,
+        7: ApiClientExceptionType.other,
+        41: ApiClientExceptionType.loginNotApproved,
+      },
+      404: {
+        6: ApiClientExceptionType.incorrectRequest,
+        34: ApiClientExceptionType.notFound,
+      },
+      400: {
+        5: ApiClientExceptionType.incorrectRequest,
+        22: ApiClientExceptionType.incorrectRequest,
+      },
+    };
+
+    final type = errorMap[statusCode]?[responseCode];
+    if (type != null) {
+      throw ApiClientException(type);
     }
   }
 }

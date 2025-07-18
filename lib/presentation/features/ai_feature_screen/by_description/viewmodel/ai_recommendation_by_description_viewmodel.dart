@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/core/constants/navigator_param_const.dart';
 import 'package:the_movie_app/data/datasources/local/cache_management/account_management.dart';
+import 'package:the_movie_app/presentation/features/ai_feature_screen/ai_list_recommendation/viewmodel/ai_recommendation_list_viewmodel.dart';
 import 'package:the_movie_app/presentation/features/navigation/main_navigation.dart';
 
 class AiRecommendationByDescriptionViewModel extends ChangeNotifier {
@@ -15,7 +16,7 @@ class AiRecommendationByDescriptionViewModel extends ChangeNotifier {
         arguments: {
           NavParamConst.prompt: prompt,
           NavParamConst.isMovie: true,
-          NavParamConst.isGenre: false,
+          NavParamConst.aiListType: AiListType.description,
         }
     );
   }

@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/core/helpers/api_error_mapper.dart';
 import 'package:the_movie_app/core/helpers/event_helper.dart';
 import 'package:the_movie_app/data/datasources/local/cache_management/local_media_tracking_service.dart';
+import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
 import 'package:the_movie_app/data/models/hive/hive_movies/hive_movies.dart';
 import 'package:the_movie_app/data/models/hive/hive_tv_show/hive_tv_show.dart';
 import 'package:the_movie_app/data/models/media/list/list.dart';
@@ -61,6 +63,7 @@ class HomeSearchViewModel extends ChangeNotifier with
   final _movieStatuses = <HiveMovies>[];
   final _tvShowStatuses = <HiveTvShow>[];
   bool _isDisposed = false;
+  String? _errorMessage;
 
   List<MediaList> get movies => List.unmodifiable(_movies);
   List<MediaList> get tvs => List.unmodifiable(_tvs);
@@ -74,6 +77,7 @@ class HomeSearchViewModel extends ChangeNotifier with
   bool get isCollectionLoadingInProgress => _isCollectionLoadingInProgress;
   final TextEditingController searchController = TextEditingController();
   final FocusNode searchFocusNode = FocusNode();
+  String? get errorMessage => _errorMessage;
 
   HomeSearchViewModel(
       this.initialIndex,
@@ -138,9 +142,14 @@ class HomeSearchViewModel extends ChangeNotifier with
       _movies.addAll(moviesResponse.list);
       _movieCurrentPage = moviesResponse.page;
       _movieTotalPage = moviesResponse.totalPages;
+      _errorMessage = null;
     } catch (e) {
       print("Error searching movies: $e");
-      // TODO: Error handling
+      if(e is ApiClientException) {
+        _errorMessage = ApiErrorMapper.mapError(e);
+      } else {
+        _errorMessage = ApiErrorMapper.unknownError();
+      }
     } finally {
       if(!_isDisposed) {
         _isMovieLoadingInProgress = false;
@@ -162,9 +171,14 @@ class HomeSearchViewModel extends ChangeNotifier with
       _tvs.addAll(tvResponse.list);
       _tvCurrentPage = tvResponse.page;
       _tvTotalPage = tvResponse.totalPages;
+      _errorMessage = null;
     } catch (e) {
       print("Error searching tv shows: $e");
-      // TODO: Error handling
+      if(e is ApiClientException) {
+        _errorMessage = ApiErrorMapper.mapError(e);
+      } else {
+        _errorMessage = ApiErrorMapper.unknownError();
+      }
     } finally {
       if(!_isDisposed) {
         _isTvsLoadingInProgress = false;
@@ -186,9 +200,14 @@ class HomeSearchViewModel extends ChangeNotifier with
       _persons.addAll(personsResponse.trendingPersonList);
       _personCurrentPage = personsResponse.page;
       _personTotalPage = personsResponse.totalPages;
+      _errorMessage = null;
     } catch (e) {
       print("Error searching persons: $e");
-      // TODO: Error handling
+      if(e is ApiClientException) {
+        _errorMessage = ApiErrorMapper.mapError(e);
+      } else {
+        _errorMessage = ApiErrorMapper.unknownError();
+      }
     } finally {
       if(!_isDisposed) {
         _isPersonLoadingInProgress = false;
@@ -210,9 +229,14 @@ class HomeSearchViewModel extends ChangeNotifier with
       _collections.addAll(collectionsResponse.results);
       _collectionCurrentPage = collectionsResponse.page;
       _collectionTotalPage = collectionsResponse.totalPages;
+      _errorMessage = null;
     } catch (e) {
       print("Error searching collections: $e");
-      // TODO: Error handling
+      if(e is ApiClientException) {
+        _errorMessage = ApiErrorMapper.mapError(e);
+      } else {
+        _errorMessage = ApiErrorMapper.unknownError();
+      }
     } finally {
       if(!_isDisposed) {
         _isCollectionLoadingInProgress = false;

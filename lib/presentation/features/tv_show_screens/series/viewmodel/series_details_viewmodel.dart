@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/core/helpers/api_error_mapper.dart';
 import 'package:the_movie_app/core/helpers/event_helper.dart';
 import 'package:the_movie_app/core/helpers/snack_bar_message_handler.dart';
 import 'package:the_movie_app/data/datasources/local/cache_management/local_media_tracking_service.dart';
+import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
 import 'package:the_movie_app/data/models/media/media_details/media_details.dart';
 import 'package:the_movie_app/data/models/person/credits_people/credits.dart';
 import 'package:the_movie_app/data/repositories/i_tv_show_repository.dart';
@@ -17,10 +19,12 @@ class SeriesDetailsViewModel extends ChangeNotifier implements IBaseMediaDetails
 
   MediaDetails? _mediaDetails;
   int? _currentStatus;
+  String? _errorMessage;
 
   @override
   MediaDetails? get mediaDetails => _mediaDetails;
   int? get currentStatus => _currentStatus;
+  String? get errorMessage => _errorMessage;
 
 
   SeriesDetailsViewModel({
@@ -35,10 +39,10 @@ class SeriesDetailsViewModel extends ChangeNotifier implements IBaseMediaDetails
   }
 
   void _initialize() {
-    loadSeriesDetails();
+    fetchSeriesDetails();
   }
 
-  Future<void> loadSeriesDetails() async {
+  Future<void> fetchSeriesDetails() async {
     notifyListeners();
 
     try {
@@ -47,21 +51,27 @@ class SeriesDetailsViewModel extends ChangeNotifier implements IBaseMediaDetails
             .then((details) => _mediaDetails = details),
         _getSeriesStatus(),
       ]);
+      _errorMessage = null;
     } catch (e) {
       print("Error loading series details: $e");
+      if(e is ApiClientException) {
+        _errorMessage = ApiErrorMapper.mapError(e);
+      } else {
+        _errorMessage = ApiErrorMapper.unknownError();
+      }
     } finally {
       notifyListeners();
     }
   }
 
   Future<void> _getSeriesStatus() async {
-    try {
+    // try {
       final seasonData = await _localMediaTrackingService.getSeason(seriesId, seasonNumber);
-      _currentStatus = seasonData?.episodes?[episodeNumber]?.status ?? 0;
-    } catch (e) {
-      print("Error getting series status: $e");
-      _currentStatus = 0;
-    }
+      _currentStatus = seasonData?.episodes?[episodeNumber]?.status;
+    // } catch (e) {
+    //   print("Error getting series status: $e");
+    //   _currentStatus = 0;
+    // }
   }
 
   Future<void> updateStatus(BuildContext context, int status) async {

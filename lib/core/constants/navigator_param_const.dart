@@ -5,6 +5,6 @@ abstract class NavParamConst {
   static String episodeNumber = "episodeNumber";
   static String prompt = "prompt";
   static String isMovie = "isMovie";
-  static String isGenre = "isGenre";
+  static String aiListType = "aiListType";
   static String index = "index";
 }

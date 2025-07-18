@@ -8,6 +8,7 @@ import 'package:the_movie_app/presentation/features/tv_show_screens/tv_show_deta
 import 'package:the_movie_app/presentation/features/tv_show_screens/tv_show_details_screen/viewmodel/tv_show_details_viewmodel.dart';
 import 'package:the_movie_app/presentation/widgets/enum_collection.dart';
 import 'package:the_movie_app/presentation/widgets/shimmer_skeleton_elements/media_details_shimmer_skeleton_widget.dart';
+import 'package:the_movie_app/presentation/widgets/widget_elements/error_widget.dart';
 
 class TvShowDetailsView extends StatelessWidget {
   const TvShowDetailsView({super.key});
@@ -15,18 +16,39 @@ class TvShowDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            stretch: true,
-            pinned: true,
-            stretchTriggerOffset: 200.0,
-            expandedHeight: 183.0,
-            flexibleSpace: const _HeaderWidget(),
-          ),
-          const _BodyWidget(),
-        ],
-      ),
+      body: _MainWidget(),
+    );
+  }
+}
+
+class _MainWidget extends StatelessWidget {
+  const _MainWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final errorMessage =  context.select<TvShowDetailsViewModel, String?>(
+            (model) => model.errorMessage);
+
+    if(errorMessage != null) {
+      return ErrorWithRetryWidget(
+        errorMessage: errorMessage,
+        onRetryPressed: () => context.read<TvShowDetailsViewModel>().fetchTvShowDetails(),
+      );
+    }
+
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverAppBar(
+          stretch: true,
+          pinned: true,
+          stretchTriggerOffset: 200.0,
+          expandedHeight: 183.0,
+          flexibleSpace: const _HeaderWidget(),
+        ),
+        const _BodyWidget(),
+      ],
     );
   }
 }

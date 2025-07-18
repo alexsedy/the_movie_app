@@ -8,6 +8,7 @@ import 'package:the_movie_app/presentation/features/movie_screens/movie_list_scr
 import 'package:the_movie_app/presentation/presentation_models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/presentation/widgets/list_elements/params_pagination_vertical_list_widget.dart';
 import 'package:the_movie_app/presentation/widgets/shimmer_skeleton_elements/list_shimmer_skeleton_widget.dart';
+import 'package:the_movie_app/presentation/widgets/widget_elements/error_widget.dart';
 
 
 class MovieListView extends StatefulWidget {
@@ -21,6 +22,14 @@ class _MovieListViewState extends State<MovieListView> {
   @override
   Widget build(BuildContext context) {
     final model = context.watch<MovieListViewModel>();
+    final errorMessage = model.errorMessage;
+
+    if(errorMessage != null) {
+      return ErrorWithRetryWidget(
+        errorMessage: errorMessage,
+        onRetryPressed:() => model.fetchContent(),
+      );
+    }
 
     if (model.movies.isEmpty && model.isLoadingInProgress) {
       return const DefaultListsShimmerSkeletonWidget();
@@ -39,11 +48,11 @@ class _MovieListViewState extends State<MovieListView> {
       paramModel: ParameterizedWidgetModel(
         altImagePath: AppImages.noPoster,
         action: (context, index) => context.read<MovieListViewModel>().onMovieScreen(context, index),
-        scrollController: model.scrollController,
         list: ConverterHelper.convertMoviesForVerticalWidget(model.movies),
         statuses: ConverterHelper.convertMovieStatuses(model.movieStatuses),
       ),
-      loadMoreItems: context.read<MovieListViewModel>().loadContent,
+      loadMoreItems: context.read<MovieListViewModel>().fetchContent,
+      scrollController: model.scrollController,
     );
   }
 }

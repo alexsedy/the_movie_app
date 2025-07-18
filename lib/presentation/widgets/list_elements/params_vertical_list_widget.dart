@@ -116,7 +116,7 @@ class ParameterizedVerticalListWidget extends StatelessWidget {
                           paramModel.additionAction!(context, index, statuses[index].number);
                         }
                       },
-                      icon: Icon(statuses[index].status == 1
+                      icon: Icon( statuses[index].status == 1
                           ? Icons.visibility_outlined
                           : Icons.visibility_off_outlined
                       ),

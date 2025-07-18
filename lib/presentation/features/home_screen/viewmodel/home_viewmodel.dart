@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/core/helpers/api_error_mapper.dart';
+import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
 import 'package:the_movie_app/data/models/media/list/list.dart';
 import 'package:the_movie_app/data/models/person/trending_person/trending_person.dart';
 import 'package:the_movie_app/data/repositories/i_movie_repository.dart';
@@ -21,6 +23,7 @@ class HomeViewModel extends ChangeNotifier {
   bool _isLoadingMovies = false;
   bool _isLoadingTvs = false;
   bool _isLoadingPersons = false;
+  String? _errorMessage;
 
   List<MediaList> get movies => List.unmodifiable(_movies);
   List<MediaList> get tvs => List.unmodifiable(_tvs);
@@ -29,6 +32,7 @@ class HomeViewModel extends ChangeNotifier {
   bool get isLoadingMovies => _isLoadingMovies;
   bool get isLoadingTvs => _isLoadingTvs;
   bool get isLoadingPersons => _isLoadingPersons;
+  String? get errorMessage => _errorMessage;
 
 
   HomeViewModel(
@@ -36,10 +40,10 @@ class HomeViewModel extends ChangeNotifier {
       this._tvShowRepository,
       this._peopleRepository,
       ) {
-    _loadAllTrending();
+    fetchAllTrending();
   }
 
-  Future<void> _loadAllTrending() async {
+  Future<void> fetchAllTrending() async {
     await Future.wait([
       loadMovies(timeToggle: "day"),
       loadTvShows(timeToggle: "day"),
@@ -55,8 +59,14 @@ class HomeViewModel extends ChangeNotifier {
       final moviesResponse = await _movieRepository.getTrendingMovie(page: 1, timeToggle: timeToggle);
       _movies.clear();
       _movies.addAll(moviesResponse.list);
+      _errorMessage = null;
     } catch (e) {
       print("Error loading trending movies: $e");
+      if(e is ApiClientException) {
+        _errorMessage = ApiErrorMapper.mapError(e);
+      } else {
+        _errorMessage = ApiErrorMapper.unknownError();
+      }
     } finally {
       _isLoadingMovies = false;
       notifyListeners();
@@ -70,8 +80,14 @@ class HomeViewModel extends ChangeNotifier {
       final tvResponse = await _tvShowRepository.getTrendingTv(page: 1, timeToggle: timeToggle);
       _tvs.clear();
       _tvs.addAll(tvResponse.list);
+      _errorMessage = null;
     } catch (e) {
       print("Error loading trending tv shows: $e");
+      if(e is ApiClientException) {
+        _errorMessage = ApiErrorMapper.mapError(e);
+      } else {
+        _errorMessage = ApiErrorMapper.unknownError();
+      }
     } finally {
       _isLoadingTvs = false;
       notifyListeners();
@@ -85,8 +101,14 @@ class HomeViewModel extends ChangeNotifier {
       final personsResponse = await _peopleRepository.getTrendingPerson(page: 1, timeToggle: timeToggle);
       _persons.clear();
       _persons.addAll(personsResponse.trendingPersonList);
+      _errorMessage = null;
     } catch (e) {
       print("Error loading trending persons: $e");
+      if(e is ApiClientException) {
+        _errorMessage = ApiErrorMapper.mapError(e);
+      } else {
+        _errorMessage = ApiErrorMapper.unknownError();
+      }
     } finally {
       _isLoadingPersons = false;
       notifyListeners();

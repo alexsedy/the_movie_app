@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/core/helpers/api_error_mapper.dart';
 import 'package:the_movie_app/core/helpers/event_helper.dart';
 import 'package:the_movie_app/data/datasources/local/cache_management/local_media_tracking_service.dart';
+import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
 import 'package:the_movie_app/data/models/hive/hive_movies/hive_movies.dart';
 import 'package:the_movie_app/data/models/media/list/list.dart';
 import 'package:the_movie_app/data/repositories/i_movie_repository.dart';
@@ -20,22 +22,24 @@ class MovieListViewModel extends ChangeNotifier with FilterMovieListModelMixin{
   var _isLoadingInProgress = false;
   final _movieStatuses = <HiveMovies>[];
   StreamSubscription? _subscription;
+  String? _errorMessage;
 
   List<MediaList> get movies => List.unmodifiable(_movies);
   ScrollController get scrollController => _scrollController;
   List<HiveMovies> get movieStatuses => List.unmodifiable(_movieStatuses);
   bool get isLoadingInProgress => _isLoadingInProgress;
+  String? get errorMessage => _errorMessage;
 
   MovieListViewModel(this._movieRepository, this._localMediaTrackingService) {
     _initialize();
   }
 
   void _initialize() {
-    loadContent();
+    fetchContent();
     _subscribeToEvents();
   }
 
-  Future<void> loadContent() async {
+  Future<void> fetchContent() async {
     _selectedGenres();
     if (isFiltered()) {
       await _loadFiltered();
@@ -58,9 +62,14 @@ class MovieListViewModel extends ChangeNotifier with FilterMovieListModelMixin{
       _movies.addAll(moviesResponse.list);
       _currentPage = moviesResponse.page;
       _totalPage = moviesResponse.totalPages;
+      _errorMessage = null;
     } catch (e) {
-      // TODO: Error handle
-      print(e);
+      print("Error loading movies: $e");
+      if(e is ApiClientException) {
+        _errorMessage = ApiErrorMapper.mapError(e);
+      } else {
+        _errorMessage = ApiErrorMapper.unknownError();
+      }
     } finally {
       _isLoadingInProgress = false;
       notifyListeners();
@@ -96,9 +105,14 @@ class MovieListViewModel extends ChangeNotifier with FilterMovieListModelMixin{
       _movies.addAll(moviesResponse.list);
       _currentPage = moviesResponse.page;
       _totalPage = moviesResponse.totalPages;
+      _errorMessage = null;
     } catch (e) {
-      // TODO: Error handle
-      print(e);
+      print("Error loading movies: $e");
+      if(e is ApiClientException) {
+        _errorMessage = ApiErrorMapper.mapError(e);
+      } else {
+        _errorMessage = ApiErrorMapper.unknownError();
+      }
     } finally {
       _isLoadingInProgress = false;
       notifyListeners();
@@ -125,7 +139,7 @@ class MovieListViewModel extends ChangeNotifier with FilterMovieListModelMixin{
   void clearAllFilters() {
     clearFilterValue();
     resetList();
-    loadContent();
+    fetchContent();
     scrollToTop();
   }
 

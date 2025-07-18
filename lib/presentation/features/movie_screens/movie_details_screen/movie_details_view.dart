@@ -6,6 +6,7 @@ import 'package:the_movie_app/data/models/media/media_details/media_details.dart
 import 'package:the_movie_app/presentation/features/movie_screens/movie_details_screen/viewmodel/movie_details_viewmodel.dart';
 import 'package:the_movie_app/presentation/widgets/enum_collection.dart';
 import 'package:the_movie_app/presentation/widgets/shimmer_skeleton_elements/media_details_shimmer_skeleton_widget.dart';
+import 'package:the_movie_app/presentation/widgets/widget_elements/error_widget.dart';
 
 import 'movie_details_main_info_widget.dart';
 
@@ -15,18 +16,39 @@ class MovieDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            stretch: true,
-            pinned: true,
-            stretchTriggerOffset: 200.0,
-            expandedHeight: 183.0,
-            flexibleSpace: _HeaderWidget(),
-          ),
-          _BodyWidget(),
-        ],
-      ),
+      body: _MainWidget(),
+    );
+  }
+}
+
+class _MainWidget extends StatelessWidget {
+  const _MainWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final errorMessage =  context.select<MovieDetailsViewModel, String?>(
+            (model) => model.errorMessage);
+
+    if(errorMessage != null) {
+      return ErrorWithRetryWidget(
+        errorMessage: errorMessage,
+        onRetryPressed: () => context.read<MovieDetailsViewModel>().fetchMovieDetails(),
+      );
+    }
+
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverAppBar(
+          stretch: true,
+          pinned: true,
+          stretchTriggerOffset: 200.0,
+          expandedHeight: 183.0,
+          flexibleSpace: _HeaderWidget(),
+        ),
+        _BodyWidget(),
+      ],
     );
   }
 }

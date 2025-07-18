@@ -7,6 +7,7 @@ import 'package:the_movie_app/presentation/features/tv_show_screens/tv_show_list
 import 'package:the_movie_app/presentation/presentation_models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/presentation/widgets/list_elements/params_pagination_vertical_list_widget.dart';
 import 'package:the_movie_app/presentation/widgets/shimmer_skeleton_elements/list_shimmer_skeleton_widget.dart';
+import 'package:the_movie_app/presentation/widgets/widget_elements/error_widget.dart';
 
 class TvShowListView extends StatefulWidget {
   const TvShowListView({super.key});
@@ -19,6 +20,14 @@ class _MovieListWidgetState extends State<TvShowListView> {
   @override
   Widget build(BuildContext context) {
     final model = context.watch<TvShowListViewModel>();
+    final errorMessage = model.errorMessage;
+
+    if(errorMessage != null) {
+      return ErrorWithRetryWidget(
+        errorMessage: errorMessage,
+        onRetryPressed:() => model.fetchContent(),
+      );
+    }
 
     if (model.tvs.isEmpty && model.isLoadingInProgress) {
       return const DefaultListsShimmerSkeletonWidget();
@@ -37,10 +46,11 @@ class _MovieListWidgetState extends State<TvShowListView> {
       paramModel: ParameterizedWidgetModel(
         action: (context, index) => context.read<TvShowListViewModel>().onTvShowScreen(context, index),
         altImagePath: AppImages.noPoster,
-        scrollController: model.scrollController,
         list: ConverterHelper.convertTVShowsForVerticalWidget(model.tvs),
         statuses: ConverterHelper.convertTvShowStatuses(model.tvShowStatuses)
-      ), loadMoreItems: context.read<TvShowListViewModel>().loadContent,
+      ),
+      loadMoreItems: context.read<TvShowListViewModel>().fetchContent,
+      scrollController: model.scrollController,
     );
   }
 }

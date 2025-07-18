@@ -9,6 +9,7 @@ import 'package:the_movie_app/presentation/features/home_screen/viewmodel/home_s
 import 'package:the_movie_app/presentation/presentation_models/models/parameterized_horizontal_widget_model.dart';
 import 'package:the_movie_app/presentation/widgets/list_elements/params_pagination_vertical_list_widget.dart';
 import 'package:the_movie_app/presentation/widgets/shimmer_skeleton_elements/list_shimmer_skeleton_widget.dart';
+import 'package:the_movie_app/presentation/widgets/widget_elements/error_widget.dart';
 
 class HomeSearchView extends StatefulWidget {
   const HomeSearchView({super.key});
@@ -105,7 +106,14 @@ class _MovieListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<HomeSearchViewModel>();
+    final errorMessage = viewModel.errorMessage;
 
+    if(errorMessage != null) {
+      return ErrorWithRetryWidget(
+        errorMessage: errorMessage,
+        onRetryPressed: () => viewModel.loadAll(immediate: true),
+      );
+    }
     if (viewModel.movies.isEmpty && viewModel.isMovieLoadingInProgress && viewModel.searchController.text.isNotEmpty) {
       return const DefaultListsShimmerSkeletonWidget();
     }
@@ -121,11 +129,11 @@ class _MovieListWidget extends StatelessWidget {
       paramModel: ParameterizedWidgetModel(
         altImagePath: AppImages.noPoster,
         action: (ctx, index) => ctx.read<HomeSearchViewModel>().onMovieScreen(context, index),
-        scrollController: viewModel.movieScrollController,
         list: ConverterHelper.convertMoviesForVerticalWidget(viewModel.movies),
         statuses: ConverterHelper.convertMovieStatuses(viewModel.movieStatuses),
       ),
       loadMoreItems: context.read<HomeSearchViewModel>().loadMovies,
+      scrollController: viewModel.movieScrollController,
     );
   }
 }
@@ -135,6 +143,14 @@ class _TvShowListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<HomeSearchViewModel>();
+    final errorMessage = viewModel.errorMessage;
+
+    if(errorMessage != null) {
+      return ErrorWithRetryWidget(
+        errorMessage: errorMessage,
+        onRetryPressed: () => viewModel.loadAll(immediate: true),
+      );
+    }
     if (viewModel.tvs.isEmpty && viewModel.isTvsLoadingInProgress && viewModel.searchController.text.isNotEmpty) return const DefaultListsShimmerSkeletonWidget();
     if (viewModel.tvs.isEmpty && !viewModel.isTvsLoadingInProgress && viewModel.searchController.text.isNotEmpty) return Center(child: Text(context.l10n.noResults));
     if (viewModel.searchController.text.isEmpty) return Center(child: Text("Enter search query"));
@@ -143,11 +159,11 @@ class _TvShowListWidget extends StatelessWidget {
       paramModel: ParameterizedWidgetModel(
         altImagePath: AppImages.noPoster,
         action: (ctx, index) => ctx.read<HomeSearchViewModel>().onTvShowScreen(context, index),
-        scrollController: viewModel.tvScrollController,
         list: ConverterHelper.convertTVShowsForVerticalWidget(viewModel.tvs),
         statuses: ConverterHelper.convertTvShowStatuses(viewModel.tvShowStatuses),
       ),
       loadMoreItems: context.read<HomeSearchViewModel>().loadTvShows,
+      scrollController: viewModel.tvScrollController,
     );
   }
 }
@@ -157,6 +173,14 @@ class _PersonListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<HomeSearchViewModel>();
+    final errorMessage = viewModel.errorMessage;
+
+    if(errorMessage != null) {
+      return ErrorWithRetryWidget(
+        errorMessage: errorMessage,
+        onRetryPressed: () => viewModel.loadAll(immediate: true),
+      );
+    }
     if (viewModel.persons.isEmpty && viewModel.isPersonLoadingInProgress && viewModel.searchController.text.isNotEmpty) return const DefaultListsShimmerSkeletonWidget();
     if (viewModel.persons.isEmpty && !viewModel.isPersonLoadingInProgress && viewModel.searchController.text.isNotEmpty) return Center(child: Text(context.l10n.noResults));
     if (viewModel.searchController.text.isEmpty) return Center(child: Text("Enter search query"));
@@ -166,10 +190,10 @@ class _PersonListWidget extends StatelessWidget {
       paramModel: ParameterizedWidgetModel(
         altImagePath: AppImages.noProfile,
         action: (ctx, index) => ctx.read<HomeSearchViewModel>().onPeopleDetailsScreen(context, index),
-        scrollController: viewModel.personScrollController,
-        list: ConverterHelper.convertTrendingPeopleForHorizontalWidget(viewModel.persons), // Используем этот конвертер
+        list: ConverterHelper.convertTrendingPeopleForHorizontalWidget(viewModel.persons),
       ),
       loadMoreItems: context.read<HomeSearchViewModel>().loadPersons,
+      scrollController: viewModel.personScrollController,
     );
   }
 }
@@ -179,6 +203,14 @@ class _MediaCollectionListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<HomeSearchViewModel>();
+    final errorMessage = viewModel.errorMessage;
+
+    if(errorMessage != null) {
+      return ErrorWithRetryWidget(
+        errorMessage: errorMessage,
+        onRetryPressed: () => viewModel.loadAll(immediate: true),
+      );
+    }
     if (viewModel.collections.isEmpty && viewModel.isCollectionLoadingInProgress && viewModel.searchController.text.isNotEmpty) return const DefaultListsShimmerSkeletonWidget(); // Используем другой шиммер?
     if (viewModel.collections.isEmpty && !viewModel.isCollectionLoadingInProgress && viewModel.searchController.text.isNotEmpty) return Center(child: Text(context.l10n.noResults));
     if (viewModel.searchController.text.isEmpty) return Center(child: Text("Enter search query"));

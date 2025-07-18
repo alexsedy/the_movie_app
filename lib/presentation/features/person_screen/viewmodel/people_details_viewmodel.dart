@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/core/helpers/api_error_mapper.dart';
 import 'package:the_movie_app/core/helpers/date_format_helper.dart';
 import 'package:the_movie_app/data/datasources/local/cache_management/local_media_tracking_service.dart';
+import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
 import 'package:the_movie_app/data/models/hive/hive_movies/hive_movies.dart';
 import 'package:the_movie_app/data/models/hive/hive_tv_show/hive_tv_show.dart';
 import 'package:the_movie_app/data/models/person/credits_people/credits.dart';
@@ -20,6 +22,7 @@ class PeopleDetailsViewModel extends ChangeNotifier {
   final _movieStatuses = <HiveMovies>[];
   final _tvShowStatuses = <HiveTvShow>[];
   bool _isLoading = true;
+  String? _errorMessage;
   final _order = const {
     'Actor': 0, 'Directing': 1, 'Writing': 2, 'Production': 3,
     'Sound': 4, 'Camera': 5, 'Editing': 6, 'Visual Effects': 7,
@@ -33,6 +36,7 @@ class PeopleDetailsViewModel extends ChangeNotifier {
   List<HiveMovies> get movieStatuses => List.unmodifiable(_movieStatuses);
   List<HiveTvShow> get tvShowStatuses => List.unmodifiable(_tvShowStatuses);
   bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
 
 
   PeopleDetailsViewModel(
@@ -40,11 +44,11 @@ class PeopleDetailsViewModel extends ChangeNotifier {
       this._peopleRepository,
       this._localMediaTrackingService,
       ) {
-    _loadDetails();
+    fetchDetails();
   }
 
 
-  Future<void> _loadDetails() async {
+  Future<void> fetchDetails() async {
     _isLoading = true;
     notifyListeners();
 
@@ -56,10 +60,14 @@ class PeopleDetailsViewModel extends ChangeNotifier {
       _addAndSortTvShowCredits();
       await _getMovieStatuses();
       await _getTvShowStatuses();
-
+      _errorMessage = null;
     } catch (e) {
       print("Error loading person details: $e");
-      // TODO: Обработка ошибок
+      if(e is ApiClientException) {
+        _errorMessage = ApiErrorMapper.mapError(e);
+      } else {
+        _errorMessage = ApiErrorMapper.unknownError();
+      }
     } finally {
       _isLoading = false;
       notifyListeners();

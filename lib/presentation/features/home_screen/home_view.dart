@@ -15,12 +15,23 @@ import 'package:the_movie_app/presentation/presentation_models/models/parameteri
 import 'package:the_movie_app/presentation/widgets/enum_collection.dart';
 import 'package:the_movie_app/presentation/widgets/list_elements/params_horizontal_list_widget.dart';
 import 'package:the_movie_app/presentation/widgets/shimmer_skeleton_elements/list_shimmer_skeleton_widget.dart';
+import 'package:the_movie_app/presentation/widgets/widget_elements/error_widget.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.read<HomeViewModel>();
+    final errorMessage = context.select<HomeViewModel, String?>((m) => m.errorMessage);
+
+    if(errorMessage != null) {
+      return ErrorWithRetryWidget(
+        errorMessage: errorMessage,
+        onRetryPressed: () => viewModel.fetchAllTrending(),
+      );
+    }
+
     return const Padding(
       padding: AppSpacing.screenPaddingAll10,
       child: SingleChildScrollView(
@@ -113,7 +124,7 @@ class _BackgroundSearch extends StatelessWidget {
   const _BackgroundSearch();
   @override
   Widget build(BuildContext context) {
-    final backdropPath = context.select<HomeViewModel, String?>((v) => v.randomPoster);
+    final backdropPath = context.select<HomeViewModel, String?>((m) => m.randomPoster);
 
     if(backdropPath == null || backdropPath.isEmpty) {
       return Shimmer.fromColors(

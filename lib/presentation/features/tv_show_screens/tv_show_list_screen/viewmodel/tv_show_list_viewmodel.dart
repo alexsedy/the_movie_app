@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:the_movie_app/core/helpers/api_error_mapper.dart';
 import 'package:the_movie_app/core/helpers/event_helper.dart';
 import 'package:the_movie_app/data/datasources/local/cache_management/local_media_tracking_service.dart';
+import 'package:the_movie_app/data/datasources/remote/api_client/api_client.dart';
 import 'package:the_movie_app/data/models/hive/hive_tv_show/hive_tv_show.dart';
 import 'package:the_movie_app/data/models/media/list/list.dart';
 import 'package:the_movie_app/data/repositories/i_tv_show_repository.dart';
@@ -20,23 +22,25 @@ class TvShowListViewModel extends ChangeNotifier with FilterTvShowListModelMixin
   var _isLoadingInProgress = false;
   final _tvShowStatuses = <HiveTvShow>[];
   StreamSubscription? _subscription;
+  String? _errorMessage;
 
   List<MediaList> get tvs => List.unmodifiable(_tvs);
   ScrollController get scrollController => _scrollController;
   List<HiveTvShow> get tvShowStatuses => List.unmodifiable(_tvShowStatuses);
   bool get isLoadingInProgress => _isLoadingInProgress;
+  String? get errorMessage => _errorMessage;
 
   TvShowListViewModel(this._tvShowRepository, this._localMediaTrackingService) {
     _initialize();
   }
 
   void _initialize() {
-    loadContent();
+    fetchContent();
     _subscribeToEvents();
   }
 
   @override
-  Future<void> loadContent() async {
+  Future<void> fetchContent() async {
     debugPrint('loadContent called. isFiltered: ${isFiltered()}');
     _selectedGenres();
     if (isFiltered()) {
@@ -61,9 +65,14 @@ class TvShowListViewModel extends ChangeNotifier with FilterTvShowListModelMixin
       _tvs.addAll(tvShowResponse.list);
       _currentPage = tvShowResponse.page;
       _totalPage = tvShowResponse.totalPages;
-      debugPrint('TV shows loaded: ${_tvs.length} items. Total pages: $_totalPage');
-    } catch (e, stackTrace) {
-      debugPrint('Error loading TV shows: $e\n$stackTrace');
+      _errorMessage = null;
+    } catch (e) {
+      print('Error loading TV shows: $e');
+      if(e is ApiClientException) {
+        _errorMessage = ApiErrorMapper.mapError(e);
+      } else {
+        _errorMessage = ApiErrorMapper.unknownError();
+      }
     } finally {
       _isLoadingInProgress = false;
       notifyListeners();
@@ -99,9 +108,14 @@ class TvShowListViewModel extends ChangeNotifier with FilterTvShowListModelMixin
       _tvs.addAll(tvResponse.list);
       _currentPage = tvResponse.page;
       _totalPage = tvResponse.totalPages;
-      debugPrint('Filtered TV shows loaded: ${_tvs.length} items. Total pages: $_totalPage');
-    } catch (e, stackTrace) {
-      debugPrint('Error loading filtered TV shows: $e\n$stackTrace');
+      _errorMessage = null;
+    } catch (e) {
+      print('Error loading TV shows: $e');
+      if(e is ApiClientException) {
+        _errorMessage = ApiErrorMapper.mapError(e);
+      } else {
+        _errorMessage = ApiErrorMapper.unknownError();
+      }
     } finally {
       _isLoadingInProgress = false;
       notifyListeners();
@@ -132,7 +146,7 @@ class TvShowListViewModel extends ChangeNotifier with FilterTvShowListModelMixin
     debugPrint('Clearing all TV show filters...');
     clearFilterValue();
     resetList();
-    loadContent();
+    fetchContent();
     scrollToTop();
     // notifyListeners();
   }
@@ -142,7 +156,7 @@ class TvShowListViewModel extends ChangeNotifier with FilterTvShowListModelMixin
     debugPrint('Applying TV show filters...');
     scrollToTop();
     resetList();
-    loadContent();
+    fetchContent();
   }
 
   void resetList() {
@@ -241,7 +255,7 @@ mixin FilterTvShowListModelMixin implements IMediaFilter {
   }
 
   @override
-  Future<void> loadContent();
+  Future<void> fetchContent();
   @override
   void clearAllFilters();
   @override

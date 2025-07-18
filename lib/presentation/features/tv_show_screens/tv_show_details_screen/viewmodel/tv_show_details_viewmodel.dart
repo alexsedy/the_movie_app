@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:the_movie_app/core/constants/navigator_param_const.dart';
+import 'package:the_movie_app/core/helpers/api_error_mapper.dart';
 import 'package:the_movie_app/core/helpers/event_helper.dart';
 import 'package:the_movie_app/core/helpers/snack_bar_message_handler.dart';
 import 'package:the_movie_app/data/datasources/local/cache_management/local_media_tracking_service.dart';
@@ -40,6 +41,7 @@ class TvShowDetailsViewModel extends ChangeNotifier implements IBaseMediaDetails
   bool _isLoading = true;
   bool _isListsLoading = false;
   StreamSubscription? _subscription;
+  String? _errorMessage;
 
   int _userListCurrentPage = 0;
   int _userListTotalPage = 1;
@@ -74,6 +76,8 @@ class TvShowDetailsViewModel extends ChangeNotifier implements IBaseMediaDetails
   bool get isRatingLoading => _isRatingLoading;
   bool get isAddToLisLoading => _isAddToLisLoading;
 
+  String? get errorMessage => _errorMessage;
+
   @override
   set rate(value) => _rate = value;
 
@@ -87,18 +91,18 @@ class TvShowDetailsViewModel extends ChangeNotifier implements IBaseMediaDetails
   }
 
   void _initialize() {
-    _loadTvShowDetails();
+    fetchTvShowDetails();
     _subscribeToEvents();
   }
 
-  Future<void> _loadTvShowDetails() async {
+  Future<void> fetchTvShowDetails() async {
     _isLoading = true;
     notifyListeners();
 
     try {
       final results = await Future.wait([
         _tvShowRepository.getTvShowById(_seriesId),
-        _tvShowRepository.getTvShowState(_seriesId), // Может вернуть null, если не залогинен
+        _tvShowRepository.getTvShowState(_seriesId),
         _localMediaTrackingService.getTVShowById(_seriesId),
       ]);
 
@@ -123,9 +127,14 @@ class TvShowDetailsViewModel extends ChangeNotifier implements IBaseMediaDetails
 
       await _loadSeasonDetails();
 
+      _errorMessage = null;
     } catch (e) {
       print("Error loading TV show details: $e");
-      // TODO: Add error handling for the user
+      if(e is ApiClientException) {
+        _errorMessage = ApiErrorMapper.mapError(e);
+      } else {
+        _errorMessage = ApiErrorMapper.unknownError();
+      }
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -146,7 +155,6 @@ class TvShowDetailsViewModel extends ChangeNotifier implements IBaseMediaDetails
       _seasonsList.addAll(seasonDetailsList);
     } catch (e) {
       print("Error loading season details: $e");
-      // Ошибка загрузки деталей сезонов не должна блокировать остальное
     }
     // notifyListeners();
   }
@@ -184,7 +192,7 @@ class TvShowDetailsViewModel extends ChangeNotifier implements IBaseMediaDetails
               : "TV show removed from favorites." // TODO: Localize
       );
     } on ApiClientException catch (e) {
-      _handleApiClientException(e, context);
+      SnackBarMessageHandler.showErrorSnackBarWithApiClientException(e, context);
     } catch (e) {
       SnackBarMessageHandler.showErrorSnackBar(context);
     } finally {
@@ -200,13 +208,11 @@ class TvShowDetailsViewModel extends ChangeNotifier implements IBaseMediaDetails
         try{
           await _tvShowRepository.addToWatchlist(tvShowId: _seriesId, isWatched: true);
         } on ApiClientException catch (e) {
-          if(e.type == ApiClientExceptionType.sessionExpired) {
-            SnackBarMessageHandler.showErrorSnackBarWithLoginButton(context);
-            return;
-          } else {
-            SnackBarMessageHandler.showErrorSnackBar(context);
-            return;
-          }
+          SnackBarMessageHandler.showErrorSnackBarWithApiClientException(e, context);
+          return;
+        } catch (e) {
+          SnackBarMessageHandler.showErrorSnackBar(context);
+          return;
         }
       }
 
@@ -307,7 +313,7 @@ class TvShowDetailsViewModel extends ChangeNotifier implements IBaseMediaDetails
         await _tvShowRepository.addToWatchlist(tvShowId: _seriesId, isWatched: false,);
       } on ApiClientException catch (e) {
         if(e == ApiClientExceptionType.sessionExpired) {
-          SnackBarMessageHandler.showErrorSnackBarWithLoginButton(context);
+          SnackBarMessageHandler.showErrorSnackBarWithApiClientException(e, context);
           return;
         } else {
           SnackBarMessageHandler.showErrorSnackBar(context);
@@ -361,7 +367,7 @@ class TvShowDetailsViewModel extends ChangeNotifier implements IBaseMediaDetails
           message: "TV show rated." // TODO: Localize
       );
     } on ApiClientException catch (e) {
-      _handleApiClientException(e, context);
+      SnackBarMessageHandler.showErrorSnackBarWithApiClientException(e, context);
     } catch (e) {
       SnackBarMessageHandler.showErrorSnackBar(context);
     } finally {
@@ -384,7 +390,7 @@ class TvShowDetailsViewModel extends ChangeNotifier implements IBaseMediaDetails
         message: context.l10n.theRatingWasDeletedSuccessfully,
       );
     } on ApiClientException catch (e) {
-      _handleApiClientException(e, context);
+      SnackBarMessageHandler.showErrorSnackBarWithApiClientException(e, context);
     } catch (e) {
       SnackBarMessageHandler.showErrorSnackBar(context);
     } finally {
@@ -413,7 +419,7 @@ class TvShowDetailsViewModel extends ChangeNotifier implements IBaseMediaDetails
         _userListTotalPage = userListsResponse.totalPages;
       }
     } on ApiClientException catch (e) {
-      _handleApiClientException(e, context);
+      SnackBarMessageHandler.showErrorSnackBarWithApiClientException(e, context);
       Navigator.of(context).pop();
     } catch(e) {
       print("Error loading user lists: $e");
@@ -435,7 +441,7 @@ class TvShowDetailsViewModel extends ChangeNotifier implements IBaseMediaDetails
       _lists.clear();
       Navigator.of(context).pop();
     } on ApiClientException catch (e) {
-      _handleApiClientException(e, context);
+      SnackBarMessageHandler.showErrorSnackBarWithApiClientException(e, context);
     } catch(e) {
       SnackBarMessageHandler.showErrorSnackBar(context);
     } finally {
@@ -468,22 +474,12 @@ class TvShowDetailsViewModel extends ChangeNotifier implements IBaseMediaDetails
         Navigator.pop(context);
       }
     } on ApiClientException catch (e) {
-      _handleApiClientException(e, context);
+      SnackBarMessageHandler.showErrorSnackBarWithApiClientException(e, context);
     } catch (e) {
       SnackBarMessageHandler.showErrorSnackBar(context);
     } finally {
       _isAddToLisLoading = false;
       notifyListeners();
-    }
-  }
-
-  void _handleApiClientException(ApiClientException exception, BuildContext context) {
-    switch (exception.type) {
-      case ApiClientExceptionType.sessionExpired:
-        SnackBarMessageHandler.showErrorSnackBarWithLoginButton(context);
-        break;
-      default:
-        SnackBarMessageHandler.showErrorSnackBar(context);
     }
   }
 
